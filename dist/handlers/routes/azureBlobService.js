@@ -24,7 +24,7 @@ const user_validator_1 = require("../validators/user-validator");
 const user_usecase_1 = require("../../domain/user-usecase");
 const azureBlobService_usecase_1 = require("../../domain/azureBlobService-usecase");
 const AzureBlobService = (app) => {
-    app.get("/getFiles/:id", auth_middleware_1.authMiddlewareAll, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    app.post("/getFiles/:id", auth_middleware_1.authMiddlewareAll, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const validationResult = user_validator_1.userIdValidation.validate(Object.assign(Object.assign({}, req.params), req.body));
         if (validationResult.error) {
             res.status(400).send((0, generate_validation_message_1.generateValidationErrorMessage)(validationResult.error.details));
@@ -50,7 +50,7 @@ const AzureBlobService = (app) => {
             res.status(500).send('Internal server error');
         }
     }));
-    app.get("/generate-sas-url/:id", auth_middleware_1.authMiddlewareAll, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    app.post("/generate-sas-url/:id", auth_middleware_1.authMiddlewareAll, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const validationResult = azureBlob_validator_1.azureBlobService.validate(Object.assign(Object.assign({}, req.params), req.body));
         if (validationResult.error) {
             res.status(400).send((0, generate_validation_message_1.generateValidationErrorMessage)(validationResult.error.details));

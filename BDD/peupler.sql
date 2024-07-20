@@ -49,9 +49,10 @@ INSERT INTO tache (Description, dateDebut, dateFin, statut, responsableId) VALUE
 ('Préparer le matériel pour l événement', NOW(), NOW(), 'En cours', 1),
 ('Contacter les fournisseurs', NOW(), NOW(), 'En cours', 2);
 
-INSERT INTO evenement (nom, date, description, lieu, nbPlace) VALUES
-('Gala Annuel', NOW() + INTERVAL 1 MONTH, 'Le gala annuel de l association', 'Salle des fêtes',10),
-('Conférence sur l éducation', NOW() + INTERVAL 2 MONTH, 'Conférence sur les échanges éducatifs', 'Amphithéâtre Central',15);
+INSERT INTO evenement (nom, date, description, lieu, nbPlace,estReserve) VALUES
+('Gala Annuel', NOW() + INTERVAL 1 MONTH, 'Le gala annuel de l association', 'Salle des fêtes',10,false),
+('Promenade en vélo', NOW() + INTERVAL 1 MONTH, 'Promenade en vélo sur Paris !', 'Parc de Luxembourg',3,true),
+('Conférence sur l éducation', NOW() + INTERVAL 2 MONTH, 'Conférence sur les échanges éducatifs', 'Amphithéâtre Central',15,false);
 
 /*INSERT INTO inscription (emailVisiteur, evenementId) VALUES
 ("test@gmail1.com", 1),
