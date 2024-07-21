@@ -138,7 +138,7 @@ export const AzureBlobService = (app: express.Express) => {
         }
     });
 
-    app.delete("/delete-document/:id", authMiddlewareAll, async (req: Request, res: Response) => {
+    app.post("/delete-document/:id", authMiddlewareAll, async (req: Request, res: Response) => {
         const validationResult = azureBlobService.validate({ ...req.params, ...req.body });
 
         if (validationResult.error) {

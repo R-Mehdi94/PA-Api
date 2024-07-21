@@ -125,7 +125,7 @@ const AzureBlobService = (app) => {
             res.status(500).send('Internal server error');
         }
     }));
-    app.delete("/delete-document/:id", auth_middleware_1.authMiddlewareAll, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    app.post("/delete-document/:id", auth_middleware_1.authMiddlewareAll, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const validationResult = azureBlob_validator_1.azureBlobService.validate(Object.assign(Object.assign({}, req.params), req.body));
         if (validationResult.error) {
             res.status(400).send((0, generate_validation_message_1.generateValidationErrorMessage)(validationResult.error.details));
