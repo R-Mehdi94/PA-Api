@@ -76,14 +76,14 @@ export class DossierUsecase {
                         FROM 
                             dossier d1
                         WHERE 
-                            d1.dossierId = 5
+                            d1.dossierId = ?
                         AND
-                            d1.userId = 2
+                            d1.userId = ?
 
 
                         UNION ALL
 
-                        select token.blobName, token.id, 'fichier' AS Type from token inner join dossier on token.id = dossier.tokenId where dossier.dossierId = 5 and token.userId = 2;
+                        select token.blobName, token.id, 'fichier' AS Type from token inner join dossier on token.id = dossier.tokenId where dossier.dossierId = ? and token.userId = ?;
                         `;
 
         const arboDossier = await entityManager.query(sqlQuery, [dossierId,id,dossierId,id]);
