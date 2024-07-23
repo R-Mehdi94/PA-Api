@@ -69,42 +69,42 @@ export class DossierUsecase {
         const entityManager = this.db.getRepository(Token);
 
                             const sqlQuery = `WITH Combined AS (
-                        SELECT 
-                            token.blobName AS Nom, 
-                            token.id, 
-                            'fichier' AS Type 
-                        FROM 
-                            token 
-                        INNER JOIN 
-                            dossier 
-                        ON 
-                            token.id = dossier.tokenId 
-                        WHERE 
-                            dossier.dossierId = ?
-                            AND token.userId = ?
+                                    SELECT 
+                                        token.blobName AS Nom, 
+                                        token.id, 
+                                        'fichier' AS Type 
+                                    FROM 
+                                        token 
+                                    INNER JOIN 
+                                        dossier 
+                                    ON 
+                                        token.id = dossier.tokenId 
+                                    WHERE 
+                                        dossier.dossierId = ? 
+                                        AND token.userId = ?
 
-                        UNION ALL
+                                    UNION ALL
 
-                        SELECT 
-                            d1.nom AS Nom, 
-                            d1.id AS id,
-                            'dossier' AS Type 
-                        FROM 
-                            dossier d1
-                        WHERE 
-                            d1.dossierId = ?
-                            AND d1.userId = ?
-                    )
-                    SELECT *
-                    FROM Combined
-                    WHERE Type = 'fichier'
-                    OR (Type = 'dossier' AND NOT EXISTS (
-                        SELECT 1
-                        FROM Combined c2
-                        WHERE c2.Nom = Combined.Nom 
-                            AND c2.id = Combined.id 
-                            AND c2.Type = 'fichier'
-                    ));`;
+                                    SELECT 
+                                        d1.nom AS Nom, 
+                                        d1.id AS id,
+                                        'dossier' AS Type 
+                                    FROM 
+                                        dossier d1
+                                    WHERE 
+                                        d1.dossierId = ?
+                                        AND d1.userId = ?
+                                )
+                                SELECT *
+                                FROM Combined c1
+                                WHERE Type = 'fichier'
+                                OR (Type = 'dossier' AND NOT EXISTS (
+                                    SELECT 1
+                                    FROM Combined c2
+                                    WHERE c2.Nom = c1.Nom 
+                                        AND c2.Type = 'fichier'
+                                ));
+                                `;
 
         const arboDossier = await entityManager.query(sqlQuery, [dossierId,id,dossierId,id]);
         if (!arboDossier.length) {
