@@ -19,6 +19,32 @@ const auth_middleware_1 = require("../middleware/auth-middleware");
 const user_usecase_1 = require("../../domain/user-usecase");
 const user_validator_1 = require("../validators/user-validator");
 const DossierHandler = (app) => {
+    app.post("/idToken/:id", auth_middleware_1.authMiddlewareAll, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        const validationResult = user_validator_1.getIdToken.validate(Object.assign(Object.assign({}, req.params), req.body));
+        if (validationResult.error) {
+            res.status(400).send((0, generate_validation_message_1.generateValidationErrorMessage)(validationResult.error.details));
+            return;
+        }
+        const userUsecase = new user_usecase_1.UserUsecase(database_1.AppDataSource);
+        if ((yield userUsecase.verifUser(+req.params.id, req.body.token)) === false) {
+            res.status(400).send({ "error": `Bad user` });
+            return;
+        }
+        const nom = validationResult.value.name;
+        try {
+            const dossierUsecase = new dossier_usecase_1.DossierUsecase(database_1.AppDataSource);
+            const idToken = yield dossierUsecase.getIdToken(nom);
+            if (!idToken) {
+                res.status(200).send({ "reponse": `Aucun fichier` });
+                return;
+            }
+            res.json({ idToken });
+        }
+        catch (error) {
+            console.error(error);
+            res.status(500).send('Internal server error');
+        }
+    }));
     app.post("/racine/:id", auth_middleware_1.authMiddlewareAll, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const validationResult = user_validator_1.userIdValidation.validate(Object.assign(Object.assign({}, req.params), req.body));
         if (validationResult.error) {

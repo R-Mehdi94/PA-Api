@@ -25,6 +25,20 @@ export class DossierUsecase {
 
     constructor(private readonly db: DataSource) { }
 
+    async getIdToken(nom: string): Promise<any | null> {
+
+        const entityManager = this.db.getRepository(Token);
+
+        const sqlQuery = `SELECT id FROM token WHERE blobName like ?;`;
+
+        const idtToken = await entityManager.query(sqlQuery, [nom]);
+        if (!idtToken.length) {
+            return null;
+        }
+        return idtToken;
+    }
+
+
     async getRacine(id: number): Promise<any | null> {
 
         const entityManager = this.db.getRepository(Token);

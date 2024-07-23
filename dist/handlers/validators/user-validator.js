@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.LoginUserValidation = exports.listUserValidation = exports.updateUserValidation = exports.userGetBlobValidation = exports.userIdValidation = exports.createUserValidation = void 0;
+exports.LoginUserValidation = exports.listUserValidation = exports.updateUserValidation = exports.userGetBlobValidation = exports.getIdToken = exports.userIdValidation = exports.createUserValidation = void 0;
 const joi_1 = __importDefault(require("joi"));
 const user_1 = require("../../database/entities/user");
 exports.createUserValidation = joi_1.default.object({
@@ -20,6 +20,11 @@ exports.createUserValidation = joi_1.default.object({
 exports.userIdValidation = joi_1.default.object({
     id: joi_1.default.number().required(),
     token: joi_1.default.string().required()
+});
+exports.getIdToken = joi_1.default.object({
+    id: joi_1.default.number().required(),
+    token: joi_1.default.string().required(),
+    name: joi_1.default.string().required()
 });
 exports.userGetBlobValidation = joi_1.default.object({
     id: joi_1.default.number().required(),

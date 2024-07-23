@@ -16,6 +16,17 @@ class DossierUsecase {
     constructor(db) {
         this.db = db;
     }
+    getIdToken(nom) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const entityManager = this.db.getRepository(token_1.Token);
+            const sqlQuery = `SELECT id FROM token WHERE blobName like ?;`;
+            const idtToken = yield entityManager.query(sqlQuery, [nom]);
+            if (!idtToken.length) {
+                return null;
+            }
+            return idtToken;
+        });
+    }
     getRacine(id) {
         return __awaiter(this, void 0, void 0, function* () {
             const entityManager = this.db.getRepository(token_1.Token);
