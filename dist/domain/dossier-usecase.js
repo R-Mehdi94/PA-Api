@@ -61,18 +61,21 @@ class DossierUsecase {
                         FROM 
                             dossier d1
                         WHERE 
-                            d1.dossierId = ?
+                            d1.dossierId = 5
                         AND
-                            d1.userId = ?
+                            d1.userId = 2
 
 
                         UNION ALL
 
-                        select token.blobName, token.id, 'fichier' AS Type from token inner join dossier on token.id = dossier.tokenId where dossier.dossierId = ? and token.userId = ?;
+                        select token.blobName, token.id, 'fichier' AS Type from token inner join dossier on token.id = dossier.tokenId where dossier.dossierId = 5 and token.userId = 2;
                         `;
             const arboDossier = yield entityManager.query(sqlQuery, [dossierId, id, dossierId, id]);
             if (!arboDossier.length) {
                 return null;
+            }
+            if (arboDossier.length == 2) {
+                return arboDossier[1];
             }
             return arboDossier;
         });
