@@ -55,7 +55,7 @@ class DossierUsecase {
             const entityManager = this.db.getRepository(token_1.Token);
             const sqlQuery = `SELECT 
                             d1.nom AS Nom, 
-                            d1.id AS dossierId,
+                            d1.id AS id,
                             'dossier' AS Type 
                         
                         FROM 
