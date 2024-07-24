@@ -34,6 +34,7 @@ export const UserHandlerAuthentication = (app: express.Express) => {
                 role: req.body.role,
                 dateInscription: new Date(),
                 estBenevole: req.body.estBenevole,
+                numTel: req.body.numTel,
             });
 
             res.status(201).send({ id: user.id,nom: user.nom,prenom:user.prenom ,email: user.email, role: user.role });
