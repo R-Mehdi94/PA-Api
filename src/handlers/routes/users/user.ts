@@ -196,17 +196,23 @@ export const UserHandler = (app: express.Express) => {
     
             const userUsecase = new UserUsecase(AppDataSource);
 
-            let user = await AppDataSource.getRepository(User).findOneBy({ id: validationResult.value.id });
 
-            console.log("ICIIIIIIIIIIIIIIIIIIIIIIIIIII", user?.role);
-
+            if(validationResult.value.idAdmin !== undefined){
+                let user = await AppDataSource.getRepository(User).findOneBy({ id: validationResult.value.idAdmin });
             
-            if(user?.role !== "Administrateur"){
+                if(user?.role !== "Administrateur"){
+                    if(await userUsecase.verifUser(+req.params.idAdmin, req.body.token) === false){
+                        res.status(400).send({ "error": `Bad user` });
+                        return;
+                    } 
+                }
+            }else{
                 if(await userUsecase.verifUser(+req.params.id, req.body.token) === false){
                     res.status(400).send({ "error": `Bad user` });
                     return;
                 } 
             }
+
 
             if(validationResult.value.motDePasse !== undefined){
                 validationResult.value.motDePasse = await hash(validationResult.value.motDePasse, 10);
@@ -250,12 +256,12 @@ export const UserHandler = (app: express.Express) => {
             }
 
 
-            const adherentId = validationResult.value;
+            const adherentId = validationResult.value.id;
 
             const adherentRepository = AppDataSource.getRepository(Adherent);
-            const adherent = await adherentRepository.findOneBy({ id: adherentId.id });
+            const adherent = await adherentRepository.findOneBy({ id: adherentId });
             if (adherent === null) {
-                res.status(404).send({ "error": `Adherent ${adherentId.id} not found` });
+                res.status(404).send({ "error": `Adherent ${adherentId} not found` });
                 return;
             }
 

@@ -71,8 +71,8 @@ export const updateUserValidation = Joi.object<UpdateUserRequest>({
     motDePasse: Joi.string().optional(),
     role: Joi.string().valid(...Object.values(UserRole)).optional(),
     estBenevole: Joi.boolean().optional(),
-    estEnLigne : Joi.boolean().optional()
-
+    estEnLigne : Joi.boolean().optional(),
+    idAdmin: Joi.number().optional()
 });
 
 export interface UpdateUserRequest {
@@ -87,7 +87,7 @@ export interface UpdateUserRequest {
     role?: UserRole
     estBenevole?: boolean   
     estEnLigne?: boolean
-
+    idAdmin?: number
 }
 
 export const listUserValidation = Joi.object<ListUserRequest>({

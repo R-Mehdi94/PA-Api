@@ -42,7 +42,8 @@ exports.updateUserValidation = joi_1.default.object({
     motDePasse: joi_1.default.string().optional(),
     role: joi_1.default.string().valid(...Object.values(user_1.UserRole)).optional(),
     estBenevole: joi_1.default.boolean().optional(),
-    estEnLigne: joi_1.default.boolean().optional()
+    estEnLigne: joi_1.default.boolean().optional(),
+    idAdmin: joi_1.default.number().optional()
 });
 exports.listUserValidation = joi_1.default.object({
     page: joi_1.default.number().min(1).optional(),

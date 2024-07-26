@@ -166,9 +166,16 @@ const UserHandler = (app) => {
                 return;
             }
             const userUsecase = new user_usecase_1.UserUsecase(database_1.AppDataSource);
-            let user = yield database_1.AppDataSource.getRepository(user_1.User).findOneBy({ id: validationResult.value.id });
-            console.log("ICIIIIIIIIIIIIIIIIIIIIIIIIIII", user === null || user === void 0 ? void 0 : user.role);
-            if ((user === null || user === void 0 ? void 0 : user.role) !== "Administrateur") {
+            if (validationResult.value.idAdmin !== undefined) {
+                let user = yield database_1.AppDataSource.getRepository(user_1.User).findOneBy({ id: validationResult.value.idAdmin });
+                if ((user === null || user === void 0 ? void 0 : user.role) !== "Administrateur") {
+                    if ((yield userUsecase.verifUser(+req.params.idAdmin, req.body.token)) === false) {
+                        res.status(400).send({ "error": `Bad user` });
+                        return;
+                    }
+                }
+            }
+            else {
                 if ((yield userUsecase.verifUser(+req.params.id, req.body.token)) === false) {
                     res.status(400).send({ "error": `Bad user` });
                     return;
@@ -201,11 +208,11 @@ const UserHandler = (app) => {
                 res.status(400).send((0, generate_validation_message_1.generateValidationErrorMessage)(validationResult.error.details));
                 return;
             }
-            const adherentId = validationResult.value;
+            const adherentId = validationResult.value.id;
             const adherentRepository = database_1.AppDataSource.getRepository(adherent_1.Adherent);
-            const adherent = yield adherentRepository.findOneBy({ id: adherentId.id });
+            const adherent = yield adherentRepository.findOneBy({ id: adherentId });
             if (adherent === null) {
-                res.status(404).send({ "error": `Adherent ${adherentId.id} not found` });
+                res.status(404).send({ "error": `Adherent ${adherentId} not found` });
                 return;
             }
             yield adherentRepository.remove(adherent);

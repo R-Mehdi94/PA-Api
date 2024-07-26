@@ -23,7 +23,8 @@ exports.adherentIdValidation = joi_1.default.object({
     token: joi_1.default.string().required()
 });
 exports.adherentIdValidationUser = joi_1.default.object({
-    id: joi_1.default.number().required()
+    id: joi_1.default.number().required(),
+    idAdmin: joi_1.default.number().optional()
 });
 exports.updateAdherentValidation = joi_1.default.object({
     id: joi_1.default.number().required(),
