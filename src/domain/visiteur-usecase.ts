@@ -1,6 +1,5 @@
-import { DataSource } from "typeorm"
-import { Visiteur } from "../database/entities/visiteur"
-import { User } from "../database/entities/user"
+import { DataSource } from "typeorm";
+import { Visiteur } from "../database/entities/visiteur";
 
 export interface ListVisiteurRequest {
     page: number
@@ -10,11 +9,7 @@ export interface ListVisiteurRequest {
     prenom?: string
     age?: number
     numTel?: string
-    adresse?: string
     profession?: string
-    dateInscription?: Date
-    estBenevole?: boolean
-    parrain?: number
 }
 
 export interface UpdateVisiteurParams {
@@ -23,48 +18,11 @@ export interface UpdateVisiteurParams {
     prenom?: string
     age?: number
     numTel?: string
-    adresse?: string
     profession?: string
-    dateInscription?: Date
-    estBenevole?: boolean
-    parrain?: User
 }
 
 export class VisiteurUsecase {
     constructor(private readonly db: DataSource) { }
-
-    async verifVisiteur(email:string,numTel: string): Promise<any | null> {
-
-        const entityManager = this.db.getRepository(Visiteur);
-
-        const sqlQuery = `select count(*) from visiteur where email like ? and numTel = ?;`;
-
-        const nbPlace = await entityManager.query(sqlQuery, [email,numTel]);
-
-        return nbPlace;
-    }
-
-    async getVisiteurEmail(): Promise<any | null> {
-
-        const entityManager = this.db.getRepository(Visiteur);
-
-        const sqlQuery = `SELECT GROUP_CONCAT(email SEPARATOR ', ') AS emails FROM visiteur;`;
-
-        const visiteurEmails = await entityManager.query(sqlQuery);
-
-        return visiteurEmails;
-    }
-
-    async verifEmail(email: string): Promise<any | null> {
-
-        const entityManager = this.db.getRepository(Visiteur);
-
-        const sqlQuery = `select count(*) as verif from visiteur where email=?;`;
-
-        const verifEmail = await entityManager.query(sqlQuery, [email]);
-
-        return verifEmail;
-    }
 
     async listVisiteurs(listVisiteurRequest: ListVisiteurRequest): Promise<{ Visiteurs: Visiteur[]; totalCount: number; }> {
         const query = this.db.createQueryBuilder(Visiteur, 'visiteur');
@@ -88,27 +46,11 @@ export class VisiteurUsecase {
             query.andWhere("visiteur.numTel = :numTel", { numTel: listVisiteurRequest.numTel });
         }
 
-        if (listVisiteurRequest.adresse) {
-            query.andWhere("visiteur.adresse = :adresse", { adresse: listVisiteurRequest.adresse });
-        }
-
         if (listVisiteurRequest.profession) {
             query.andWhere("visiteur.profession = :profession", { profession: listVisiteurRequest.profession });
         }
 
-        if (listVisiteurRequest.dateInscription) {
-            query.andWhere("visiteur.dateInscription = :dateInscription", { dateInscription: listVisiteurRequest.dateInscription });
-        }
-
-        if (listVisiteurRequest.estBenevole !== undefined) {
-            query.andWhere("visiteur.estBenevole = :estBenevole", { estBenevole: listVisiteurRequest.estBenevole });
-        }
-
-        if (listVisiteurRequest.parrain) {
-            query.andWhere("visiteur.parrainId = :parrain", { parrain: listVisiteurRequest.parrain });
-        }
-
-        query.leftJoinAndSelect('visiteur.parrain', 'parrain')
+        query.leftJoinAndSelect('visiteur.inscriptions', 'inscriptions')
             .skip((listVisiteurRequest.page - 1) * listVisiteurRequest.limit)
             .take(listVisiteurRequest.limit);
 
@@ -119,29 +61,33 @@ export class VisiteurUsecase {
         };
     }
 
-    async getOneVisiteur(email: string): Promise<Visiteur | null> {
+    async getOneVisiteur(id: number): Promise<Visiteur | null> {
         const query = this.db.createQueryBuilder(Visiteur, 'visiteur')
-            .leftJoinAndSelect('visiteur.parrain', 'parrain')
-            .where("visiteur.email = :email", { email: email });
+            .leftJoinAndSelect('visiteur.inscriptions', 'inscriptions')
+            
+            .where("visiteur.id = :id", { id: id });
 
         const visiteur = await query.getOne();
 
         if (!visiteur) {
-            console.log({ error: `Visiteur ${email} not found` });
+            console.log({ error: `Visiteur ${id} not found` });
             return null;
         }
         return visiteur;
     }
 
-    async updateVisiteur(email: string, { nom, prenom, age, numTel, adresse, profession, dateInscription, estBenevole, parrain }: UpdateVisiteurParams): Promise<Visiteur | string | null> {
+    async updateVisiteur(id: number, { email, nom, prenom, age, numTel, profession }: UpdateVisiteurParams): Promise<Visiteur | string | null> {
         const repo = this.db.getRepository(Visiteur);
-        const visiteurFound = await repo.findOneBy({ email });
+        const visiteurFound = await repo.findOneBy({ id });
         if (visiteurFound === null) return null;
 
-        if (nom === undefined && prenom === undefined && age === undefined && numTel === undefined && adresse === undefined && profession === undefined && dateInscription === undefined && estBenevole === undefined && parrain === undefined) {
+        if (email === undefined && nom === undefined && prenom === undefined && age === undefined && numTel === undefined && profession === undefined) {
             return "No changes";
         }
 
+        if (email) {
+            visiteurFound.email = email;
+        }
         if (nom) {
             visiteurFound.nom = nom;
         }
@@ -154,20 +100,8 @@ export class VisiteurUsecase {
         if (numTel) {
             visiteurFound.numTel = numTel;
         }
-        if (adresse) {
-            visiteurFound.adresse = adresse;
-        }
         if (profession) {
             visiteurFound.profession = profession;
-        }
-        if (dateInscription) {
-            visiteurFound.dateInscription = dateInscription;
-        }
-        if (estBenevole !== undefined) {
-            visiteurFound.estBenevole = estBenevole;
-        }
-        if (parrain) {
-            visiteurFound.parrain = parrain;
         }
 
         const visiteurUpdate = await repo.save(visiteurFound);

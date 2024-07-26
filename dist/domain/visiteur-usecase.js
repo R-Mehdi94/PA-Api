@@ -15,30 +15,6 @@ class VisiteurUsecase {
     constructor(db) {
         this.db = db;
     }
-    verifVisiteur(email, numTel) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const entityManager = this.db.getRepository(visiteur_1.Visiteur);
-            const sqlQuery = `select count(*) from visiteur where email like ? and numTel = ?;`;
-            const nbPlace = yield entityManager.query(sqlQuery, [email, numTel]);
-            return nbPlace;
-        });
-    }
-    getVisiteurEmail() {
-        return __awaiter(this, void 0, void 0, function* () {
-            const entityManager = this.db.getRepository(visiteur_1.Visiteur);
-            const sqlQuery = `SELECT GROUP_CONCAT(email SEPARATOR ', ') AS emails FROM visiteur;`;
-            const visiteurEmails = yield entityManager.query(sqlQuery);
-            return visiteurEmails;
-        });
-    }
-    verifEmail(email) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const entityManager = this.db.getRepository(visiteur_1.Visiteur);
-            const sqlQuery = `select count(*) as verif from visiteur where email=?;`;
-            const verifEmail = yield entityManager.query(sqlQuery, [email]);
-            return verifEmail;
-        });
-    }
     listVisiteurs(listVisiteurRequest) {
         return __awaiter(this, void 0, void 0, function* () {
             const query = this.db.createQueryBuilder(visiteur_1.Visiteur, 'visiteur');
@@ -57,22 +33,10 @@ class VisiteurUsecase {
             if (listVisiteurRequest.numTel) {
                 query.andWhere("visiteur.numTel = :numTel", { numTel: listVisiteurRequest.numTel });
             }
-            if (listVisiteurRequest.adresse) {
-                query.andWhere("visiteur.adresse = :adresse", { adresse: listVisiteurRequest.adresse });
-            }
             if (listVisiteurRequest.profession) {
                 query.andWhere("visiteur.profession = :profession", { profession: listVisiteurRequest.profession });
             }
-            if (listVisiteurRequest.dateInscription) {
-                query.andWhere("visiteur.dateInscription = :dateInscription", { dateInscription: listVisiteurRequest.dateInscription });
-            }
-            if (listVisiteurRequest.estBenevole !== undefined) {
-                query.andWhere("visiteur.estBenevole = :estBenevole", { estBenevole: listVisiteurRequest.estBenevole });
-            }
-            if (listVisiteurRequest.parrain) {
-                query.andWhere("visiteur.parrainId = :parrain", { parrain: listVisiteurRequest.parrain });
-            }
-            query.leftJoinAndSelect('visiteur.parrain', 'parrain')
+            query.leftJoinAndSelect('visiteur.inscriptions', 'inscriptions')
                 .skip((listVisiteurRequest.page - 1) * listVisiteurRequest.limit)
                 .take(listVisiteurRequest.limit);
             const [Visiteurs, totalCount] = yield query.getManyAndCount();
@@ -82,27 +46,30 @@ class VisiteurUsecase {
             };
         });
     }
-    getOneVisiteur(email) {
+    getOneVisiteur(id) {
         return __awaiter(this, void 0, void 0, function* () {
             const query = this.db.createQueryBuilder(visiteur_1.Visiteur, 'visiteur')
-                .leftJoinAndSelect('visiteur.parrain', 'parrain')
-                .where("visiteur.email = :email", { email: email });
+                .leftJoinAndSelect('visiteur.inscriptions', 'inscriptions')
+                .where("visiteur.id = :id", { id: id });
             const visiteur = yield query.getOne();
             if (!visiteur) {
-                console.log({ error: `Visiteur ${email} not found` });
+                console.log({ error: `Visiteur ${id} not found` });
                 return null;
             }
             return visiteur;
         });
     }
-    updateVisiteur(email_1, _a) {
-        return __awaiter(this, arguments, void 0, function* (email, { nom, prenom, age, numTel, adresse, profession, dateInscription, estBenevole, parrain }) {
+    updateVisiteur(id_1, _a) {
+        return __awaiter(this, arguments, void 0, function* (id, { email, nom, prenom, age, numTel, profession }) {
             const repo = this.db.getRepository(visiteur_1.Visiteur);
-            const visiteurFound = yield repo.findOneBy({ email });
+            const visiteurFound = yield repo.findOneBy({ id });
             if (visiteurFound === null)
                 return null;
-            if (nom === undefined && prenom === undefined && age === undefined && numTel === undefined && adresse === undefined && profession === undefined && dateInscription === undefined && estBenevole === undefined && parrain === undefined) {
+            if (email === undefined && nom === undefined && prenom === undefined && age === undefined && numTel === undefined && profession === undefined) {
                 return "No changes";
+            }
+            if (email) {
+                visiteurFound.email = email;
             }
             if (nom) {
                 visiteurFound.nom = nom;
@@ -116,20 +83,8 @@ class VisiteurUsecase {
             if (numTel) {
                 visiteurFound.numTel = numTel;
             }
-            if (adresse) {
-                visiteurFound.adresse = adresse;
-            }
             if (profession) {
                 visiteurFound.profession = profession;
-            }
-            if (dateInscription) {
-                visiteurFound.dateInscription = dateInscription;
-            }
-            if (estBenevole !== undefined) {
-                visiteurFound.estBenevole = estBenevole;
-            }
-            if (parrain) {
-                visiteurFound.parrain = parrain;
             }
             const visiteurUpdate = yield repo.save(visiteurFound);
             return visiteurUpdate;

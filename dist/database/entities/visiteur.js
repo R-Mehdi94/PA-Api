@@ -13,25 +13,27 @@ exports.Visiteur = void 0;
 const typeorm_1 = require("typeorm");
 require("reflect-metadata");
 const user_1 = require("./user");
+const inscription_1 = require("./inscription");
 let Visiteur = class Visiteur {
-    constructor(nom, prenom, email, age, numTel, adresse, profession, dateInscription, estBenevole, parrain) {
+    constructor(id, nom, prenom, email, age, numTel, adresse, profession, dateInscription, estBenevole, parrain, inscriptions, cotisations) {
+        this.id = id;
         this.nom = nom;
         this.prenom = prenom;
         this.email = email;
         this.age = age;
         this.numTel = numTel;
-        this.adresse = adresse;
         this.profession = profession;
         this.dateInscription = dateInscription;
-        this.estBenevole = estBenevole;
-        this.parrain = parrain;
+        this.inscriptions = inscriptions;
     }
 };
 exports.Visiteur = Visiteur;
 __decorate([
-    (0, typeorm_1.PrimaryColumn)({
-        unique: true
-    }),
+    (0, typeorm_1.PrimaryGeneratedColumn)(),
+    __metadata("design:type", Number)
+], Visiteur.prototype, "id", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ unique: true }),
     __metadata("design:type", String)
 ], Visiteur.prototype, "email", void 0);
 __decorate([
@@ -53,10 +55,6 @@ __decorate([
 __decorate([
     (0, typeorm_1.Column)(),
     __metadata("design:type", String)
-], Visiteur.prototype, "adresse", void 0);
-__decorate([
-    (0, typeorm_1.Column)(),
-    __metadata("design:type", String)
 ], Visiteur.prototype, "profession", void 0);
 __decorate([
     (0, typeorm_1.Column)(),
@@ -64,14 +62,10 @@ __decorate([
     __metadata("design:type", Date)
 ], Visiteur.prototype, "dateInscription", void 0);
 __decorate([
-    (0, typeorm_1.Column)(),
-    __metadata("design:type", Boolean)
-], Visiteur.prototype, "estBenevole", void 0);
-__decorate([
-    (0, typeorm_1.ManyToOne)(() => user_1.User, user => user.parraine),
-    __metadata("design:type", user_1.User)
-], Visiteur.prototype, "parrain", void 0);
+    (0, typeorm_1.OneToMany)(() => inscription_1.Inscription, inscriptions => inscriptions.visiteur),
+    __metadata("design:type", Array)
+], Visiteur.prototype, "inscriptions", void 0);
 exports.Visiteur = Visiteur = __decorate([
     (0, typeorm_1.Entity)(),
-    __metadata("design:paramtypes", [String, String, String, Number, String, String, String, Date, Boolean, user_1.User])
+    __metadata("design:paramtypes", [Number, String, String, String, Number, String, String, String, Date, Boolean, user_1.User, Array, Array])
 ], Visiteur);

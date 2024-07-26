@@ -48,7 +48,7 @@ const ReservationHandler = (app) => {
         const reservationRequest = validation.value;
         const userRepository = database_1.AppDataSource.getRepository(user_1.User);
         const user = yield userRepository.findOneBy({ id: req.body.user });
-        if ((user === null || user === void 0 ? void 0 : user.role) !== "Administrateur" && (user === null || user === void 0 ? void 0 : user.role) !== "Adherent") {
+        if ((user === null || user === void 0 ? void 0 : user.role) !== "Administrateur" && (user === null || user === void 0 ? void 0 : user.role) !== "Utilisateur") {
             res.status(400).send({ error: "Administrateur ou Adherent requis" });
             return;
         }
@@ -115,7 +115,7 @@ const ReservationHandler = (app) => {
         if (UpdateReservationRequest.user) {
             const userRepository = database_1.AppDataSource.getRepository(user_1.User);
             const user = yield userRepository.findOneBy({ id: req.body.user });
-            if ((user === null || user === void 0 ? void 0 : user.role) !== "Administrateur" && (user === null || user === void 0 ? void 0 : user.role) !== "Adherent") {
+            if ((user === null || user === void 0 ? void 0 : user.role) !== "Administrateur" && (user === null || user === void 0 ? void 0 : user.role) !== "Utilisateur") {
                 res.status(400).send({ error: "Administrateur ou Adherent requis" });
                 return;
             }

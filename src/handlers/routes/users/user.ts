@@ -5,6 +5,10 @@ import { UserUsecase } from '../../../domain/user-usecase';
 import { generateValidationErrorMessage } from '../../validators/generate-validation-message';
 import { listUserValidation, createUserValidation, userIdValidation, updateUserValidation} from '../../validators/user-validator';
 import { hash } from "bcrypt";
+import { authMiddlewareAll } from '../../middleware/auth-middleware';
+import { adherentIdValidation, adherentIdValidationUser, updateAdherentValidationUser } from '../../validators/adherent-validator';
+import { Adherent } from '../../../database/entities/adherent';
+import { AdherentUsecase } from '../../../domain/adherent-usecase';
 
 
 export const UserHandler = (app: express.Express) => {
@@ -23,7 +27,7 @@ export const UserHandler = (app: express.Express) => {
         }
     });
 
-    app.get("/users/blobName/:id", async (req: Request, res: Response) => {
+    app.get("/users/blobName/:id",authMiddlewareAll, async (req: Request, res: Response) => {
         try {
             const validationResult = userIdValidation.validate({ ...req.params, ...req.body });
 
@@ -62,7 +66,7 @@ export const UserHandler = (app: express.Express) => {
         }
     });
 
-    app.get("/users", async (req: Request, res: Response) => {
+    app.get("/users" ,async (req: Request, res: Response) => {
         const validation = listUserValidation.validate(req.query);
 
         if (validation.error) {
@@ -107,7 +111,7 @@ export const UserHandler = (app: express.Express) => {
         }
     });
 
-    app.delete("/users/:id", async (req: Request, res: Response) => {
+    app.delete("/users/:id", authMiddlewareAll,async (req: Request, res: Response) => {
         try {
             const validationResult = userIdValidation.validate({ ...req.params, ...req.body });
 
@@ -118,11 +122,17 @@ export const UserHandler = (app: express.Express) => {
             }
 
             const userUsecase = new UserUsecase(AppDataSource);
+
+            const user2 = await AppDataSource.getRepository(User).findOneBy({ id: validationResult.value.id });
+
             
-            if(await userUsecase.verifUser(+req.params.id, req.body.token) === false){
-                res.status(400).send({ "error": `Bad user` });
-                return;
-            } 
+            if(user2?.role !== "Administrateur"){
+                if(await userUsecase.verifUser(+req.params.id, req.body.token) === false){
+                    res.status(400).send({ "error": `Bad user` });
+                    return;
+                } 
+            }
+            
             const userId = validationResult.value;
 
             const userRepository = AppDataSource.getRepository(User);
@@ -140,7 +150,7 @@ export const UserHandler = (app: express.Express) => {
         }
     });
 
-    app.get("/users/:id", async (req: Request, res: Response) => {
+    app.get("/users/:id", authMiddlewareAll,async (req: Request, res: Response) => {
         try {
             const validationResult = userIdValidation.validate({ ...req.params, ...req.body });
 
@@ -151,6 +161,8 @@ export const UserHandler = (app: express.Express) => {
             }
 
             const userUsecase = new UserUsecase(AppDataSource);
+
+
             
             if(await userUsecase.verifUser(+req.params.id, req.body.token) === false){
                 res.status(400).send({ "error": `Bad user` });
@@ -170,7 +182,7 @@ export const UserHandler = (app: express.Express) => {
         }
     });
 
-    app.patch("/users/:id", async (req: Request, res: Response) => {
+    app.patch("/users/:id",authMiddlewareAll ,async (req: Request, res: Response) => {
 
 
 
@@ -226,8 +238,35 @@ export const UserHandler = (app: express.Express) => {
         }
     });
 
-    app.patch("/visiteurs/:id" ,async (req: Request, res: Response) => {
-        const validation = updateUserValidation.validate({ ...req.params, ...req.body });
+    app.delete("/adherentsUser/:id",authMiddlewareAll, async (req: Request, res: Response) => {
+        try {
+            const validationResult = adherentIdValidationUser.validate(req.params);
+
+            if (validationResult.error) {
+                res.status(400).send(generateValidationErrorMessage(validationResult.error.details));
+                return;
+            }
+
+
+            const adherentId = validationResult.value;
+
+            const adherentRepository = AppDataSource.getRepository(Adherent);
+            const adherent = await adherentRepository.findOneBy({ id: adherentId.id });
+            if (adherent === null) {
+                res.status(404).send({ "error": `Adherent ${adherentId.id} not found` });
+                return;
+            }
+
+            await adherentRepository.remove(adherent);
+            res.status(200).send("Adherent supprimé avec succès");
+        } catch (error) {
+            console.log(error);
+            res.status(500).send({ error: "Internal error" });
+        }
+    });
+
+    app.patch("/adherentsUser/:id",authMiddlewareAll, async (req: Request, res: Response) => {
+        const validation = updateAdherentValidationUser.validate({ ...req.params, ...req.body });
 
         if (validation.error) {
             res.status(400).send(generateValidationErrorMessage(validation.error.details));
@@ -235,47 +274,34 @@ export const UserHandler = (app: express.Express) => {
         }
 
 
-
-        const updateUserRequest = validation.value;
+        const updateAdherentRequest = validation.value;
 
         try {
-            if(updateUserRequest.role as string !== "visiteur"){
-                res.status(400).send({ "error": `User ${updateUserRequest.id} n'est pas un visiteur` });
-                return;
-            }
-            const userUsecase = new UserUsecase(AppDataSource);
+            const adherentUsecase = new AdherentUsecase(AppDataSource);
 
-            if(await userUsecase.verifUser(+req.params.id, req.body.token) === false){
-                res.status(400).send({ "error": `Bad user` });
-                return;
-            } 
-
-            const validationResult = userIdValidation.validate(req.params);
+            const validationResult = adherentIdValidation.validate(req.params);
 
             if (validationResult.error) {
                 res.status(400).send(generateValidationErrorMessage(validationResult.error.details));
                 return;
             }
 
-            const updatedUser = await userUsecase.updateUser(
-                updateUserRequest.id,
-                { ...updateUserRequest }
+            const updatedAdherent = await adherentUsecase.updateAdherent(
+                updateAdherentRequest.id,
+                { ...updateAdherentRequest }
             );
 
-
-            if (updatedUser === null) {
-                res.status(404).send({ "error": `User ${updateUserRequest.id} not found` });
+            if (updatedAdherent === null) {
+                res.status(404).send({ "error": `Adherent ${updateAdherentRequest.id} not found` });
                 return;
             }
 
-            if (updatedUser === "No update provided") {
+            if (updatedAdherent === "No update provided") {
                 res.status(400).send({ "error": `No update provided` });
                 return;
             }
 
-
-
-            res.status(200).send(updatedUser);
+            res.status(200).send(updatedAdherent);
         } catch (error) {
             console.log(error);
             res.status(500).send({ error: "Internal error" });

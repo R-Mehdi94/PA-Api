@@ -23,9 +23,11 @@ import { VoteHandler } from "./vote";
 import { DossierHandler } from "./dossier";
 import { AideProjetHandler } from "./aideProjet";
 import { AutreDemandeHandler } from "./autreDemande";
-import Chat from "./chat";
 import { EvenementUserHandler } from "./evenementUser";
 import { EvenementRessourceHandler } from "./evenementRessource";
+import { AdherentHandler } from "./adhrents/adherent";
+import { CotisationHandler } from "./cotisation";
+import { AdherentHandlerAuthentication } from "./adhrents/adherentAuthentication";
 
 
 export const initRoutes = (app: express.Express) => {
@@ -58,9 +60,11 @@ export const initRoutes = (app: express.Express) => {
     DossierHandler(app)
     AideProjetHandler(app)
     AutreDemandeHandler(app)
-    Chat(app)
     EvenementUserHandler(app)
     EvenementRessourceHandler(app)
+    AdherentHandlerAuthentication(app)
+    AdherentHandler(app)
+    CotisationHandler(app)
 
     app.use(invalidPathHandler);
 }

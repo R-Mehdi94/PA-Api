@@ -28,7 +28,7 @@ export const authMiddlewareAll = async (req: Request, res: Response, next: NextF
         return res.status(403).json({"error": "Access Forbidden"});
     }
 
-    if (tokenFound.user.role !== "Adherent" && tokenFound.user.role !== "Administrateur") {
+    if (tokenFound.user.role !== "Utilisateur" && tokenFound.user.role !== "Administrateur") {
         return res.status(403).json({"error": "Access Denied: User role required"});
     }
     
@@ -42,6 +42,36 @@ export const authMiddlewareAll = async (req: Request, res: Response, next: NextF
 }
 
 
+export const authMiddlewareAdherent = async (req: Request, res: Response, next: NextFunction) => {
+    
+    
+    const authHeader = req.headers['authorization'];
+    if (!authHeader) return res.status(401).json({"error": "Unauthorized"});
+
+    const token = authHeader.split(' ')[1];
+    if (token === null) return res.status(401).json({"error": "Unauthorized"});
+
+    const tokenRepo = AppDataSource.getRepository(Token)
+
+    const tokenFound = await tokenRepo
+    .createQueryBuilder("token")
+    .innerJoinAndSelect("token.adherent", "adherent")
+    .where("token.token = :token", { token })
+    .getOne();
+
+    if (!tokenFound) {
+        return res.status(403).json({"error": "Access Forbidden"})
+    }
+
+    
+    const secret = process.env.JWT_SECRET ?? ""
+
+    verify(token, secret, (err, user) => {
+        if (err) return res.status(403).json({"error": "Access Forbidden"});
+        (req as any).user = user;
+        next();
+    });
+}
 
 export const authMiddlewareAdminstrateur = async (req: Request, res: Response, next: NextFunction) => {
     
@@ -78,7 +108,7 @@ export const authMiddlewareAdminstrateur = async (req: Request, res: Response, n
     });
 }
 
-export const authMiddlewareAdherent = async (req: Request, res: Response, next: NextFunction) => {
+export const authMiddlewareUtilisateur = async (req: Request, res: Response, next: NextFunction) => {
     
     
     const authHeader = req.headers['authorization'];
@@ -100,7 +130,7 @@ export const authMiddlewareAdherent = async (req: Request, res: Response, next: 
         return res.status(403).json({"error": "Access Forbidden"});
     }
 
-    if (tokenFound.user.role !== "Adherent") {
+    if (tokenFound.user.role !== "Utilisateur") {
         return res.status(403).json({"error": "Access Denied: User role required"});
     }
     

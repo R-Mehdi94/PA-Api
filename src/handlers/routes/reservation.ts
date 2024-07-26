@@ -51,7 +51,7 @@ export const ReservationHandler = (app: express.Express) => {
 
         const userRepository = AppDataSource.getRepository(User);
         const user = await userRepository.findOneBy({ id: req.body.user})
-        if(user?.role !== "Administrateur" && user?.role !== "Adherent"){
+        if(user?.role !== "Administrateur" && user?.role !== "Utilisateur"){
             res.status(400).send({ error: "Administrateur ou Adherent requis" })
             return
         }
@@ -136,7 +136,7 @@ export const ReservationHandler = (app: express.Express) => {
         if(UpdateReservationRequest.user){
             const userRepository = AppDataSource.getRepository(User);
             const user = await userRepository.findOneBy({ id: req.body.user})
-            if(user?.role !== "Administrateur" && user?.role !== "Adherent"){
+            if(user?.role !== "Administrateur" && user?.role !== "Utilisateur"){
                 res.status(400).send({ error: "Administrateur ou Adherent requis" })
                 return
             }

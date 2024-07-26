@@ -42,13 +42,18 @@ class InscriptionUsecase {
     listInscriptions(listInscriptionRequest) {
         return __awaiter(this, void 0, void 0, function* () {
             const query = this.db.createQueryBuilder(inscription_1.Inscription, 'inscription');
-            if (listInscriptionRequest.emailVisiteur) {
-                query.andWhere("inscription.emailVisiteur = :emailVisiteur", { emailVisiteur: listInscriptionRequest.emailVisiteur });
-            }
             if (listInscriptionRequest.evenement) {
                 query.andWhere("inscription.evenementId = :evenement", { evenement: listInscriptionRequest.evenement });
             }
+            if (listInscriptionRequest.visiteur) {
+                query.andWhere("inscription.visiteurId = :visiteur", { visiteur: listInscriptionRequest.visiteur });
+            }
+            if (listInscriptionRequest.adherent) {
+                query.andWhere("inscription.adherentId = :adherent", { adherent: listInscriptionRequest.adherent });
+            }
             query.leftJoinAndSelect('inscription.evenement', 'evenement')
+                .leftJoinAndSelect('inscription.visiteur', 'visiteur')
+                .leftJoinAndSelect('inscription.adherent', 'adherent')
                 .skip((listInscriptionRequest.page - 1) * listInscriptionRequest.limit)
                 .take(listInscriptionRequest.limit);
             const [Inscriptions, totalCount] = yield query.getManyAndCount();
@@ -62,6 +67,8 @@ class InscriptionUsecase {
         return __awaiter(this, void 0, void 0, function* () {
             const query = this.db.createQueryBuilder(inscription_1.Inscription, 'inscription')
                 .leftJoinAndSelect('inscription.evenement', 'evenement')
+                .leftJoinAndSelect('inscription.visiteur', 'visiteur')
+                .leftJoinAndSelect('inscription.adherent', 'adherent')
                 .where("inscription.id = :id", { id: id });
             const inscription = yield query.getOne();
             if (!inscription) {
@@ -72,19 +79,22 @@ class InscriptionUsecase {
         });
     }
     updateInscription(id_1, _a) {
-        return __awaiter(this, arguments, void 0, function* (id, { emailVisiteur, evenement }) {
+        return __awaiter(this, arguments, void 0, function* (id, { evenement, visiteur, adherent }) {
             const repo = this.db.getRepository(inscription_1.Inscription);
             const inscriptionFound = yield repo.findOneBy({ id });
             if (inscriptionFound === null)
                 return null;
-            if (emailVisiteur === undefined && evenement === undefined) {
+            if (evenement === undefined && visiteur === undefined && adherent === undefined) {
                 return "No changes";
-            }
-            if (emailVisiteur) {
-                inscriptionFound.emailVisiteur = emailVisiteur;
             }
             if (evenement) {
                 inscriptionFound.evenement = evenement;
+            }
+            if (visiteur) {
+                inscriptionFound.visiteur = visiteur;
+            }
+            if (adherent) {
+                inscriptionFound.adherent = adherent;
             }
             const inscriptionUpdate = yield repo.save(inscriptionFound);
             return inscriptionUpdate;

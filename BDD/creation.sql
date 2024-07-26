@@ -11,16 +11,30 @@ CREATE TABLE user (
     motDePasse VARCHAR(255),
     profession VARCHAR(255),
     numTel VARCHAR(10),
-    role ENUM('Administrateur', 'Adherent') NOT NULL,
+    role ENUM('Administrateur', 'Utilisateur') NOT NULL,
     dateInscription TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     estBenevole BOOLEAN DEFAULT FALSE,
     estEnLigne BOOLEAN DEFAULT FALSE
 );
 
 CREATE TABLE visiteur (
+    id INT AUTO_INCREMENT PRIMARY KEY,
     nom VARCHAR(100) NOT NULL,
     prenom VARCHAR(100) NOT NULL,
-    email VARCHAR(255) UNIQUE NOT NULL PRIMARY KEY,
+    email VARCHAR(255) UNIQUE NOT NULL,
+    age INT,
+    numTel VARCHAR(10),
+    profession VARCHAR(255),
+    dateInscription TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE (email)
+);
+
+CREATE TABLE adherent (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nom VARCHAR(100) NOT NULL,
+    prenom VARCHAR(100) NOT NULL,
+    email VARCHAR(255) UNIQUE NOT NULL,
+    motDePasse VARCHAR(255),
     age INT,
     numTel VARCHAR(10),
     adresse VARCHAR(255),
@@ -28,10 +42,21 @@ CREATE TABLE visiteur (
     estBenevole BOOLEAN DEFAULT FALSE,
     dateInscription TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     parrainId INT,
+    estBanie BOOLEAN DEFAULT FALSE,
     UNIQUE (email),
     FOREIGN KEY (parrainId) REFERENCES user(id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
+CREATE TABLE cotisation (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    userId INT,
+    adherentId INT,
+    type ENUM('cadre','etudiant','chefEntreprise','autre'),
+    date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    Ajours BOOLEAN DEFAULT TRUE,
+    FOREIGN KEY (userId) REFERENCES user(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (adherentId) REFERENCES adherent(id) ON DELETE CASCADE ON UPDATE CASCADE
+);
 
 CREATE TABLE fonctionnalite (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -99,10 +124,12 @@ CREATE TABLE evenement_ressource (
 
 CREATE TABLE inscription (
     id INT AUTO_INCREMENT,
-    emailVisiteur VARCHAR(255) NOT NULL,
+    visiteurId INT,
+    adherentId INT,
     evenementId INT NOT NULL,
     PRIMARY KEY (id),
-    UNIQUE (emailVisiteur),
+    FOREIGN KEY (visiteurId) REFERENCES visiteur(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (adherentId) REFERENCES adherent(id) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY (evenementId) REFERENCES evenement(id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
@@ -183,7 +210,9 @@ CREATE TABLE token (
     id INT AUTO_INCREMENT PRIMARY KEY,
     token VARCHAR(255) NOT NULL,
     blobName VARCHAR(255),
-    userId INT REFERENCES user(id) ON DELETE CASCADE ON UPDATE CASCADE
+    userId INT REFERENCES user(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    adherentId INT REFERENCES adherent(id) ON DELETE CASCADE ON UPDATE CASCADE
+
 );
 
 CREATE TABLE dossier (

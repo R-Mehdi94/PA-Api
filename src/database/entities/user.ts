@@ -3,16 +3,16 @@ import "reflect-metadata";
 import { Token } from "./token";
 import { Tache } from "./tache";
 import { ParrainageDemande } from "./parrainageDemande";
-import { Visiteur } from "./visiteur";
 import { ParticipationAG } from "./participationAG";
 import { Vote } from "./vote";
 import { Dossier } from "./dossier";
-import { EvenementUser } from "./evenementUser"; // Importez la nouvelle entité
+import { EvenementUser } from "./evenementUser"; 
+import { Adherent } from "./adherent";
+import { Cotisation } from "./cotisation";
 
 export enum UserRole {
-    Visiteur = "Visiteur",
     Administrateur = "Administrateur",
-    Adherent = "Adherent"
+    Utilisateur = "Utilisateur"
 }
 
 @Entity()
@@ -61,11 +61,14 @@ export class User {
     @OneToMany(() => ParrainageDemande, parrainageDemandes => parrainageDemandes.parrain)
     parrainageDemandes: ParrainageDemande[];
 
-    @OneToMany(() => Visiteur, visiteurs => visiteurs.parrain)
-    parraine: Visiteur[];
+    @OneToMany(() => Adherent, adherents => adherents.parrain)
+    parraine: Adherent[];
 
     @OneToMany(() => Token, token => token.user)
     tokens: Token[];
+
+    @OneToMany(() => Cotisation, cotisations => cotisations.user)
+    cotisations: Cotisation[];
 
     @OneToMany(() => ParticipationAG, participationAG => participationAG.user)
     participationsAg: ParticipationAG[];
@@ -79,7 +82,7 @@ export class User {
     @OneToMany(() => EvenementUser, evenementUser => evenementUser.user)
     evenementUsers: EvenementUser[]; 
 
-    constructor(id: number, nom: string, prenom: string, email: string, numTel: string, motDePasse: string, profession: string, role: UserRole, dateInscription: Date, estBenevole: boolean, taches: Tache[], parrainageDemandes: ParrainageDemande[], parraine: Visiteur[], tokens: Token[], participationsAg: ParticipationAG[], votes: Vote[], dossiers: Dossier[], evenementUsers: EvenementUser[]) {
+    constructor(id: number, nom: string, prenom: string, email: string, numTel: string, motDePasse: string, profession: string, role: UserRole, dateInscription: Date, estBenevole: boolean, taches: Tache[], parrainageDemandes: ParrainageDemande[], parraine: Adherent[], tokens: Token[], participationsAg: ParticipationAG[], votes: Vote[], dossiers: Dossier[], evenementUsers: EvenementUser[], cotisations: Cotisation[]) {
         this.id = id;
         this.nom = nom;
         this.prenom = prenom;
@@ -99,5 +102,7 @@ export class User {
         this.votes = votes;
         this.dossiers = dossiers;
         this.evenementUsers = evenementUsers;
+        this.cotisations = cotisations;
+
     }
 }

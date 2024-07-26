@@ -15,19 +15,19 @@ require("reflect-metadata");
 const token_1 = require("./token");
 const tache_1 = require("./tache");
 const parrainageDemande_1 = require("./parrainageDemande");
-const visiteur_1 = require("./visiteur");
 const participationAG_1 = require("./participationAG");
 const vote_1 = require("./vote");
 const dossier_1 = require("./dossier");
-const evenementUser_1 = require("./evenementUser"); // Importez la nouvelle entité
+const evenementUser_1 = require("./evenementUser");
+const adherent_1 = require("./adherent");
+const cotisation_1 = require("./cotisation");
 var UserRole;
 (function (UserRole) {
-    UserRole["Visiteur"] = "Visiteur";
     UserRole["Administrateur"] = "Administrateur";
-    UserRole["Adherent"] = "Adherent";
+    UserRole["Utilisateur"] = "Utilisateur";
 })(UserRole || (exports.UserRole = UserRole = {}));
 let User = class User {
-    constructor(id, nom, prenom, email, numTel, motDePasse, profession, role, dateInscription, estBenevole, taches, parrainageDemandes, parraine, tokens, participationsAg, votes, dossiers, evenementUsers) {
+    constructor(id, nom, prenom, email, numTel, motDePasse, profession, role, dateInscription, estBenevole, taches, parrainageDemandes, parraine, tokens, participationsAg, votes, dossiers, evenementUsers, cotisations) {
         this.id = id;
         this.nom = nom;
         this.prenom = prenom;
@@ -47,6 +47,7 @@ let User = class User {
         this.votes = votes;
         this.dossiers = dossiers;
         this.evenementUsers = evenementUsers;
+        this.cotisations = cotisations;
     }
 };
 exports.User = User;
@@ -108,13 +109,17 @@ __decorate([
     __metadata("design:type", Array)
 ], User.prototype, "parrainageDemandes", void 0);
 __decorate([
-    (0, typeorm_1.OneToMany)(() => visiteur_1.Visiteur, visiteurs => visiteurs.parrain),
+    (0, typeorm_1.OneToMany)(() => adherent_1.Adherent, adherents => adherents.parrain),
     __metadata("design:type", Array)
 ], User.prototype, "parraine", void 0);
 __decorate([
     (0, typeorm_1.OneToMany)(() => token_1.Token, token => token.user),
     __metadata("design:type", Array)
 ], User.prototype, "tokens", void 0);
+__decorate([
+    (0, typeorm_1.OneToMany)(() => cotisation_1.Cotisation, cotisations => cotisations.user),
+    __metadata("design:type", Array)
+], User.prototype, "cotisations", void 0);
 __decorate([
     (0, typeorm_1.OneToMany)(() => participationAG_1.ParticipationAG, participationAG => participationAG.user),
     __metadata("design:type", Array)
@@ -133,5 +138,5 @@ __decorate([
 ], User.prototype, "evenementUsers", void 0);
 exports.User = User = __decorate([
     (0, typeorm_1.Entity)(),
-    __metadata("design:paramtypes", [Number, String, String, String, String, String, String, String, Date, Boolean, Array, Array, Array, Array, Array, Array, Array, Array])
+    __metadata("design:paramtypes", [Number, String, String, String, String, String, String, String, Date, Boolean, Array, Array, Array, Array, Array, Array, Array, Array, Array])
 ], User);

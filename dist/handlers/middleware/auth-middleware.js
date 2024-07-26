@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.authMiddlewareAdherent = exports.authMiddlewareAdminstrateur = exports.authMiddlewareAll = void 0;
+exports.authMiddlewareUtilisateur = exports.authMiddlewareAdminstrateur = exports.authMiddlewareAdherent = exports.authMiddlewareAll = void 0;
 const database_1 = require("../../database/database");
 const token_1 = require("../../database/entities/token");
 const jsonwebtoken_1 = require("jsonwebtoken");
@@ -30,7 +30,7 @@ const authMiddlewareAll = (req, res, next) => __awaiter(void 0, void 0, void 0, 
     if (!tokenFound) {
         return res.status(403).json({ "error": "Access Forbidden" });
     }
-    if (tokenFound.user.role !== "Adherent" && tokenFound.user.role !== "Administrateur") {
+    if (tokenFound.user.role !== "Utilisateur" && tokenFound.user.role !== "Administrateur") {
         return res.status(403).json({ "error": "Access Denied: User role required" });
     }
     const secret = (_a = process.env.JWT_SECRET) !== null && _a !== void 0 ? _a : "";
@@ -42,8 +42,34 @@ const authMiddlewareAll = (req, res, next) => __awaiter(void 0, void 0, void 0, 
     });
 });
 exports.authMiddlewareAll = authMiddlewareAll;
-const authMiddlewareAdminstrateur = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+const authMiddlewareAdherent = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     var _b;
+    const authHeader = req.headers['authorization'];
+    if (!authHeader)
+        return res.status(401).json({ "error": "Unauthorized" });
+    const token = authHeader.split(' ')[1];
+    if (token === null)
+        return res.status(401).json({ "error": "Unauthorized" });
+    const tokenRepo = database_1.AppDataSource.getRepository(token_1.Token);
+    const tokenFound = yield tokenRepo
+        .createQueryBuilder("token")
+        .innerJoinAndSelect("token.adherent", "adherent")
+        .where("token.token = :token", { token })
+        .getOne();
+    if (!tokenFound) {
+        return res.status(403).json({ "error": "Access Forbidden" });
+    }
+    const secret = (_b = process.env.JWT_SECRET) !== null && _b !== void 0 ? _b : "";
+    (0, jsonwebtoken_1.verify)(token, secret, (err, user) => {
+        if (err)
+            return res.status(403).json({ "error": "Access Forbidden" });
+        req.user = user;
+        next();
+    });
+});
+exports.authMiddlewareAdherent = authMiddlewareAdherent;
+const authMiddlewareAdminstrateur = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    var _c;
     const authHeader = req.headers['authorization'];
     if (!authHeader)
         return res.status(401).json({ "error": "Unauthorized" });
@@ -62,7 +88,7 @@ const authMiddlewareAdminstrateur = (req, res, next) => __awaiter(void 0, void 0
     if (tokenFound.user.role !== "Administrateur") {
         return res.status(403).json({ "error": "Access Denied: Administrator role required" });
     }
-    const secret = (_b = process.env.JWT_SECRET) !== null && _b !== void 0 ? _b : "";
+    const secret = (_c = process.env.JWT_SECRET) !== null && _c !== void 0 ? _c : "";
     (0, jsonwebtoken_1.verify)(token, secret, (err, user) => {
         if (err)
             return res.status(403).json({ "error": "Access Forbidden" });
@@ -71,8 +97,8 @@ const authMiddlewareAdminstrateur = (req, res, next) => __awaiter(void 0, void 0
     });
 });
 exports.authMiddlewareAdminstrateur = authMiddlewareAdminstrateur;
-const authMiddlewareAdherent = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    var _c;
+const authMiddlewareUtilisateur = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    var _d;
     const authHeader = req.headers['authorization'];
     if (!authHeader)
         return res.status(401).json({ "error": "Unauthorized" });
@@ -88,10 +114,10 @@ const authMiddlewareAdherent = (req, res, next) => __awaiter(void 0, void 0, voi
     if (!tokenFound) {
         return res.status(403).json({ "error": "Access Forbidden" });
     }
-    if (tokenFound.user.role !== "Adherent") {
+    if (tokenFound.user.role !== "Utilisateur") {
         return res.status(403).json({ "error": "Access Denied: User role required" });
     }
-    const secret = (_c = process.env.JWT_SECRET) !== null && _c !== void 0 ? _c : "";
+    const secret = (_d = process.env.JWT_SECRET) !== null && _d !== void 0 ? _d : "";
     (0, jsonwebtoken_1.verify)(token, secret, (err, user) => {
         if (err)
             return res.status(403).json({ "error": "Access Forbidden" });
@@ -99,4 +125,4 @@ const authMiddlewareAdherent = (req, res, next) => __awaiter(void 0, void 0, voi
         next();
     });
 });
-exports.authMiddlewareAdherent = authMiddlewareAdherent;
+exports.authMiddlewareUtilisateur = authMiddlewareUtilisateur;

@@ -1,21 +1,31 @@
 source creation.sql
 
 INSERT INTO user (nom, prenom, email, motDePasse, profession, numTel, role, dateInscription, estBenevole) VALUES
-('Dupont', 'Jean', 'jean.dupont@email.com', '$2b$10$JuqVnm5ov5EBsi158eE4FOJFVXjnkOCqrc5k2s87M.ya2dwOTS.wG', 'Ingénieur informatique', '0612345678', 'Adherent', NOW(), TRUE),
+('Dupont', 'Jean', 'jean.dupont@email.com', '$2b$10$JuqVnm5ov5EBsi158eE4FOJFVXjnkOCqrc5k2s87M.ya2dwOTS.wG', 'Ingénieur informatique', '0612345678', 'Utilisateur', NOW(), TRUE),
 ('Martin', 'Alice', 'alice.martin@email.com', '$2b$10$F4zka3au8kLQG1rAD2Oq5eEd9P1Ru0xzcW1zWT51odT7VFOSKJs/6', 'Plombier', '0712345678', 'Administrateur', NOW(), FALSE);
 
-INSERT INTO visiteur (nom, prenom, email, age, numTel, adresse, profession, estBenevole, dateInscription, parrainId)
-VALUES
-('Dupont', 'Jean', 'jean.dupont@example.com', 34, '0123456789', '123 Rue Principale, Paris', 'Ingénieur', TRUE, '2023-06-01', 1),
-('Martin', 'Sophie', 'sophie.martin@example.com', 28, '0987654321', '456 Avenue des Champs, Lyon', 'Médecin', FALSE, '2023-06-02', 2),
-('Bernard', 'Alice', 'alice.bernard@example.com', 40, '0213456789', '789 Boulevard de la République, Marseille', 'Professeur', TRUE, '2023-06-03', 2),
-('Lefevre', 'Pierre', 'pierre.lefevre@example.com', 22, '0321456789', '321 Rue de la Paix, Lille', 'Étudiant', FALSE, '2023-06-04', 1),
-('Moreau', 'Claire', 'claire.moreau@example.com', 30, '0432156789', '654 Rue de la Liberté, Bordeaux', 'Designer', TRUE, '2023-06-05', 2),
-('Roux', 'Luc', 'luc.roux@example.com', 36, '0543216789', '987 Avenue de la Victoire, Toulouse', 'Commercial', FALSE, '2023-06-06', 2),
-('Petit', 'Emilie', 'emilie.petit@example.com', 25, '0654321789', '159 Rue des Fleurs, Nice', 'Architecte', TRUE, '2023-06-07', 1),
-('Durand', 'Julien', 'julien.durand@example.com', 29, '0765432178', '753 Avenue de la Gare, Strasbourg', 'Développeur', FALSE, '2023-06-08', 2),
-('Girard', 'Nathalie', 'nathalie.girard@example.com', 32, '0876543217', '951 Boulevard Saint-Germain, Rennes', 'Avocate', TRUE, '2023-06-09', 1),
-('Morel', 'Hugo', 'hugo.morel@example.com', 38, '0987654321', '357 Rue de la République, Montpellier', 'Journaliste', FALSE, '2023-06-10', 1);
+INSERT INTO visiteur (nom, prenom, email, age, numTel, profession)
+VALUES 
+('Dupont', 'Jean', 'jean.dupont@example.com', 30, '0123456789', 'Ingenieur'),
+('Martin', 'Marie', 'marie.martin@example.com', 25, '0987654321', 'Etudiante'),
+('Petit', 'Paul', 'paul.petit@example.com', 40, '0612345678', 'Medecin');
+
+INSERT INTO adherent (nom, prenom, email, motDePasse, age, numTel, adresse, profession, estBenevole, parrainId, estBanie)
+VALUES 
+('Dupont', 'Claire', 'claire.dupont@example.com', '$2b$10$JuqVnm5ov5EBsi158eE4FOJFVXjnkOCqrc5k2s87M.ya2dwOTS.wG', 35, '0623456789', '123 Rue de Paris', 'Professeur', TRUE, 1, FALSE),
+('Durand', 'Luc', 'luc.durand@example.com', '$2b$10$JuqVnm5ov5EBsi158eE4FOJFVXjnkOCqrc5k2s87M.ya2dwOTS.wG', 28, '0634567890', '456 Avenue de Lyon', 'Designer', FALSE, 2, FALSE),
+('Leroy', 'Anne', 'anne.leroy@example.com', '$2b$10$JuqVnm5ov5EBsi158eE4FOJFVXjnkOCqrc5k2s87M.ya2dwOTS.wG', 32, '0645678901', '789 Boulevard de Marseille', 'Avocate', TRUE, 2, TRUE);
+
+INSERT INTO cotisation (adherentId, type)
+VALUES 
+(1, 'cadre'),
+(2, 'etudiant'),
+(3, 'autre');
+
+INSERT INTO cotisation (userId, type)
+VALUES 
+(1, 'cadre'),
+(2, 'etudiant');
 
 
 
@@ -52,10 +62,14 @@ INSERT INTO evenement (nom, date, description, lieu, nbPlace,estReserve) VALUES
 ('Promenade en vélo', NOW() + INTERVAL 1 MONTH, 'Promenade en vélo sur Paris !', 'Parc de Luxembourg',3,true),
 ('Conférence sur l éducation', NOW() + INTERVAL 2 MONTH, 'Conférence sur les échanges éducatifs', 'Amphithéâtre Central',15,false);
 
-/*INSERT INTO inscription (emailVisiteur, evenementId) VALUES
-("test@gmail1.com", 1),
-("test@gmail2.com", 1),
-("test@gmail3.com", 2);*/
+INSERT INTO inscription (visiteurId, evenementId)
+VALUES 
+(1, 2),
+(2, 1);
+INSERT INTO inscription (adherentId, evenementId)
+VALUES 
+(1, 2),
+(2, 1);
 
 INSERT INTO ag (nom, date, description, type, quorum) VALUES
 ('AG Annuelle 2024', NOW() + INTERVAL 3 MONTH, 'Discussion sur les bilans et projets futurs', 'Ordinaire', 15),

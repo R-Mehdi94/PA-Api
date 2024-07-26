@@ -1,9 +1,10 @@
-import express, { Request, Response } from "express";
-import { AppDataSource } from "../../database/database";
-import { Visiteur } from "../../database/entities/visiteur";
-import { VisiteurUsecase } from "../../domain/visiteur-usecase";
-import { generateValidationErrorMessage } from "../validators/generate-validation-message";
-import { listVisiteurValidation, createVisiteurValidation, updateVisiteurValidation, visiteurEmailValidation, verifVisiteur } from "../validators/visiteur-validator";
+import express, { Request, Response } from 'express';
+import { AppDataSource } from '../../database/database';
+import { Visiteur } from '../../database/entities/visiteur';
+import { VisiteurUsecase } from '../../domain/visiteur-usecase';
+import { generateValidationErrorMessage } from '../validators/generate-validation-message';
+import { listVisiteurValidation, createVisiteurValidation, visiteurIdValidation, updateVisiteurValidation } from '../validators/visiteur-validator';
+
 
 export const VisiteurHandler = (app: express.Express) => {
     app.get("/visiteurs", async (req: Request, res: Response) => {
@@ -31,46 +32,6 @@ export const VisiteurHandler = (app: express.Express) => {
         }
     });
 
-    app.post("/verifVisiteur", async (req: Request, res: Response) => {
-
-        console.log(req.body)
-        const validation = verifVisiteur.validate(req.body);
-
-        if (validation.error) {
-            res.status(400).send(generateValidationErrorMessage(validation.error.details));
-            return;
-        }
-
-        try {
-            const visiteurUsecase = new VisiteurUsecase(AppDataSource);
-            const verifVisiteur = await visiteurUsecase.verifVisiteur(validation.value.email, validation.value.numTel)
-
-            if(verifVisiteur[0]['count(*)'] > 0){
-                res.status(200).send({ response: "Visiteur existant" });
-                return;
-            }
-            res.status(201).send({ response: "Visiteur non existant" });
-
-        } catch (error) {
-            console.log(error);
-            res.status(500).send({ error: "Internal error" });
-        }
-    });
-
-    app.post("/visiteursEmail", async (req: Request, res: Response) => {
-
-
-        try {
-            const visiteurUsecase = new VisiteurUsecase(AppDataSource);
-            const listVisiteurEmail = await visiteurUsecase.getVisiteurEmail()
-
-            res.status(200).send(listVisiteurEmail);
-        } catch (error) {
-            console.log(error);
-            res.status(500).send({ error: "Internal error" });
-        }
-    });
-
     app.post("/visiteurs", async (req: Request, res: Response) => {
         const validation = createVisiteurValidation.validate(req.body);
 
@@ -81,14 +42,6 @@ export const VisiteurHandler = (app: express.Express) => {
         const visiteurRequest = validation.value;
 
         const visiteurRepo = AppDataSource.getRepository(Visiteur);
-        const visiteurUsecase = new VisiteurUsecase(AppDataSource);
-
-        const emailExists = await visiteurUsecase.verifEmail(visiteurRequest.email);
-
-        if (emailExists[0].verif > 0) {
-            res.status(209).send({ "error": `Visiteur ${visiteurRequest.email} already exists` });
-            return;
-        }
 
         try {
             const visiteurCreated = await visiteurRepo.save(visiteurRequest);
@@ -99,20 +52,20 @@ export const VisiteurHandler = (app: express.Express) => {
         }
     });
 
-    app.delete("/visiteurs/:email", async (req: Request, res: Response) => {
+    app.delete("/visiteurs/:id", async (req: Request, res: Response) => {
         try {
-            const validationResult = visiteurEmailValidation.validate(req.params);
+            const validationResult = visiteurIdValidation.validate(req.params);
 
             if (validationResult.error) {
                 res.status(400).send(generateValidationErrorMessage(validationResult.error.details));
                 return;
             }
-            const visiteurEmail = validationResult.value;
+            const visiteurId = validationResult.value;
 
             const visiteurRepository = AppDataSource.getRepository(Visiteur);
-            const visiteur = await visiteurRepository.findOneBy({ email: visiteurEmail.email });
+            const visiteur = await visiteurRepository.findOneBy({ id: visiteurId.id });
             if (visiteur === null) {
-                res.status(404).send({ "error": `Visiteur ${visiteurEmail.email} not found` });
+                res.status(404).send({ "error": `Visiteur ${visiteurId.id} not found` });
                 return;
             }
 
@@ -124,20 +77,20 @@ export const VisiteurHandler = (app: express.Express) => {
         }
     });
 
-    app.get("/visiteurs/:email", async (req: Request, res: Response) => {
+    app.get("/visiteurs/:id", async (req: Request, res: Response) => {
         try {
-            const validationResult = visiteurEmailValidation.validate(req.params);
+            const validationResult = visiteurIdValidation.validate(req.params);
 
             if (validationResult.error) {
                 res.status(400).send(generateValidationErrorMessage(validationResult.error.details));
                 return;
             }
-            const visiteurEmail = validationResult.value;
+            const visiteurId = validationResult.value;
 
             const visiteurUsecase = new VisiteurUsecase(AppDataSource);
-            const visiteur = await visiteurUsecase.getOneVisiteur(visiteurEmail.email);
+            const visiteur = await visiteurUsecase.getOneVisiteur(visiteurId.id);
             if (visiteur === null) {
-                res.status(404).send({ "error": `Visiteur ${visiteurEmail.email} not found` });
+                res.status(404).send({ "error": `Visiteur ${visiteurId.id} not found` });
                 return;
             }
             res.status(200).send(visiteur);
@@ -147,7 +100,7 @@ export const VisiteurHandler = (app: express.Express) => {
         }
     });
 
-    app.patch("/visiteurs/:email", async (req: Request, res: Response) => {
+    app.patch("/visiteurs/:id", async (req: Request, res: Response) => {
         const validation = updateVisiteurValidation.validate({ ...req.params, ...req.body });
 
         if (validation.error) {
@@ -160,7 +113,7 @@ export const VisiteurHandler = (app: express.Express) => {
         try {
             const visiteurUsecase = new VisiteurUsecase(AppDataSource);
 
-            const validationResult = visiteurEmailValidation.validate(req.params);
+            const validationResult = visiteurIdValidation.validate(req.params);
 
             if (validationResult.error) {
                 res.status(400).send(generateValidationErrorMessage(validationResult.error.details));
@@ -168,12 +121,12 @@ export const VisiteurHandler = (app: express.Express) => {
             }
 
             const updatedVisiteur = await visiteurUsecase.updateVisiteur(
-                updateVisiteurRequest.email,
+                updateVisiteurRequest.id,
                 { ...updateVisiteurRequest }
             );
 
             if (updatedVisiteur === null) {
-                res.status(404).send({ "error": `Visiteur ${updateVisiteurRequest.email} not found` });
+                res.status(404).send({ "error": `Visiteur ${updateVisiteurRequest.id} not found` });
                 return;
             }
 

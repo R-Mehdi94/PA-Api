@@ -13,12 +13,14 @@ exports.Token = void 0;
 const typeorm_1 = require("typeorm");
 const user_1 = require("./user");
 const dossier_1 = require("./dossier");
+const adherent_1 = require("./adherent");
 let Token = class Token {
-    constructor(id, token, blobName, user, dossiers) {
+    constructor(id, token, blobName, user, dossiers, adherent) {
         this.id = id;
         this.token = token;
         this.blobName = blobName;
         this.user = user;
+        this.adherent = adherent;
         this.dossiers = dossiers;
     }
 };
@@ -40,10 +42,14 @@ __decorate([
     __metadata("design:type", user_1.User)
 ], Token.prototype, "user", void 0);
 __decorate([
+    (0, typeorm_1.ManyToOne)(() => adherent_1.Adherent, adherent => adherent.tokens),
+    __metadata("design:type", adherent_1.Adherent)
+], Token.prototype, "adherent", void 0);
+__decorate([
     (0, typeorm_1.OneToMany)(() => dossier_1.Dossier, dossier => dossier.token),
     __metadata("design:type", Array)
 ], Token.prototype, "dossiers", void 0);
 exports.Token = Token = __decorate([
     (0, typeorm_1.Entity)(),
-    __metadata("design:paramtypes", [Number, String, String, user_1.User, Array])
+    __metadata("design:paramtypes", [Number, String, String, user_1.User, Array, adherent_1.Adherent])
 ], Token);

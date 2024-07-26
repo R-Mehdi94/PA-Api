@@ -16,6 +16,10 @@ const user_usecase_1 = require("../../../domain/user-usecase");
 const generate_validation_message_1 = require("../../validators/generate-validation-message");
 const user_validator_1 = require("../../validators/user-validator");
 const bcrypt_1 = require("bcrypt");
+const auth_middleware_1 = require("../../middleware/auth-middleware");
+const adherent_validator_1 = require("../../validators/adherent-validator");
+const adherent_1 = require("../../../database/entities/adherent");
+const adherent_usecase_1 = require("../../../domain/adherent-usecase");
 const UserHandler = (app) => {
     app.post("/usersEmail", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         try {
@@ -28,7 +32,7 @@ const UserHandler = (app) => {
             res.status(500).send({ error: "Internal error" });
         }
     }));
-    app.get("/users/blobName/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    app.get("/users/blobName/:id", auth_middleware_1.authMiddlewareAll, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         try {
             const validationResult = user_validator_1.userIdValidation.validate(Object.assign(Object.assign({}, req.params), req.body));
             if (validationResult.error) {
@@ -99,7 +103,7 @@ const UserHandler = (app) => {
             res.status(500).send({ error: "Internal error" });
         }
     }));
-    app.delete("/users/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    app.delete("/users/:id", auth_middleware_1.authMiddlewareAll, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         try {
             const validationResult = user_validator_1.userIdValidation.validate(Object.assign(Object.assign({}, req.params), req.body));
             if (validationResult.error) {
@@ -107,9 +111,12 @@ const UserHandler = (app) => {
                 return;
             }
             const userUsecase = new user_usecase_1.UserUsecase(database_1.AppDataSource);
-            if ((yield userUsecase.verifUser(+req.params.id, req.body.token)) === false) {
-                res.status(400).send({ "error": `Bad user` });
-                return;
+            const user2 = yield database_1.AppDataSource.getRepository(user_1.User).findOneBy({ id: validationResult.value.id });
+            if ((user2 === null || user2 === void 0 ? void 0 : user2.role) !== "Administrateur") {
+                if ((yield userUsecase.verifUser(+req.params.id, req.body.token)) === false) {
+                    res.status(400).send({ "error": `Bad user` });
+                    return;
+                }
             }
             const userId = validationResult.value;
             const userRepository = database_1.AppDataSource.getRepository(user_1.User);
@@ -126,7 +133,7 @@ const UserHandler = (app) => {
             res.status(500).send({ error: "Internal error" });
         }
     }));
-    app.get("/users/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    app.get("/users/:id", auth_middleware_1.authMiddlewareAll, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         try {
             const validationResult = user_validator_1.userIdValidation.validate(Object.assign(Object.assign({}, req.params), req.body));
             if (validationResult.error) {
@@ -151,7 +158,7 @@ const UserHandler = (app) => {
             res.status(500).send({ error: "Internal error" });
         }
     }));
-    app.patch("/users/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    app.patch("/users/:id", auth_middleware_1.authMiddlewareAll, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         try {
             const validationResult = user_validator_1.updateUserValidation.validate(Object.assign(Object.assign({}, req.params), req.body));
             if (validationResult.error) {
@@ -186,38 +193,52 @@ const UserHandler = (app) => {
             res.status(500).send({ error: "Internal error" });
         }
     }));
-    app.patch("/visiteurs/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-        const validation = user_validator_1.updateUserValidation.validate(Object.assign(Object.assign({}, req.params), req.body));
-        if (validation.error) {
-            res.status(400).send((0, generate_validation_message_1.generateValidationErrorMessage)(validation.error.details));
-            return;
-        }
-        const updateUserRequest = validation.value;
+    app.delete("/adherentsUser/:id", auth_middleware_1.authMiddlewareAll, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         try {
-            if (updateUserRequest.role !== "visiteur") {
-                res.status(400).send({ "error": `User ${updateUserRequest.id} n'est pas un visiteur` });
-                return;
-            }
-            const userUsecase = new user_usecase_1.UserUsecase(database_1.AppDataSource);
-            if ((yield userUsecase.verifUser(+req.params.id, req.body.token)) === false) {
-                res.status(400).send({ "error": `Bad user` });
-                return;
-            }
-            const validationResult = user_validator_1.userIdValidation.validate(req.params);
+            const validationResult = adherent_validator_1.adherentIdValidationUser.validate(req.params);
             if (validationResult.error) {
                 res.status(400).send((0, generate_validation_message_1.generateValidationErrorMessage)(validationResult.error.details));
                 return;
             }
-            const updatedUser = yield userUsecase.updateUser(updateUserRequest.id, Object.assign({}, updateUserRequest));
-            if (updatedUser === null) {
-                res.status(404).send({ "error": `User ${updateUserRequest.id} not found` });
+            const adherentId = validationResult.value;
+            const adherentRepository = database_1.AppDataSource.getRepository(adherent_1.Adherent);
+            const adherent = yield adherentRepository.findOneBy({ id: adherentId.id });
+            if (adherent === null) {
+                res.status(404).send({ "error": `Adherent ${adherentId.id} not found` });
                 return;
             }
-            if (updatedUser === "No update provided") {
+            yield adherentRepository.remove(adherent);
+            res.status(200).send("Adherent supprimé avec succès");
+        }
+        catch (error) {
+            console.log(error);
+            res.status(500).send({ error: "Internal error" });
+        }
+    }));
+    app.patch("/adherentsUser/:id", auth_middleware_1.authMiddlewareAll, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        const validation = adherent_validator_1.updateAdherentValidationUser.validate(Object.assign(Object.assign({}, req.params), req.body));
+        if (validation.error) {
+            res.status(400).send((0, generate_validation_message_1.generateValidationErrorMessage)(validation.error.details));
+            return;
+        }
+        const updateAdherentRequest = validation.value;
+        try {
+            const adherentUsecase = new adherent_usecase_1.AdherentUsecase(database_1.AppDataSource);
+            const validationResult = adherent_validator_1.adherentIdValidation.validate(req.params);
+            if (validationResult.error) {
+                res.status(400).send((0, generate_validation_message_1.generateValidationErrorMessage)(validationResult.error.details));
+                return;
+            }
+            const updatedAdherent = yield adherentUsecase.updateAdherent(updateAdherentRequest.id, Object.assign({}, updateAdherentRequest));
+            if (updatedAdherent === null) {
+                res.status(404).send({ "error": `Adherent ${updateAdherentRequest.id} not found` });
+                return;
+            }
+            if (updatedAdherent === "No update provided") {
                 res.status(400).send({ "error": `No update provided` });
                 return;
             }
-            res.status(200).send(updatedUser);
+            res.status(200).send(updatedAdherent);
         }
         catch (error) {
             console.log(error);

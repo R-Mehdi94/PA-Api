@@ -1,7 +1,4 @@
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.initRoutes = void 0;
 const invalid_path_handler_1 = require("../errors/invalid-path-handler");
@@ -28,9 +25,11 @@ const vote_1 = require("./vote");
 const dossier_1 = require("./dossier");
 const aideProjet_1 = require("./aideProjet");
 const autreDemande_1 = require("./autreDemande");
-const chat_1 = __importDefault(require("./chat"));
 const evenementUser_1 = require("./evenementUser");
 const evenementRessource_1 = require("./evenementRessource");
+const adherent_1 = require("./adhrents/adherent");
+const cotisation_1 = require("./cotisation");
+const adherentAuthentication_1 = require("./adhrents/adherentAuthentication");
 const initRoutes = (app) => {
     app.get("/health", (req, res) => {
         res.send({ "message": "OP LE S" });
@@ -58,9 +57,11 @@ const initRoutes = (app) => {
     (0, dossier_1.DossierHandler)(app);
     (0, aideProjet_1.AideProjetHandler)(app);
     (0, autreDemande_1.AutreDemandeHandler)(app);
-    (0, chat_1.default)(app);
     (0, evenementUser_1.EvenementUserHandler)(app);
     (0, evenementRessource_1.EvenementRessourceHandler)(app);
+    (0, adherentAuthentication_1.AdherentHandlerAuthentication)(app);
+    (0, adherent_1.AdherentHandler)(app);
+    (0, cotisation_1.CotisationHandler)(app);
     app.use(invalid_path_handler_1.invalidPathHandler);
 };
 exports.initRoutes = initRoutes;

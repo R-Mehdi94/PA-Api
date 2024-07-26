@@ -1,14 +1,18 @@
 import Joi from "joi";
 import { Evenement } from "../../database/entities/evenement";
+import { Visiteur } from "../../database/entities/visiteur";
+import { Adherent } from "../../database/entities/adherent";
 
 export const createInscriptionValidation = Joi.object<CreateInscriptionValidationRequest>({
-    emailVisiteur: Joi.string().email().required(),
-    evenement: Joi.number().required()
-}).options({ abortEarly: false })
+    evenement: Joi.number().required(),
+    visiteur: Joi.number().required(),
+    adherent: Joi.number().required()
+});
 
 export interface CreateInscriptionValidationRequest {
-    emailVisiteur: string
     evenement: Evenement
+    visiteur: Visiteur
+    adherent: Adherent
 }
 
 export const deleteInscriptionValidationRequest = Joi.object<DeleteInscriptionValidationRequest>({
@@ -30,14 +34,16 @@ export interface InscriptionIdRequest {
 
 export const updateInscriptionValidation = Joi.object<UpdateInscriptionRequest>({
     id: Joi.number().required(),
-    emailVisiteur: Joi.string().email().optional(),
-    evenement: Joi.number().optional()
+    evenement: Joi.number().optional(),
+    visiteur: Joi.number().optional(),
+    adherent: Joi.number().optional()
 });
 
 export interface UpdateInscriptionRequest {
     id: number
-    emailVisiteur?: string
     evenement?: Evenement
+    visiteur?: Visiteur
+    adherent?: Adherent
 }
 
 
@@ -55,13 +61,15 @@ export interface VerifEmail {
 export const listInscriptionValidation = Joi.object<ListInscriptionRequest>({
     page: Joi.number().min(1).optional(),
     limit: Joi.number().min(1).optional(),
-    emailVisiteur: Joi.string().email().optional(),
-    evenement: Joi.number().optional()
+    evenement: Joi.number().optional(),
+    visiteur: Joi.number().optional(),
+    adherent: Joi.number().optional()
 });
 
 export interface ListInscriptionRequest {
     page: number
     limit: number
-    emailVisiteur?: string
     evenement?: number
+    visiteur?: number
+    adherent?: number
 }

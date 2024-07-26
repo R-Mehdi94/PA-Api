@@ -6,9 +6,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.listInscriptionValidation = exports.verifEmail = exports.updateInscriptionValidation = exports.inscriptionIdValidation = exports.deleteInscriptionValidationRequest = exports.createInscriptionValidation = void 0;
 const joi_1 = __importDefault(require("joi"));
 exports.createInscriptionValidation = joi_1.default.object({
-    emailVisiteur: joi_1.default.string().email().required(),
-    evenement: joi_1.default.number().required()
-}).options({ abortEarly: false });
+    evenement: joi_1.default.number().required(),
+    visiteur: joi_1.default.number().required(),
+    adherent: joi_1.default.number().required()
+});
 exports.deleteInscriptionValidationRequest = joi_1.default.object({
     emailVisiteur: joi_1.default.string().email().required(),
     evenement: joi_1.default.number().required()
@@ -18,8 +19,9 @@ exports.inscriptionIdValidation = joi_1.default.object({
 });
 exports.updateInscriptionValidation = joi_1.default.object({
     id: joi_1.default.number().required(),
-    emailVisiteur: joi_1.default.string().email().optional(),
-    evenement: joi_1.default.number().optional()
+    evenement: joi_1.default.number().optional(),
+    visiteur: joi_1.default.number().optional(),
+    adherent: joi_1.default.number().optional()
 });
 exports.verifEmail = joi_1.default.object({
     emailVisiteur: joi_1.default.string().email().required(),
@@ -28,6 +30,7 @@ exports.verifEmail = joi_1.default.object({
 exports.listInscriptionValidation = joi_1.default.object({
     page: joi_1.default.number().min(1).optional(),
     limit: joi_1.default.number().min(1).optional(),
-    emailVisiteur: joi_1.default.string().email().optional(),
-    evenement: joi_1.default.number().optional()
+    evenement: joi_1.default.number().optional(),
+    visiteur: joi_1.default.number().optional(),
+    adherent: joi_1.default.number().optional()
 });
