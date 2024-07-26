@@ -167,6 +167,7 @@ const UserHandler = (app) => {
             }
             const userUsecase = new user_usecase_1.UserUsecase(database_1.AppDataSource);
             let user = yield database_1.AppDataSource.getRepository(user_1.User).findOneBy({ id: validationResult.value.id });
+            console.log("ICIIIIIIIIIIIIIIIIIIIIIIIIIII", user === null || user === void 0 ? void 0 : user.role);
             if ((user === null || user === void 0 ? void 0 : user.role) !== "Administrateur") {
                 if ((yield userUsecase.verifUser(+req.params.id, req.body.token)) === false) {
                     res.status(400).send({ "error": `Bad user` });

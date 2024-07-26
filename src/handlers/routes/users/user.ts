@@ -198,6 +198,8 @@ export const UserHandler = (app: express.Express) => {
 
             let user = await AppDataSource.getRepository(User).findOneBy({ id: validationResult.value.id });
 
+            console.log("ICIIIIIIIIIIIIIIIIIIIIIIIIIII", user?.role);
+
             
             if(user?.role !== "Administrateur"){
                 if(await userUsecase.verifUser(+req.params.id, req.body.token) === false){
