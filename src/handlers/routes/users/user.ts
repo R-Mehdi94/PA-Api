@@ -4,6 +4,7 @@ import { User } from '../../../database/entities/user';
 import { UserUsecase } from '../../../domain/user-usecase';
 import { generateValidationErrorMessage } from '../../validators/generate-validation-message';
 import { listUserValidation, createUserValidation, userIdValidation, updateUserValidation} from '../../validators/user-validator';
+import { hash } from "bcrypt";
 
 
 export const UserHandler = (app: express.Express) => {
@@ -183,16 +184,27 @@ export const UserHandler = (app: express.Express) => {
     
             const userUsecase = new UserUsecase(AppDataSource);
 
-            if(await userUsecase.verifUser(+req.params.id, req.body.token) === false){
-                res.status(400).send({ "error": `Bad user` });
-                return;
-            } 
+            let user = await AppDataSource.getRepository(User).findOneBy({ id: validationResult.value.id });
+
+            
+            if(user?.role !== "Administrateur"){
+                if(await userUsecase.verifUser(+req.params.id, req.body.token) === false){
+                    res.status(400).send({ "error": `Bad user` });
+                    return;
+                } 
+            }
+
+            if(validationResult.value.motDePasse !== undefined){
+                validationResult.value.motDePasse = await hash(validationResult.value.motDePasse, 10);
+            }
+            
             const updateUserRequest = validationResult.value;
 
             const updatedUser = await userUsecase.updateUser(
                 updateUserRequest.id,
                 { ...updateUserRequest }
             );
+
 
 
             if (updatedUser === null) {

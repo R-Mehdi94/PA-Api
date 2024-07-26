@@ -15,6 +15,7 @@ const user_1 = require("../../../database/entities/user");
 const user_usecase_1 = require("../../../domain/user-usecase");
 const generate_validation_message_1 = require("../../validators/generate-validation-message");
 const user_validator_1 = require("../../validators/user-validator");
+const bcrypt_1 = require("bcrypt");
 const UserHandler = (app) => {
     app.post("/usersEmail", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         try {
@@ -158,9 +159,15 @@ const UserHandler = (app) => {
                 return;
             }
             const userUsecase = new user_usecase_1.UserUsecase(database_1.AppDataSource);
-            if ((yield userUsecase.verifUser(+req.params.id, req.body.token)) === false) {
-                res.status(400).send({ "error": `Bad user` });
-                return;
+            let user = yield database_1.AppDataSource.getRepository(user_1.User).findOneBy({ id: validationResult.value.id });
+            if ((user === null || user === void 0 ? void 0 : user.role) !== "Administrateur") {
+                if ((yield userUsecase.verifUser(+req.params.id, req.body.token)) === false) {
+                    res.status(400).send({ "error": `Bad user` });
+                    return;
+                }
+            }
+            if (validationResult.value.motDePasse !== undefined) {
+                validationResult.value.motDePasse = yield (0, bcrypt_1.hash)(validationResult.value.motDePasse, 10);
             }
             const updateUserRequest = validationResult.value;
             const updatedUser = yield userUsecase.updateUser(updateUserRequest.id, Object.assign({}, updateUserRequest));
