@@ -45,9 +45,7 @@ WHERE user.role = 'Adherent'
 AND fonctionnalite.id NOT IN (7, 8);
 
 
-INSERT INTO tache (Description, dateDebut, dateFin, statut, responsableId) VALUES
-('Préparer le matériel pour l événement', NOW(), NOW(), 'En cours', 1),
-('Contacter les fournisseurs', NOW(), NOW(), 'En cours', 2);
+
 
 INSERT INTO evenement (nom, date, description, lieu, nbPlace,estReserve) VALUES
 ('Gala Annuel', NOW() + INTERVAL 1 MONTH, 'Le gala annuel de l association', 'Salle des fêtes',10,false),
@@ -87,9 +85,12 @@ INSERT INTO transaction (montant, type, dateTransaction, emailVisiteur) VALUES
 
 
 INSERT INTO ressource (nom, type,  quantite ,emplacement) VALUES
-('Sac de pomme', 'Alimentaire', 3, 'Bâtiment B');
-INSERT INTO ressource (nom, type,  quantite) VALUES
-('VIdéoprojecteur', 'Matériel', 2);
+('Sac de pomme', 'Alimentaire', 3, 'Bâtiment B'),
+('VIdéoprojecteur', 'Matériel', 2, 'Bâtiment A');
+
+INSERT INTO tache (Description, dateDebut, dateFin, statut, responsableId, ressourceId) VALUES
+('Préparer le matériel pour l événement', NOW(), NOW(), 'En cours', 1,1),
+('Contacter les fournisseurs', NOW(), NOW(), 'En cours', 2,2);
 
 /*INSERT INTO reservation (dateDebut, dateFin, description, ressourceId, UserId) VALUES
 (NOW(), NOW() + INTERVAL 2 HOUR, 'Réunion du bureau', 1, 1);*/

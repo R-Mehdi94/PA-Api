@@ -2,6 +2,7 @@ import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, ManyToOne} fr
 import "reflect-metadata"
 import { User } from "./user"
 import { Evenement } from "./evenement"
+import { Ressource } from "./ressource"
 
 
 export enum StatutTache {
@@ -35,18 +36,20 @@ export class Tache {
     @ManyToOne(() => User, user => user.taches)
     responsable: User
 
+    @ManyToOne(() => Ressource, ressource => ressource.taches)
+    ressource: Ressource
 
 
-    constructor(id: number, description:string,dateDebut:Date,dateFin:Date,statut:StatutTache,responsable:User) {
+
+    constructor(id: number, description:string,dateDebut:Date,dateFin:Date,statut:StatutTache,responsable:User,ressource:Ressource){ 
         this.id = id;
         this.description = description;
         this.dateDebut = dateDebut;
         this.dateFin = dateFin;
         this.statut = statut;
         this.responsable = responsable;
+        this.ressource = ressource;
+
     }
-
-
-
 
 }

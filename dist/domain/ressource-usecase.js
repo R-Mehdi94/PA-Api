@@ -32,6 +32,7 @@ class RessourceUsecase {
             }
             query.leftJoinAndSelect('ressource.evenementRessources', 'evenementRessources')
                 .leftJoinAndSelect('ressource.evenementUsers', 'evenementUsers')
+                .leftJoinAndSelect('ressource.taches', 'taches')
                 .skip((listRessourceRequest.page - 1) * listRessourceRequest.limit)
                 .take(listRessourceRequest.limit);
             const [Ressources, totalCount] = yield query.getManyAndCount();
@@ -46,6 +47,7 @@ class RessourceUsecase {
             const query = this.db.createQueryBuilder(ressource_1.Ressource, 'ressource')
                 .leftJoinAndSelect('ressource.evenementRessources', 'evenementRessources')
                 .leftJoinAndSelect('ressource.evenementUsers', 'evenementUsers')
+                .leftJoinAndSelect('ressource.taches', 'taches')
                 .where("ressource.id = :id", { id: id });
             const ressource = yield query.getOne();
             if (!ressource) {

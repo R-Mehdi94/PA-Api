@@ -1,111 +1,113 @@
-import {DataSource, SelectQueryBuilder } from "typeorm";
-import { Ressource, TypeRessource } from "../database/entities/ressource";
-import { StatutTache } from "../database/entities/tache";
+import { DataSource } from "typeorm";
+import { StatutTache, Tache } from "../database/entities/tache";
+import { Ressource } from "../database/entities/ressource";
 import { User } from "../database/entities/user";
-import { Tache } from "../database/entities/tache";
-
 
 export interface ListTacheRequest {
     page: number
     limit: number
     description?: string
-    dateDebut?: Date;
-    dateFin?: Date;
-    statut?: StatutTache;
+    dateDebut?: Date
+    dateFin?: Date
+    statut?: StatutTache
     responsable?: number
+    ressource?: number
 }
-
-
 
 export interface UpdateTacheParams {
-    id: number
     description?: string
-    dateDebut?: Date;
-    dateFin?: Date;
-    statut?: StatutTache;
+    dateDebut?: Date
+    dateFin?: Date
+    statut?: StatutTache
     responsable?: User
+    ressource?: Ressource
 }
-
 
 export class TacheUsecase {
     constructor(private readonly db: DataSource) { }
 
-    async listShowtime(listTacheRequest: ListTacheRequest): Promise<{ Taches: Tache[]; totalCount: number; }> {
-        const query = this.db.createQueryBuilder(Tache, 'tache')
-        if (listTacheRequest.dateDebut){
-            query.andWhere("tache.dateDebut = :dateDebut", { dateDebut: listTacheRequest.dateDebut });
-        }
-
-        if(listTacheRequest.dateFin){
-            query.andWhere("tache.dateFin = :dateFin", { dateFin: listTacheRequest.dateFin });
-        }
-
-        if(listTacheRequest.description){
+    async listTaches(listTacheRequest: ListTacheRequest): Promise<{ Taches: Tache[]; totalCount: number; }> {
+        const query = this.db.createQueryBuilder(Tache, 'tache');
+        if (listTacheRequest.description) {
             query.andWhere("tache.description = :description", { description: listTacheRequest.description });
         }
 
-        if(listTacheRequest.responsable){
-            query.andWhere("tache.responsable = :responsable", { responsable: listTacheRequest.responsable });
+        if (listTacheRequest.dateDebut) {
+            query.andWhere("tache.dateDebut = :dateDebut", { dateDebut: listTacheRequest.dateDebut });
         }
 
-        if(listTacheRequest.statut){
+        if (listTacheRequest.dateFin) {
+            query.andWhere("tache.dateFin = :dateFin", { dateFin: listTacheRequest.dateFin });
+        }
+
+        if (listTacheRequest.statut) {
             query.andWhere("tache.statut = :statut", { statut: listTacheRequest.statut });
         }
 
+        if (listTacheRequest.responsable) {
+            query.andWhere("tache.responsableId = :responsable", { responsable: listTacheRequest.responsable });
+        }
+
+        if (listTacheRequest.ressource) {
+            query.andWhere("tache.ressourceId = :ressource", { ressource: listTacheRequest.ressource });
+        }
 
         query.leftJoinAndSelect('tache.responsable', 'responsable')
-        .skip((listTacheRequest.page - 1) * listTacheRequest.limit)
-        .take(listTacheRequest.limit)
+            .leftJoinAndSelect('tache.ressource', 'ressource')
+            .skip((listTacheRequest.page - 1) * listTacheRequest.limit)
+            .take(listTacheRequest.limit);
 
-        const [Taches, totalCount] = await query.getManyAndCount()
+        const [Taches, totalCount] = await query.getManyAndCount();
         return {
             Taches,
             totalCount
-        }
+        };
     }
 
     async getOneTache(id: number): Promise<Tache | null> {
         const query = this.db.createQueryBuilder(Tache, 'tache')
-        query.leftJoinAndSelect('tache.responsable', 'responsable')
-        .where("tache.id = :id", { id: id })
-
+            .leftJoinAndSelect('tache.responsable', 'responsable')
+            .leftJoinAndSelect('tache.ressource', 'ressource')
+            .where("tache.id = :id", { id: id });
 
         const tache = await query.getOne();
 
-        // Vérifier si le ticket existe
         if (!tache) {
             console.log({ error: `Tache ${id} not found` });
             return null;
         }
-        return tache
+        return tache;
     }
 
-    async updateTache(id: number, { dateDebut,dateFin,description,statut,responsable }: UpdateTacheParams): Promise<Tache | string |null> {
-        const repo = this.db.getRepository(Tache)
-        const TacheFound = await repo.findOneBy({ id })
-        if (TacheFound === null) return null
+    async updateTache(id: number, { description, dateDebut, dateFin, statut, responsable, ressource }: UpdateTacheParams): Promise<Tache | string | null> {
+        const repo = this.db.getRepository(Tache);
+        const tacheFound = await repo.findOneBy({ id });
+        if (tacheFound === null) return null;
 
-        if(dateDebut===undefined && dateFin===undefined && description===undefined && statut===undefined && responsable===undefined){
-            return "No changes"
+        if (description === undefined && dateDebut === undefined && dateFin === undefined && statut === undefined && responsable === undefined && ressource === undefined) {
+            return "No changes";
         }
 
+        if (description) {
+            tacheFound.description = description;
+        }
         if (dateDebut) {
-            TacheFound.dateDebut = dateDebut
+            tacheFound.dateDebut = dateDebut;
         }
         if (dateFin) {
-            TacheFound.dateFin = dateFin
-        }
-        if (description) {
-            TacheFound.description = description
+            tacheFound.dateFin = dateFin;
         }
         if (statut) {
-            TacheFound.statut = statut
+            tacheFound.statut = statut;
         }
         if (responsable) {
-            TacheFound.responsable = responsable
+            tacheFound.responsable = responsable;
+        }
+        if (ressource) {
+            tacheFound.ressource = ressource;
         }
 
-        const ShowtimeUpdate = await repo.save(TacheFound)
-        return ShowtimeUpdate
+        const tacheUpdate = await repo.save(tacheFound);
+        return tacheUpdate;
     }
 }

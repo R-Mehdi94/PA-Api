@@ -32,7 +32,7 @@ const TacheHandler = (app) => {
         const page = (_a = listTacheRequest.page) !== null && _a !== void 0 ? _a : 1;
         try {
             const tacheUsecase = new tache_usecase_1.TacheUsecase(database_1.AppDataSource);
-            const listTaches = yield tacheUsecase.listShowtime(Object.assign(Object.assign({}, listTacheRequest), { page, limit }));
+            const listTaches = yield tacheUsecase.listTaches(Object.assign(Object.assign({}, listTacheRequest), { page, limit }));
             res.status(200).send(listTaches);
         }
         catch (error) {

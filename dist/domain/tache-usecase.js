@@ -15,25 +15,29 @@ class TacheUsecase {
     constructor(db) {
         this.db = db;
     }
-    listShowtime(listTacheRequest) {
+    listTaches(listTacheRequest) {
         return __awaiter(this, void 0, void 0, function* () {
             const query = this.db.createQueryBuilder(tache_1.Tache, 'tache');
+            if (listTacheRequest.description) {
+                query.andWhere("tache.description = :description", { description: listTacheRequest.description });
+            }
             if (listTacheRequest.dateDebut) {
                 query.andWhere("tache.dateDebut = :dateDebut", { dateDebut: listTacheRequest.dateDebut });
             }
             if (listTacheRequest.dateFin) {
                 query.andWhere("tache.dateFin = :dateFin", { dateFin: listTacheRequest.dateFin });
             }
-            if (listTacheRequest.description) {
-                query.andWhere("tache.description = :description", { description: listTacheRequest.description });
-            }
-            if (listTacheRequest.responsable) {
-                query.andWhere("tache.responsable = :responsable", { responsable: listTacheRequest.responsable });
-            }
             if (listTacheRequest.statut) {
                 query.andWhere("tache.statut = :statut", { statut: listTacheRequest.statut });
             }
+            if (listTacheRequest.responsable) {
+                query.andWhere("tache.responsableId = :responsable", { responsable: listTacheRequest.responsable });
+            }
+            if (listTacheRequest.ressource) {
+                query.andWhere("tache.ressourceId = :ressource", { ressource: listTacheRequest.ressource });
+            }
             query.leftJoinAndSelect('tache.responsable', 'responsable')
+                .leftJoinAndSelect('tache.ressource', 'ressource')
                 .skip((listTacheRequest.page - 1) * listTacheRequest.limit)
                 .take(listTacheRequest.limit);
             const [Taches, totalCount] = yield query.getManyAndCount();
@@ -45,11 +49,11 @@ class TacheUsecase {
     }
     getOneTache(id) {
         return __awaiter(this, void 0, void 0, function* () {
-            const query = this.db.createQueryBuilder(tache_1.Tache, 'tache');
-            query.leftJoinAndSelect('tache.responsable', 'responsable')
+            const query = this.db.createQueryBuilder(tache_1.Tache, 'tache')
+                .leftJoinAndSelect('tache.responsable', 'responsable')
+                .leftJoinAndSelect('tache.ressource', 'ressource')
                 .where("tache.id = :id", { id: id });
             const tache = yield query.getOne();
-            // Vérifier si le ticket existe
             if (!tache) {
                 console.log({ error: `Tache ${id} not found` });
                 return null;
@@ -58,31 +62,34 @@ class TacheUsecase {
         });
     }
     updateTache(id_1, _a) {
-        return __awaiter(this, arguments, void 0, function* (id, { dateDebut, dateFin, description, statut, responsable }) {
+        return __awaiter(this, arguments, void 0, function* (id, { description, dateDebut, dateFin, statut, responsable, ressource }) {
             const repo = this.db.getRepository(tache_1.Tache);
-            const TacheFound = yield repo.findOneBy({ id });
-            if (TacheFound === null)
+            const tacheFound = yield repo.findOneBy({ id });
+            if (tacheFound === null)
                 return null;
-            if (dateDebut === undefined && dateFin === undefined && description === undefined && statut === undefined && responsable === undefined) {
+            if (description === undefined && dateDebut === undefined && dateFin === undefined && statut === undefined && responsable === undefined && ressource === undefined) {
                 return "No changes";
             }
+            if (description) {
+                tacheFound.description = description;
+            }
             if (dateDebut) {
-                TacheFound.dateDebut = dateDebut;
+                tacheFound.dateDebut = dateDebut;
             }
             if (dateFin) {
-                TacheFound.dateFin = dateFin;
-            }
-            if (description) {
-                TacheFound.description = description;
+                tacheFound.dateFin = dateFin;
             }
             if (statut) {
-                TacheFound.statut = statut;
+                tacheFound.statut = statut;
             }
             if (responsable) {
-                TacheFound.responsable = responsable;
+                tacheFound.responsable = responsable;
             }
-            const ShowtimeUpdate = yield repo.save(TacheFound);
-            return ShowtimeUpdate;
+            if (ressource) {
+                tacheFound.ressource = ressource;
+            }
+            const tacheUpdate = yield repo.save(tacheFound);
+            return tacheUpdate;
         });
     }
 }

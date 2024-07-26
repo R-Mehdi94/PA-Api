@@ -26,16 +26,12 @@ export const TacheHandler = (app: express.Express) => {
 
             try {
                 const tacheUsecase = new TacheUsecase(AppDataSource);
-                const listTaches = await tacheUsecase.listShowtime({ ...listTacheRequest, page, limit })
+                const listTaches = await tacheUsecase.listTaches({ ...listTacheRequest, page, limit })
                 res.status(200).send(listTaches)
             } catch (error) {
                 console.log(error)
             }
         })
-
-
-
-
 
     app.post("/taches", async (req: Request, res: Response) => {
         const validation = createTacheValidation.validate(req.body)

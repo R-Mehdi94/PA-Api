@@ -14,6 +14,7 @@ const typeorm_1 = require("typeorm");
 require("reflect-metadata");
 const evenementUser_1 = require("./evenementUser");
 const evenementRessource_1 = require("./evenementRessource");
+const tache_1 = require("./tache");
 var TypeRessource;
 (function (TypeRessource) {
     TypeRessource["Vetement"] = "Vetement";
@@ -24,7 +25,7 @@ var TypeRessource;
     TypeRessource["Autre"] = "Autre";
 })(TypeRessource || (exports.TypeRessource = TypeRessource = {}));
 let Ressource = class Ressource {
-    constructor(id, nom, type, emplacement, quantite, evenementRessources, evenementUsers) {
+    constructor(id, nom, type, emplacement, quantite, evenementRessources, evenementUsers, taches) {
         this.id = id;
         this.nom = nom;
         this.type = type;
@@ -32,6 +33,7 @@ let Ressource = class Ressource {
         this.emplacement = emplacement;
         this.evenementRessources = evenementRessources;
         this.evenementUsers = evenementUsers;
+        this.taches = taches;
     }
 };
 exports.Ressource = Ressource;
@@ -66,7 +68,11 @@ __decorate([
     (0, typeorm_1.OneToMany)(() => evenementUser_1.EvenementUser, evenementUser => evenementUser.user),
     __metadata("design:type", Array)
 ], Ressource.prototype, "evenementUsers", void 0);
+__decorate([
+    (0, typeorm_1.OneToMany)(() => tache_1.Tache, tache => tache.ressource),
+    __metadata("design:type", Array)
+], Ressource.prototype, "taches", void 0);
 exports.Ressource = Ressource = __decorate([
     (0, typeorm_1.Entity)(),
-    __metadata("design:paramtypes", [Number, String, String, String, Number, Array, Array])
+    __metadata("design:paramtypes", [Number, String, String, String, Number, Array, Array, Array])
 ], Ressource);

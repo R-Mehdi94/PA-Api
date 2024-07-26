@@ -40,6 +40,7 @@ export class RessourceUsecase {
 
         query.leftJoinAndSelect('ressource.evenementRessources', 'evenementRessources')
             .leftJoinAndSelect('ressource.evenementUsers', 'evenementUsers')
+            .leftJoinAndSelect('ressource.taches', 'taches')
             .skip((listRessourceRequest.page - 1) * listRessourceRequest.limit)
             .take(listRessourceRequest.limit);
 
@@ -54,6 +55,7 @@ export class RessourceUsecase {
         const query = this.db.createQueryBuilder(Ressource, 'ressource')
             .leftJoinAndSelect('ressource.evenementRessources', 'evenementRessources')
             .leftJoinAndSelect('ressource.evenementUsers', 'evenementUsers')
+            .leftJoinAndSelect('ressource.taches', 'taches')
             .where("ressource.id = :id", { id: id });
 
         const ressource = await query.getOne();

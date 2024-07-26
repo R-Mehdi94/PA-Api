@@ -2,6 +2,7 @@ import { Entity, PrimaryGeneratedColumn, Column, OneToMany} from "typeorm"
 import "reflect-metadata"
 import { EvenementUser } from "./evenementUser"
 import { EvenementRessource } from "./evenementRessource"
+import { Tache } from "./tache"
 
 export enum TypeRessource{
     Vetement = "Vetement",
@@ -40,8 +41,11 @@ export class Ressource {
     @OneToMany(() => EvenementUser, evenementUser => evenementUser.user)
     evenementUsers: EvenementUser[]; 
 
+    @OneToMany(() => Tache, tache => tache.ressource)
+    taches: Tache[]; 
 
-    constructor(id: number, nom:string,type:TypeRessource,emplacement:string, quantite:number ,evenementRessources:EvenementRessource[], evenementUsers:EvenementUser[]){ 
+
+    constructor(id: number, nom:string,type:TypeRessource,emplacement:string, quantite:number ,evenementRessources:EvenementRessource[], evenementUsers:EvenementUser[], taches:Tache[]){ 
         this.id = id;
         this.nom = nom;
         this.type = type;
@@ -49,5 +53,6 @@ export class Ressource {
         this.emplacement = emplacement;
         this.evenementRessources = evenementRessources;
         this.evenementUsers = evenementUsers;
+        this.taches = taches;
     }
 }

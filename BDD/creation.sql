@@ -48,15 +48,6 @@ CREATE TABLE droit (
     PRIMARY KEY (id, userId, fonctionnaliteId)
 );
 
-CREATE TABLE tache (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    description TEXT NOT NULL,
-    dateDebut DATE NOT NULL,
-    dateFin DATE NOT NULL,
-    statut ENUM('En cours', 'Fini') NOT NULL,
-    responsableId INT,
-    FOREIGN KEY (responsableId) REFERENCES user(id) ON DELETE CASCADE ON UPDATE CASCADE
-);
 
 CREATE TABLE ressource (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -64,6 +55,18 @@ CREATE TABLE ressource (
     type ENUM('Vetement', 'Argent', 'Alimentaire','Jouet','Matériel maison divers','Materiel','Autre') NOT NULL,
     quantite INT DEFAULT 1,
     emplacement VARCHAR(255) DEFAULT NULL
+);
+
+CREATE TABLE tache (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    description TEXT NOT NULL,
+    dateDebut DATE NOT NULL,
+    dateFin DATE NOT NULL,
+    statut ENUM('En cours', 'Fini') NOT NULL,
+    responsableId INT,
+    ressourceId INT,
+    FOREIGN KEY (responsableId) REFERENCES user(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (ressourceId) REFERENCES ressource(id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 CREATE TABLE evenement (
