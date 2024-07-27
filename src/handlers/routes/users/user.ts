@@ -292,7 +292,6 @@ export const UserHandler = (app: express.Express) => {
 
         try {
             const adherentUsecase = new AdherentUsecase(AppDataSource);
-
             const updatedAdherent = await adherentUsecase.updateAdherent(
                 updateAdherentRequest.id,
                 { ...updateAdherentRequest }

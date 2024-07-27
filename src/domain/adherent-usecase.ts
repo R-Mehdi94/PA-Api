@@ -35,12 +35,23 @@ export interface UpdateAdherentParams {
 export class AdherentUsecase {
     constructor(private readonly db: DataSource) { }
 
+    async verifMdp(id:number, mdp: string): Promise<boolean> {
+        const entityManager = this.db.getRepository(Adherent);
+
+        const sqlQuery = `select count(*) from adherent where motDePasse like ? and id = ?;`;
+
+        const verifVisiteur = await entityManager.query(sqlQuery, [mdp,id]);
+
+        if(verifVisiteur[0]['count(*)'] === 0){
+            return false;
+        }
+
+        return true;
+    }
+
     async deleteToken(id: number): Promise<DeleteResult> {
-
         const TokenDelete = await this.db.createQueryBuilder().delete().from(Token).where("adherentId = :id", { id: id }).andWhere("blobName IS NULL").execute();
-
         return TokenDelete;
-
     }
 
     async verifAdherentToken(id: number, token: string): Promise<boolean> { 

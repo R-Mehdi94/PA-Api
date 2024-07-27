@@ -142,10 +142,20 @@ const AdherentHandler = (app) => {
                     return;
                 }
             }
-            if (validationResult.value.motDePasse !== undefined) {
-                validationResult.value.motDePasse = yield (0, bcrypt_1.hash)(validationResult.value.motDePasse, 10);
+            // Handle password update separately
+            if (validationResult.value.oldPassword !== undefined && validationResult.value.newPassword !== undefined) {
+                const oldPasswordHash = yield (0, bcrypt_1.hash)(validationResult.value.oldPassword, 10);
+                if ((yield adherentUsecase.verifMdp(+req.params.id, oldPasswordHash)) === false) {
+                    res.status(400).send({ "error": `Bad mot de passe` });
+                    return;
+                }
+                const newPasswordHash = yield (0, bcrypt_1.hash)(validationResult.value.newPassword, 10);
+                validationResult.value.motDePasse = newPasswordHash;
             }
-            const updateAdherentRequest = validationResult.value;
+            // Create update object without oldPassword and newPassword
+            const updateAdherentRequest = Object.assign({}, validationResult.value);
+            delete updateAdherentRequest.oldPassword;
+            delete updateAdherentRequest.newPassword;
             const updateAdherent = yield adherentUsecase.updateAdherent(updateAdherentRequest.id, Object.assign({}, updateAdherentRequest));
             if (updateAdherent === null) {
                 res.status(404).send({ "error": `Adherent ${updateAdherentRequest.id} not found` });

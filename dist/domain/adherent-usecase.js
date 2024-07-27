@@ -16,6 +16,17 @@ class AdherentUsecase {
     constructor(db) {
         this.db = db;
     }
+    verifMdp(id, mdp) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const entityManager = this.db.getRepository(adherent_1.Adherent);
+            const sqlQuery = `select count(*) from adherent where motDePasse like ? and id = ?;`;
+            const verifVisiteur = yield entityManager.query(sqlQuery, [mdp, id]);
+            if (verifVisiteur[0]['count(*)'] === 0) {
+                return false;
+            }
+            return true;
+        });
+    }
     deleteToken(id) {
         return __awaiter(this, void 0, void 0, function* () {
             const TokenDelete = yield this.db.createQueryBuilder().delete().from(token_1.Token).where("adherentId = :id", { id: id }).andWhere("blobName IS NULL").execute();

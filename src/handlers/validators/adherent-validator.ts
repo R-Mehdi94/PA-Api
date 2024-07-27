@@ -51,6 +51,8 @@ export interface AdherentIdRequestUser {
 export const updateAdherentValidation = Joi.object<UpdateAdherentRequest>({
     id: Joi.number().required(),
     email: Joi.string().email().optional(),
+    oldPassword: Joi.string().optional(),
+    newPassword: Joi.string().optional(),
     motDePasse: Joi.string().optional(),
     nom: Joi.string().optional(),
     prenom: Joi.string().optional(),
@@ -68,6 +70,8 @@ export const updateAdherentValidation = Joi.object<UpdateAdherentRequest>({
 export interface UpdateAdherentRequest {
     id: number
     email?: string
+    oldPassword?: string
+    newPassword?: string
     motDePasse?: string
     nom?: string
     prenom?: string

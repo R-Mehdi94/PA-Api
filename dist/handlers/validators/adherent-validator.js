@@ -28,6 +28,8 @@ exports.adherentIdValidationUser = joi_1.default.object({
 exports.updateAdherentValidation = joi_1.default.object({
     id: joi_1.default.number().required(),
     email: joi_1.default.string().email().optional(),
+    oldPassword: joi_1.default.string().optional(),
+    newPassword: joi_1.default.string().optional(),
     motDePasse: joi_1.default.string().optional(),
     nom: joi_1.default.string().optional(),
     prenom: joi_1.default.string().optional(),

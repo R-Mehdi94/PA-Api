@@ -123,70 +123,72 @@ export const AdherentHandler = (app: express.Express) => {
         }
     });
 
-    app.patch("/adherents/:id",authMiddlewareAdherent, async (req: Request, res: Response) => {
+    app.patch("/adherents/:id", authMiddlewareAdherent, async (req: Request, res: Response) => {
         try {
             const validationResult = updateAdherentValidation.validate({ ...req.params, ...req.body });
-
+    
             if (validationResult.error) {
                 res.status(400).send(generateValidationErrorMessage(validationResult.error.details));
                 return;
             }
-
+    
             const adherentUsecase = new AdherentUsecase(AppDataSource);
             const userUsecase = new UserUsecase(AppDataSource);
-
-
-
-            if(validationResult.value.idAdmin !== undefined){
+    
+            if (validationResult.value.idAdmin !== undefined) {
                 let user = await AppDataSource.getRepository(User).findOneBy({ id: validationResult.value.idAdmin });
-            
-                if(user?.role !== "Administrateur"){
-                    if(await userUsecase.verifUser(+req.params.idAdmin, req.body.token) === false){
+    
+                if (user?.role !== "Administrateur") {
+                    if (await userUsecase.verifUser(+req.params.idAdmin, req.body.token) === false) {
                         res.status(400).send({ "error": `Bad user` });
                         return;
-                    } 
+                    }
                 }
-            }else{
-                if(await adherentUsecase.verifAdherentToken(+req.params.id, req.body.token) === false){
+            } else {
+                if (await adherentUsecase.verifAdherentToken(+req.params.id, req.body.token) === false) {
                     res.status(400).send({ "error": `Bad user` });
                     return;
-                } 
+                }
             }
-
-
-            if(validationResult.value.motDePasse !== undefined){
-                validationResult.value.motDePasse = await hash(validationResult.value.motDePasse, 10);
+    
+            // Handle password update separately
+            if (validationResult.value.oldPassword !== undefined && validationResult.value.newPassword !== undefined) {
+                const oldPasswordHash = await hash(validationResult.value.oldPassword, 10);
+                if (await adherentUsecase.verifMdp(+req.params.id, oldPasswordHash) === false) {
+                    res.status(400).send({ "error": `Bad mot de passe` });
+                    return;
+                }
+                const newPasswordHash = await hash(validationResult.value.newPassword, 10);
+                validationResult.value.motDePasse = newPasswordHash;
             }
-
-            const updateAdherentRequest = validationResult.value;
-
+    
+            // Create update object without oldPassword and newPassword
+            const updateAdherentRequest = { ...validationResult.value };
+            delete updateAdherentRequest.oldPassword;
+            delete updateAdherentRequest.newPassword;
+    
             const updateAdherent = await adherentUsecase.updateAdherent(
                 updateAdherentRequest.id,
                 { ...updateAdherentRequest }
             );
-
-
-
+    
             if (updateAdherent === null) {
                 res.status(404).send({ "error": `Adherent ${updateAdherentRequest.id} not found` });
                 return;
-            }            
-
-
+            }
+    
             if (updateAdherent === "No update provided") {
                 res.status(400).send({ "error": `No update provided` });
                 return;
             }
-       
-
-
-
+    
             res.status(200).send(updateAdherent);
         } catch (error) {
             console.log(error);
             res.status(500).send({ error: "Internal error" });
         }
     });
+    
 
     app.post("/verifVisiteur", async (req: Request, res: Response) => {
 
@@ -226,4 +228,8 @@ export const AdherentHandler = (app: express.Express) => {
             res.status(500).send({ error: "Internal error" });
         }
     });
+
+
 };
+
+
