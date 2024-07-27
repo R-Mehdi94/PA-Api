@@ -7,16 +7,16 @@ export const createTransactionValidation = Joi.object<CreateTransactionValidatio
     montant: Joi.number().required(),
     methodePaiement: Joi.string().required(),
     type: Joi.string().valid(...Object.values(TypeTransaction)).required(),
-    visiteur: Joi.number().required(),
-    adherent: Joi.number().required()
+    visiteur: Joi.number().optional(),
+    adherent: Joi.number().optional()
 });
 
 export interface CreateTransactionValidationRequest {
     montant: number
     methodePaiement: string
     type: TypeTransaction
-    visiteur: Visiteur
-    adherent: Adherent
+    visiteur?: Visiteur
+    adherent?: Adherent
 }
 
 export const transactionIdValidation = Joi.object<TransactionIdRequest>({

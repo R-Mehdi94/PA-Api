@@ -10,8 +10,8 @@ exports.createTransactionValidation = joi_1.default.object({
     montant: joi_1.default.number().required(),
     methodePaiement: joi_1.default.string().required(),
     type: joi_1.default.string().valid(...Object.values(transaction_1.TypeTransaction)).required(),
-    visiteur: joi_1.default.number().required(),
-    adherent: joi_1.default.number().required()
+    visiteur: joi_1.default.number().optional(),
+    adherent: joi_1.default.number().optional()
 });
 exports.transactionIdValidation = joi_1.default.object({
     id: joi_1.default.number().required(),
