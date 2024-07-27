@@ -150,7 +150,6 @@ export const AdherentHandler = (app: express.Express) => {
                     return;
                 }
             }
-    
             // Handle password update separately
             if (validationResult.value.oldPassword !== undefined && validationResult.value.newPassword !== undefined) {
                 const oldPasswordHash = await hash(validationResult.value.oldPassword, 10);

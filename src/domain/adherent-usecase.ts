@@ -41,8 +41,8 @@ export class AdherentUsecase {
         const sqlQuery = `select count(*) from adherent where motDePasse like ? and id = ?;`;
 
         const verifVisiteur = await entityManager.query(sqlQuery, [mdp,id]);
-
-        if(verifVisiteur[0]['count(*)'] === 0){
+        console.log(verifVisiteur[0]['count(*)'])
+        if(verifVisiteur[0]['count(*)'] < 0){
             return false;
         }
 
