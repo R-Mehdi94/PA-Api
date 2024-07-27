@@ -1,12 +1,9 @@
 import express, { Request, Response } from "express"
 import { AppDataSource } from "../../../database/database"
 import { compare, hash } from "bcrypt";
-import { createUserValidation, LoginUserValidation, userIdValidation } from "../../validators/user-validator"
 import { generateValidationErrorMessage } from "../../validators/generate-validation-message";
-import { User } from "../../../database/entities/user";
 import { sign } from "jsonwebtoken";
 import { Token } from "../../../database/entities/token";
-import { UserUsecase } from "../../../domain/user-usecase";
 import { adherentIdValidation, createAdherentValidation, LoginValidationValidation } from "../../validators/adherent-validator";
 import { Adherent } from "../../../database/entities/adherent";
 import { AdherentUsecase } from "../../../domain/adherent-usecase";
@@ -102,8 +99,8 @@ export const AdherentHandlerAuthentication = (app: express.Express) => {
             }
             
             const secret = process.env.JWT_SECRET ?? "azerty"
-            const token = sign({ userId: adherent.id, email: adherent.email }, secret, { expiresIn: '1d' });
-            await AppDataSource.getRepository(Token).save({ token: token, user: adherent})
+            const token = sign({ adherentId: adherent.id, email: adherent.email }, secret, { expiresIn: '1d' });
+            await AppDataSource.getRepository(Token).save({ token: token, adherent: adherent})
             
 
             await adherentUsecase.updateAdherent(
