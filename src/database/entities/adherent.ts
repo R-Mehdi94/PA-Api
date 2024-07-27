@@ -57,6 +57,7 @@ export class Adherent {
     @OneToMany(() => Token, token => token.adherent)
     tokens: Token[];
 
+
     constructor(id:number,motDePasse:string,estBanie:boolean,nom: string, prenom: string, email: string, age: number, numTel: string, adresse: string, profession: string, dateInscription: Date, estBenevole: boolean, parrain: User, inscriptions: Inscription[], cotisations: Cotisation[], tokens: Token[]) {
         this.id = id
         this.motDePasse = motDePasse

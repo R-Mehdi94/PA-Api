@@ -135,6 +135,7 @@ export class AdherentUsecase {
         query.leftJoinAndSelect('adherent.parrain', 'parrain')
             .leftJoinAndSelect('adherent.inscriptions', 'inscriptions')
             .leftJoinAndSelect('adherent.cotisations', 'cotisations')
+            .leftJoinAndSelect('adherent.tokens', 'tokens')
             .skip((listAdherentRequest.page - 1) * listAdherentRequest.limit)
             .take(listAdherentRequest.limit);
 
@@ -150,6 +151,7 @@ export class AdherentUsecase {
             .leftJoinAndSelect('adherent.parrain', 'parrain')
             .leftJoinAndSelect('adherent.inscriptions', 'inscriptions')
             .leftJoinAndSelect('adherent.cotisations', 'cotisations')
+            .leftJoinAndSelect('adherent.tokens', 'tokens')
             .where("adherent.id = :id", { id: id });
 
         const adherent = await query.getOne();
