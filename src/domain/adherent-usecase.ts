@@ -137,10 +137,7 @@ export class AdherentUsecase {
             .leftJoinAndSelect('adherent.cotisations', 'cotisations')
             .leftJoinAndSelect('adherent.tokens', 'tokens')
             .leftJoinAndSelect('adherent.demandes', 'demandes')
-            .leftJoinAndSelect('demandes.evenementDemandes', 'evenementDemandes')
-            .leftJoinAndSelect('demandes.aideProjetDemandes', 'aideProjetDemandes')
-            .leftJoinAndSelect('demandes.parrainageDemandes', 'parrainageDemandes')
-            .leftJoinAndSelect('demandes.autreDemandes', 'autreDemandes')
+
             .skip((listAdherentRequest.page - 1) * listAdherentRequest.limit)
             .take(listAdherentRequest.limit);
 
@@ -158,10 +155,7 @@ export class AdherentUsecase {
             .leftJoinAndSelect('adherent.cotisations', 'cotisations')
             .leftJoinAndSelect('adherent.tokens', 'tokens')
             .leftJoinAndSelect('adherent.demandes', 'demandes')
-            .leftJoinAndSelect('demandes.evenementDemandes', 'evenementDemandes')
-            .leftJoinAndSelect('demandes.aideProjetDemandes', 'aideProjetDemandes')
-            .leftJoinAndSelect('demandes.parrainageDemandes', 'parrainageDemandes')
-            .leftJoinAndSelect('demandes.autreDemandes', 'autreDemandes')
+
 
             .where("adherent.id = :id", { id: id });
 
