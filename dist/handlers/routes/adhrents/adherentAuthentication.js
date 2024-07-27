@@ -97,8 +97,8 @@ const AdherentHandlerAuthentication = (app) => {
                 return;
             }
             const secret = (_a = process.env.JWT_SECRET) !== null && _a !== void 0 ? _a : "azerty";
-            const token = (0, jsonwebtoken_1.sign)({ userId: adherent.id, email: adherent.email }, secret, { expiresIn: '1d' });
-            yield database_1.AppDataSource.getRepository(token_1.Token).save({ token: token, user: adherent });
+            const token = (0, jsonwebtoken_1.sign)({ adherentId: adherent.id, email: adherent.email }, secret, { expiresIn: '1d' });
+            yield database_1.AppDataSource.getRepository(token_1.Token).save({ token: token, adherent: adherent });
             yield adherentUsecase.updateAdherent(adherent.id, Object.assign({}, adherent));
             res.status(200).json({ token, adherent });
         }
