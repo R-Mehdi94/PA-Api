@@ -31,12 +31,11 @@ var StatutDemande;
     StatutDemande["Refusee"] = "Refus\u00E9e";
 })(StatutDemande || (exports.StatutDemande = StatutDemande = {}));
 let Demande = class Demande {
-    constructor(id, type, dateDemande, statut, emailVisiteur, evenementDemandes, aideProjetDemandes, parrainageDemandes, autreDemandes, adherent, visiteur) {
+    constructor(id, type, dateDemande, statut, evenementDemandes, aideProjetDemandes, parrainageDemandes, autreDemandes, adherent, visiteur) {
         this.id = id;
         this.type = type;
         this.dateDemande = dateDemande;
         this.statut = statut;
-        this.emailVisiteur = emailVisiteur;
         this.autreDemandes = autreDemandes;
         this.evenementDemandes = evenementDemandes;
         this.aideProjetDemandes = aideProjetDemandes;
@@ -63,10 +62,6 @@ __decorate([
     __metadata("design:type", String)
 ], Demande.prototype, "statut", void 0);
 __decorate([
-    (0, typeorm_1.Column)(),
-    __metadata("design:type", String)
-], Demande.prototype, "emailVisiteur", void 0);
-__decorate([
     (0, typeorm_1.ManyToOne)(() => adherent_1.Adherent, adherent => adherent.demandes),
     __metadata("design:type", adherent_1.Adherent)
 ], Demande.prototype, "adherent", void 0);
@@ -92,5 +87,5 @@ __decorate([
 ], Demande.prototype, "parrainageDemandes", void 0);
 exports.Demande = Demande = __decorate([
     (0, typeorm_1.Entity)(),
-    __metadata("design:paramtypes", [Number, String, Date, String, String, Array, Array, Array, Array, adherent_1.Adherent, visiteur_1.Visiteur])
+    __metadata("design:paramtypes", [Number, String, Date, String, Array, Array, Array, Array, adherent_1.Adherent, visiteur_1.Visiteur])
 ], Demande);

@@ -153,6 +153,7 @@ export class AdherentUsecase {
             .leftJoinAndSelect('adherent.inscriptions', 'inscriptions')
             .leftJoinAndSelect('adherent.cotisations', 'cotisations')
             .leftJoinAndSelect('adherent.tokens', 'tokens')
+            .leftJoinAndSelect('adherent.demandes', 'demandes')
             .where("adherent.id = :id", { id: id });
 
         const adherent = await query.getOne();

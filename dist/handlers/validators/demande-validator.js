@@ -10,7 +10,6 @@ exports.createDemandeValidation = joi_1.default.object({
     type: joi_1.default.string().valid(...Object.values(demande_1.TypeDemande)).required(),
     dateDemande: joi_1.default.date().required(),
     statut: joi_1.default.string().valid(...Object.values(demande_1.StatutDemande)).required(),
-    emailVisiteur: joi_1.default.string().email().required(),
     adherent: joi_1.default.number().optional(),
     visiteur: joi_1.default.number().optional()
 });
@@ -22,7 +21,6 @@ exports.updateDemandeValidation = joi_1.default.object({
     type: joi_1.default.string().valid(...Object.values(demande_1.TypeDemande)).optional(),
     dateDemande: joi_1.default.date().optional(),
     statut: joi_1.default.string().valid(...Object.values(demande_1.StatutDemande)).optional(),
-    emailVisiteur: joi_1.default.string().email().optional(),
     adherent: joi_1.default.number().optional(),
     visiteur: joi_1.default.number().optional()
 });
@@ -32,7 +30,6 @@ exports.listDemandeValidation = joi_1.default.object({
     type: joi_1.default.string().valid(...Object.values(demande_1.TypeDemande)).optional(),
     dateDemande: joi_1.default.date().optional(),
     statut: joi_1.default.string().valid(...Object.values(demande_1.StatutDemande)).optional(),
-    emailVisiteur: joi_1.default.string().email().optional(),
     adherent: joi_1.default.number().optional(),
     visiteur: joi_1.default.number().optional()
 });

@@ -118,11 +118,17 @@ INSERT INTO tache (Description, dateDebut, dateFin, statut, responsableId, resso
 /*INSERT INTO reservation (dateDebut, dateFin, description, ressourceId, UserId) VALUES
 (NOW(), NOW() + INTERVAL 2 HOUR, 'Réunion du bureau', 1, 1);*/
 
-INSERT INTO demande (type, dateDemande, statut, emailVisiteur)
+INSERT INTO demande (type, dateDemande, statut, adherentId)
 VALUES 
-('Evénement', '2024-05-19 14:30:00', 'En attente', 'test@gmail.com'),
-('Projet', '2024-05-20 10:00:00', 'Acceptée', 'test@gmail.com'),
-('Parrainage', '2024-05-21 08:45:00', 'Refusée', 'test@gmail.com');
+('Evénement', '2024-05-19 14:30:00', 'En attente', 1),
+('Projet', '2024-05-20 10:00:00', 'Acceptée', 1),
+('Parrainage', '2024-05-21 08:45:00', 'Refusée', 2);
+
+INSERT INTO demande (type, dateDemande, statut, visiteurId)
+VALUES 
+('Evénement', '2024-05-19 14:30:00', 'En attente', 1),
+('Projet', '2024-05-20 10:00:00', 'Acceptée', 2),
+('Parrainage', '2024-05-21 08:45:00', 'Refusée', 3);
 
 INSERT INTO evenement_demande (id, titre, date, description, lieu, demandeId)
 VALUES 

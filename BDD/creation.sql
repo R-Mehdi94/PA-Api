@@ -227,11 +227,10 @@ CREATE TABLE demande(
     type ENUM('Projet','Evénement','Parrainage','Autre'),
     dateDemande TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     statut ENUM('En attente','Acceptée','Refusée') DEFAULT 'En attente',
-    emailVisiteur VARCHAR(255) NOT NULL,
-    idVisiteur INT,
-    idAdherent INT,
-    FOREIGN KEY (idVisiteur) REFERENCES visiteur(id) ON DELETE CASCADE ON UPDATE CASCADE,
-    FOREIGN KEY (idAdherent) REFERENCES adherent(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    visiteurId INT,
+    adherentId INT,
+    FOREIGN KEY (visiteurId) REFERENCES visiteur(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (adherentId) REFERENCES adherent(id) ON DELETE CASCADE ON UPDATE CASCADE,
     PRIMARY KEY (id)
 );
 

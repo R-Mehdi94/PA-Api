@@ -7,7 +7,6 @@ export const createDemandeValidation = Joi.object<CreateDemandeValidationRequest
     type: Joi.string().valid(...Object.values(TypeDemande)).required(),
     dateDemande: Joi.date().required(),
     statut: Joi.string().valid(...Object.values(StatutDemande)).required(),
-    emailVisiteur: Joi.string().email().required(),
     adherent: Joi.number().optional(),
     visiteur: Joi.number().optional()
 });
@@ -16,7 +15,6 @@ export interface CreateDemandeValidationRequest {
     type: TypeDemande
     dateDemande: Date
     statut: StatutDemande
-    emailVisiteur: string
     adherent?: Adherent
     visiteur?: Visiteur
 }
@@ -34,7 +32,6 @@ export const updateDemandeValidation = Joi.object<UpdateDemandeRequest>({
     type: Joi.string().valid(...Object.values(TypeDemande)).optional(),
     dateDemande: Joi.date().optional(),
     statut: Joi.string().valid(...Object.values(StatutDemande)).optional(),
-    emailVisiteur: Joi.string().email().optional(),
     adherent: Joi.number().optional(),
     visiteur: Joi.number().optional()
 });
@@ -44,7 +41,6 @@ export interface UpdateDemandeRequest {
     type?: TypeDemande
     dateDemande?: Date
     statut?: StatutDemande
-    emailVisiteur?: string
     adherent?: Adherent
     visiteur?: Visiteur
 }
@@ -55,7 +51,6 @@ export const listDemandeValidation = Joi.object<ListDemandeRequest>({
     type: Joi.string().valid(...Object.values(TypeDemande)).optional(),
     dateDemande: Joi.date().optional(),
     statut: Joi.string().valid(...Object.values(StatutDemande)).optional(),
-    emailVisiteur: Joi.string().email().optional(),
     adherent: Joi.number().optional(),
     visiteur: Joi.number().optional()
 });
@@ -66,7 +61,6 @@ export interface ListDemandeRequest {
     type?: TypeDemande
     dateDemande?: Date
     statut?: StatutDemande
-    emailVisiteur?: string
     adherent?: number
     visiteur?: number
 }

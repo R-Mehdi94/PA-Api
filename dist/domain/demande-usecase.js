@@ -24,9 +24,6 @@ class DemandeUsecase {
             if (listDemandeRequest.statut) {
                 query.andWhere("demande.statut = :statut", { statut: listDemandeRequest.statut });
             }
-            if (listDemandeRequest.emailVisiteur) {
-                query.andWhere("demande.emailVisiteur = :emailVisiteur", { emailVisiteur: listDemandeRequest.emailVisiteur });
-            }
             if (listDemandeRequest.adherent) {
                 query.andWhere("demande.adherentId = :adherent", { adherent: listDemandeRequest.adherent });
             }
@@ -67,12 +64,12 @@ class DemandeUsecase {
         });
     }
     updateDemande(id_1, _a) {
-        return __awaiter(this, arguments, void 0, function* (id, { type, statut, emailVisiteur, adherent, visiteur }) {
+        return __awaiter(this, arguments, void 0, function* (id, { type, statut, adherent, visiteur }) {
             const repo = this.db.getRepository(demande_1.Demande);
             const demandeFound = yield repo.findOneBy({ id });
             if (demandeFound === null)
                 return null;
-            if (type === undefined && statut === undefined && emailVisiteur === undefined && adherent === undefined && visiteur === undefined) {
+            if (type === undefined && statut === undefined && adherent === undefined && visiteur === undefined) {
                 return "No changes";
             }
             if (type) {
@@ -80,9 +77,6 @@ class DemandeUsecase {
             }
             if (statut) {
                 demandeFound.statut = statut;
-            }
-            if (emailVisiteur) {
-                demandeFound.emailVisiteur = emailVisiteur;
             }
             if (adherent) {
                 demandeFound.adherent = adherent;

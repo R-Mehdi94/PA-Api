@@ -8,7 +8,6 @@ export interface ListDemandeRequest {
     limit: number
     type?: TypeDemande
     statut?: StatutDemande
-    emailVisiteur?: string
     adherent?: number
     visiteur?: number
 }
@@ -16,7 +15,6 @@ export interface ListDemandeRequest {
 export interface UpdateDemandeParams {
     type?: TypeDemande
     statut?: StatutDemande
-    emailVisiteur?: string
     adherent?: Adherent
     visiteur?: Visiteur
 }
@@ -34,9 +32,7 @@ export class DemandeUsecase {
             query.andWhere("demande.statut = :statut", { statut: listDemandeRequest.statut });
         }
 
-        if (listDemandeRequest.emailVisiteur) {
-            query.andWhere("demande.emailVisiteur = :emailVisiteur", { emailVisiteur: listDemandeRequest.emailVisiteur });
-        }
+
 
         if (listDemandeRequest.adherent) {
             query.andWhere("demande.adherentId = :adherent", { adherent: listDemandeRequest.adherent });
@@ -81,12 +77,12 @@ export class DemandeUsecase {
         return demande;
     }
 
-    async updateDemande(id: number, { type, statut, emailVisiteur, adherent, visiteur }: UpdateDemandeParams): Promise<Demande | string | null> {
+    async updateDemande(id: number, { type, statut, adherent, visiteur }: UpdateDemandeParams): Promise<Demande | string | null> {
         const repo = this.db.getRepository(Demande);
         const demandeFound = await repo.findOneBy({ id });
         if (demandeFound === null) return null;
 
-        if (type === undefined && statut === undefined && emailVisiteur === undefined && adherent === undefined && visiteur === undefined) {
+        if (type === undefined && statut === undefined && adherent === undefined && visiteur === undefined) {
             return "No changes";
         }
 
@@ -96,9 +92,7 @@ export class DemandeUsecase {
         if (statut) {
             demandeFound.statut = statut;
         }
-        if (emailVisiteur) {
-            demandeFound.emailVisiteur = emailVisiteur;
-        }
+
         if (adherent) {
             demandeFound.adherent = adherent;
         }

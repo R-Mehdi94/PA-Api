@@ -37,8 +37,7 @@ export class Demande {
     @Column()
     statut: StatutDemande;
 
-    @Column()
-    emailVisiteur: string
+
 
     @ManyToOne(() => Adherent, adherent => adherent.demandes)
     adherent: Adherent;
@@ -58,12 +57,11 @@ export class Demande {
     @OneToMany(() => ParrainageDemande, parrainageDemande => parrainageDemande.demande)
     parrainageDemandes: ParrainageDemande[];
 
-    constructor(id: number, type: TypeDemande,dateDemande :Date,statut:StatutDemande ,emailVisiteur: string, evenementDemandes: EvenementDemande[], aideProjetDemandes:AideProjetDemande[], parrainageDemandes:ParrainageDemande[], autreDemandes: AutreDemande[], adherent: Adherent, visiteur: Visiteur) {
+    constructor(id: number, type: TypeDemande,dateDemande :Date,statut:StatutDemande, evenementDemandes: EvenementDemande[], aideProjetDemandes:AideProjetDemande[], parrainageDemandes:ParrainageDemande[], autreDemandes: AutreDemande[], adherent: Adherent, visiteur: Visiteur) {
         this.id = id
         this.type = type
         this.dateDemande = dateDemande
         this.statut = statut
-        this.emailVisiteur = emailVisiteur
         this.autreDemandes = autreDemandes
         this.evenementDemandes = evenementDemandes
         this.aideProjetDemandes = aideProjetDemandes
