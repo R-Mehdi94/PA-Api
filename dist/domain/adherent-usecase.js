@@ -21,8 +21,8 @@ class AdherentUsecase {
             const entityManager = this.db.getRepository(adherent_1.Adherent);
             const sqlQuery = `select count(*) from adherent where motDePasse like ? and id = ?;`;
             const verifVisiteur = yield entityManager.query(sqlQuery, [mdp, id]);
-            console.log(verifVisiteur[0]['count(*)']);
-            if (verifVisiteur[0]['count(*)'] < 0) {
+            if (verifVisiteur[0]['count(*)'] === 0) {
+                console.log("Mot de passe incorrect");
                 return false;
             }
             return true;
