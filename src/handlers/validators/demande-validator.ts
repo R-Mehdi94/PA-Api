@@ -1,16 +1,24 @@
 import Joi from "joi";
 import { TypeDemande, StatutDemande } from "../../database/entities/demande";
+import { Adherent } from "../../database/entities/adherent";
+import { Visiteur } from "../../database/entities/visiteur";
 
 export const createDemandeValidation = Joi.object<CreateDemandeValidationRequest>({
     type: Joi.string().valid(...Object.values(TypeDemande)).required(),
+    dateDemande: Joi.date().required(),
     statut: Joi.string().valid(...Object.values(StatutDemande)).required(),
-    emailVisiteur: Joi.string().email().required()
-}).options({ abortEarly: false })
+    emailVisiteur: Joi.string().email().required(),
+    adherent: Joi.number().optional(),
+    visiteur: Joi.number().optional()
+});
 
 export interface CreateDemandeValidationRequest {
     type: TypeDemande
+    dateDemande: Date
     statut: StatutDemande
     emailVisiteur: string
+    adherent?: Adherent
+    visiteur?: Visiteur
 }
 
 export const demandeIdValidation = Joi.object<DemandeIdRequest>({
@@ -24,15 +32,21 @@ export interface DemandeIdRequest {
 export const updateDemandeValidation = Joi.object<UpdateDemandeRequest>({
     id: Joi.number().required(),
     type: Joi.string().valid(...Object.values(TypeDemande)).optional(),
+    dateDemande: Joi.date().optional(),
     statut: Joi.string().valid(...Object.values(StatutDemande)).optional(),
-    emailVisiteur: Joi.string().email().optional()
+    emailVisiteur: Joi.string().email().optional(),
+    adherent: Joi.number().optional(),
+    visiteur: Joi.number().optional()
 });
 
 export interface UpdateDemandeRequest {
     id: number
     type?: TypeDemande
+    dateDemande?: Date
     statut?: StatutDemande
     emailVisiteur?: string
+    adherent?: Adherent
+    visiteur?: Visiteur
 }
 
 export const listDemandeValidation = Joi.object<ListDemandeRequest>({
@@ -41,7 +55,9 @@ export const listDemandeValidation = Joi.object<ListDemandeRequest>({
     type: Joi.string().valid(...Object.values(TypeDemande)).optional(),
     dateDemande: Joi.date().optional(),
     statut: Joi.string().valid(...Object.values(StatutDemande)).optional(),
-    emailVisiteur: Joi.string().email().optional()
+    emailVisiteur: Joi.string().email().optional(),
+    adherent: Joi.number().optional(),
+    visiteur: Joi.number().optional()
 });
 
 export interface ListDemandeRequest {
@@ -51,4 +67,6 @@ export interface ListDemandeRequest {
     dateDemande?: Date
     statut?: StatutDemande
     emailVisiteur?: string
+    adherent?: number
+    visiteur?: number
 }

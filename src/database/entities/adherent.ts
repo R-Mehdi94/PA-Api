@@ -5,6 +5,7 @@ import { Inscription } from "./inscription"
 import { Cotisation } from "./cotisation"
 import { Token } from "./token"
 import { Transaction } from "./transaction"
+import { Demande } from "./demande"
 
 @Entity()
 export class Adherent {
@@ -61,7 +62,10 @@ export class Adherent {
     @OneToMany(() => Transaction, transactions => transactions.adherent)
     transactions: Transaction[];
 
-    constructor(id:number,motDePasse:string,estBanie:boolean,nom: string, prenom: string, email: string, age: number, numTel: string, adresse: string, profession: string, dateInscription: Date, estBenevole: boolean, parrain: User, inscriptions: Inscription[], cotisations: Cotisation[], tokens: Token[], transactions: Transaction[]) {
+    @OneToMany(() => Demande, demandes => demandes.visiteur)
+    demandes: Demande[];
+
+    constructor(id:number,motDePasse:string,estBanie:boolean,nom: string, prenom: string, email: string, age: number, numTel: string, adresse: string, profession: string, dateInscription: Date, estBenevole: boolean, parrain: User, inscriptions: Inscription[], cotisations: Cotisation[], tokens: Token[], transactions: Transaction[], demandes: Demande[]) {
         this.id = id
         this.motDePasse = motDePasse
         this.estBanie = estBanie
@@ -79,5 +83,6 @@ export class Adherent {
         this.cotisations = cotisations
         this.tokens = tokens
         this.transactions = transactions
+        this.demandes = demandes    
     }
 }

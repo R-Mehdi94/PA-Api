@@ -97,6 +97,7 @@ class AdherentUsecase {
                 .leftJoinAndSelect('adherent.inscriptions', 'inscriptions')
                 .leftJoinAndSelect('adherent.cotisations', 'cotisations')
                 .leftJoinAndSelect('adherent.tokens', 'tokens')
+                .leftJoinAndSelect('adherent.demandes', 'demandes')
                 .skip((listAdherentRequest.page - 1) * listAdherentRequest.limit)
                 .take(listAdherentRequest.limit);
             const [Adherents, totalCount] = yield query.getManyAndCount();

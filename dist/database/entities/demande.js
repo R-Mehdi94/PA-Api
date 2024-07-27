@@ -14,7 +14,9 @@ const typeorm_1 = require("typeorm");
 const evenementDemande_1 = require("./evenementDemande");
 const aideProjetDemande_1 = require("./aideProjetDemande");
 const parrainageDemande_1 = require("./parrainageDemande");
+const visiteur_1 = require("./visiteur");
 const autreDemande_1 = require("./autreDemande");
+const adherent_1 = require("./adherent");
 var TypeDemande;
 (function (TypeDemande) {
     TypeDemande["Projet"] = "Projet";
@@ -29,7 +31,7 @@ var StatutDemande;
     StatutDemande["Refusee"] = "Refus\u00E9e";
 })(StatutDemande || (exports.StatutDemande = StatutDemande = {}));
 let Demande = class Demande {
-    constructor(id, type, dateDemande, statut, emailVisiteur, evenementDemandes, aideProjetDemandes, parrainageDemandes, autreDemandes) {
+    constructor(id, type, dateDemande, statut, emailVisiteur, evenementDemandes, aideProjetDemandes, parrainageDemandes, autreDemandes, adherent, visiteur) {
         this.id = id;
         this.type = type;
         this.dateDemande = dateDemande;
@@ -39,6 +41,8 @@ let Demande = class Demande {
         this.evenementDemandes = evenementDemandes;
         this.aideProjetDemandes = aideProjetDemandes;
         this.parrainageDemandes = parrainageDemandes;
+        this.adherent = adherent;
+        this.visiteur = visiteur;
     }
 };
 exports.Demande = Demande;
@@ -63,6 +67,14 @@ __decorate([
     __metadata("design:type", String)
 ], Demande.prototype, "emailVisiteur", void 0);
 __decorate([
+    (0, typeorm_1.ManyToOne)(() => adherent_1.Adherent, adherent => adherent.demandes),
+    __metadata("design:type", adherent_1.Adherent)
+], Demande.prototype, "adherent", void 0);
+__decorate([
+    (0, typeorm_1.ManyToOne)(() => visiteur_1.Visiteur, visiteur => visiteur.demandes),
+    __metadata("design:type", visiteur_1.Visiteur)
+], Demande.prototype, "visiteur", void 0);
+__decorate([
     (0, typeorm_1.OneToMany)(() => autreDemande_1.AutreDemande, autreDemande => autreDemande.demande),
     __metadata("design:type", Array)
 ], Demande.prototype, "autreDemandes", void 0);
@@ -80,5 +92,5 @@ __decorate([
 ], Demande.prototype, "parrainageDemandes", void 0);
 exports.Demande = Demande = __decorate([
     (0, typeorm_1.Entity)(),
-    __metadata("design:paramtypes", [Number, String, Date, String, String, Array, Array, Array, Array])
+    __metadata("design:paramtypes", [Number, String, Date, String, String, Array, Array, Array, Array, adherent_1.Adherent, visiteur_1.Visiteur])
 ], Demande);

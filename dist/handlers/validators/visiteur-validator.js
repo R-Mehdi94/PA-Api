@@ -11,7 +11,8 @@ exports.createVisiteurValidation = joi_1.default.object({
     prenom: joi_1.default.string().required(),
     age: joi_1.default.number().required(),
     numTel: joi_1.default.string().required(),
-    profession: joi_1.default.string().required()
+    profession: joi_1.default.string().required(),
+    estBanie: joi_1.default.boolean().required()
 });
 exports.visiteurIdValidation = joi_1.default.object({
     id: joi_1.default.number().required(),
@@ -23,7 +24,8 @@ exports.updateVisiteurValidation = joi_1.default.object({
     prenom: joi_1.default.string().optional(),
     age: joi_1.default.number().optional(),
     numTel: joi_1.default.string().optional(),
-    profession: joi_1.default.string().optional()
+    profession: joi_1.default.string().optional(),
+    estBanie: joi_1.default.boolean().optional()
 });
 exports.listVisiteurValidation = joi_1.default.object({
     page: joi_1.default.number().min(1).optional(),
@@ -33,5 +35,6 @@ exports.listVisiteurValidation = joi_1.default.object({
     prenom: joi_1.default.string().optional(),
     age: joi_1.default.number().optional(),
     numTel: joi_1.default.string().optional(),
-    profession: joi_1.default.string().optional()
+    profession: joi_1.default.string().optional(),
+    estBanie: joi_1.default.boolean().optional()
 });

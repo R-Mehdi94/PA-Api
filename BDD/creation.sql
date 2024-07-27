@@ -26,6 +26,7 @@ CREATE TABLE visiteur (
     numTel VARCHAR(10),
     profession VARCHAR(255),
     dateInscription TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    estBanie BOOLEAN DEFAULT FALSE,
     UNIQUE (email)
 );
 
@@ -227,6 +228,10 @@ CREATE TABLE demande(
     dateDemande TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     statut ENUM('En attente','Acceptée','Refusée') DEFAULT 'En attente',
     emailVisiteur VARCHAR(255) NOT NULL,
+    idVisiteur INT,
+    idAdherent INT,
+    FOREIGN KEY (idVisiteur) REFERENCES visiteur(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (idAdherent) REFERENCES adherent(id) ON DELETE CASCADE ON UPDATE CASCADE,
     PRIMARY KEY (id)
 );
 

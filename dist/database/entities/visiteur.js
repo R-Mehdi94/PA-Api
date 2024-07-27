@@ -15,8 +15,9 @@ require("reflect-metadata");
 const user_1 = require("./user");
 const inscription_1 = require("./inscription");
 const transaction_1 = require("./transaction");
+const demande_1 = require("./demande");
 let Visiteur = class Visiteur {
-    constructor(id, nom, prenom, email, age, numTel, adresse, profession, dateInscription, estBenevole, parrain, inscriptions, cotisations, transactions) {
+    constructor(id, nom, prenom, email, age, numTel, adresse, profession, dateInscription, estBenevole, parrain, inscriptions, cotisations, transactions, estBanie, demandes) {
         this.id = id;
         this.nom = nom;
         this.prenom = prenom;
@@ -27,6 +28,8 @@ let Visiteur = class Visiteur {
         this.dateInscription = dateInscription;
         this.inscriptions = inscriptions;
         this.transactions = transactions;
+        this.estBanie = estBanie;
+        this.demandes = demandes;
     }
 };
 exports.Visiteur = Visiteur;
@@ -60,6 +63,10 @@ __decorate([
 ], Visiteur.prototype, "profession", void 0);
 __decorate([
     (0, typeorm_1.Column)(),
+    __metadata("design:type", Boolean)
+], Visiteur.prototype, "estBanie", void 0);
+__decorate([
+    (0, typeorm_1.Column)(),
     (0, typeorm_1.CreateDateColumn)({ type: "datetime" }),
     __metadata("design:type", Date)
 ], Visiteur.prototype, "dateInscription", void 0);
@@ -71,7 +78,11 @@ __decorate([
     (0, typeorm_1.OneToMany)(() => transaction_1.Transaction, transactions => transactions.visiteur),
     __metadata("design:type", Array)
 ], Visiteur.prototype, "transactions", void 0);
+__decorate([
+    (0, typeorm_1.OneToMany)(() => demande_1.Demande, demandes => demandes.visiteur),
+    __metadata("design:type", Array)
+], Visiteur.prototype, "demandes", void 0);
 exports.Visiteur = Visiteur = __decorate([
     (0, typeorm_1.Entity)(),
-    __metadata("design:paramtypes", [Number, String, String, String, Number, String, String, String, Date, Boolean, user_1.User, Array, Array, Array])
+    __metadata("design:paramtypes", [Number, String, String, String, Number, String, String, String, Date, Boolean, user_1.User, Array, Array, Array, Boolean, Array])
 ], Visiteur);

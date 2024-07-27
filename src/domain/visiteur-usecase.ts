@@ -10,6 +10,7 @@ export interface ListVisiteurRequest {
     age?: number
     numTel?: string
     profession?: string
+    estBanie?: boolean
 }
 
 export interface UpdateVisiteurParams {
@@ -19,6 +20,7 @@ export interface UpdateVisiteurParams {
     age?: number
     numTel?: string
     profession?: string
+    estBanie?: boolean
 }
 
 export class VisiteurUsecase {
@@ -50,7 +52,13 @@ export class VisiteurUsecase {
             query.andWhere("visiteur.profession = :profession", { profession: listVisiteurRequest.profession });
         }
 
+        if (listVisiteurRequest.estBanie !== undefined) {
+            query.andWhere("visiteur.estBanie = :estBanie", { estBanie: listVisiteurRequest.estBanie });
+        }
+
         query.leftJoinAndSelect('visiteur.inscriptions', 'inscriptions')
+            .leftJoinAndSelect('visiteur.transactions', 'transactions')
+            .leftJoinAndSelect('visiteur.demandes', 'demandes')
             .skip((listVisiteurRequest.page - 1) * listVisiteurRequest.limit)
             .take(listVisiteurRequest.limit);
 
@@ -64,7 +72,7 @@ export class VisiteurUsecase {
     async getOneVisiteur(id: number): Promise<Visiteur | null> {
         const query = this.db.createQueryBuilder(Visiteur, 'visiteur')
             .leftJoinAndSelect('visiteur.inscriptions', 'inscriptions')
-            
+            .leftJoinAndSelect('visiteur.transactions', 'transactions')
             .where("visiteur.id = :id", { id: id });
 
         const visiteur = await query.getOne();
@@ -76,12 +84,12 @@ export class VisiteurUsecase {
         return visiteur;
     }
 
-    async updateVisiteur(id: number, { email, nom, prenom, age, numTel, profession }: UpdateVisiteurParams): Promise<Visiteur | string | null> {
+    async updateVisiteur(id: number, { email, nom, prenom, age, numTel, profession, estBanie }: UpdateVisiteurParams): Promise<Visiteur | string | null> {
         const repo = this.db.getRepository(Visiteur);
         const visiteurFound = await repo.findOneBy({ id });
         if (visiteurFound === null) return null;
 
-        if (email === undefined && nom === undefined && prenom === undefined && age === undefined && numTel === undefined && profession === undefined) {
+        if (email === undefined && nom === undefined && prenom === undefined && age === undefined && numTel === undefined && profession === undefined && estBanie === undefined) {
             return "No changes";
         }
 
@@ -102,6 +110,9 @@ export class VisiteurUsecase {
         }
         if (profession) {
             visiteurFound.profession = profession;
+        }
+        if (estBanie !== undefined) {
+            visiteurFound.estBanie = estBanie;
         }
 
         const visiteurUpdate = await repo.save(visiteurFound);

@@ -36,7 +36,12 @@ class VisiteurUsecase {
             if (listVisiteurRequest.profession) {
                 query.andWhere("visiteur.profession = :profession", { profession: listVisiteurRequest.profession });
             }
+            if (listVisiteurRequest.estBanie !== undefined) {
+                query.andWhere("visiteur.estBanie = :estBanie", { estBanie: listVisiteurRequest.estBanie });
+            }
             query.leftJoinAndSelect('visiteur.inscriptions', 'inscriptions')
+                .leftJoinAndSelect('visiteur.transactions', 'transactions')
+                .leftJoinAndSelect('visiteur.demandes', 'demandes')
                 .skip((listVisiteurRequest.page - 1) * listVisiteurRequest.limit)
                 .take(listVisiteurRequest.limit);
             const [Visiteurs, totalCount] = yield query.getManyAndCount();
@@ -50,6 +55,7 @@ class VisiteurUsecase {
         return __awaiter(this, void 0, void 0, function* () {
             const query = this.db.createQueryBuilder(visiteur_1.Visiteur, 'visiteur')
                 .leftJoinAndSelect('visiteur.inscriptions', 'inscriptions')
+                .leftJoinAndSelect('visiteur.transactions', 'transactions')
                 .where("visiteur.id = :id", { id: id });
             const visiteur = yield query.getOne();
             if (!visiteur) {
@@ -60,12 +66,12 @@ class VisiteurUsecase {
         });
     }
     updateVisiteur(id_1, _a) {
-        return __awaiter(this, arguments, void 0, function* (id, { email, nom, prenom, age, numTel, profession }) {
+        return __awaiter(this, arguments, void 0, function* (id, { email, nom, prenom, age, numTel, profession, estBanie }) {
             const repo = this.db.getRepository(visiteur_1.Visiteur);
             const visiteurFound = yield repo.findOneBy({ id });
             if (visiteurFound === null)
                 return null;
-            if (email === undefined && nom === undefined && prenom === undefined && age === undefined && numTel === undefined && profession === undefined) {
+            if (email === undefined && nom === undefined && prenom === undefined && age === undefined && numTel === undefined && profession === undefined && estBanie === undefined) {
                 return "No changes";
             }
             if (email) {
@@ -85,6 +91,9 @@ class VisiteurUsecase {
             }
             if (profession) {
                 visiteurFound.profession = profession;
+            }
+            if (estBanie !== undefined) {
+                visiteurFound.estBanie = estBanie;
             }
             const visiteurUpdate = yield repo.save(visiteurFound);
             return visiteurUpdate;

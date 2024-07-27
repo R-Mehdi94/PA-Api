@@ -1,10 +1,10 @@
-import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
-import { User } from "./user";
+import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { EvenementDemande } from "./evenementDemande";
 import { AideProjetDemande } from "./aideProjetDemande";
 import { ParrainageDemande } from "./parrainageDemande";
 import { Visiteur } from "./visiteur";
 import { AutreDemande } from "./autreDemande";
+import { Adherent } from "./adherent";
 
 
 
@@ -40,6 +40,12 @@ export class Demande {
     @Column()
     emailVisiteur: string
 
+    @ManyToOne(() => Adherent, adherent => adherent.demandes)
+    adherent: Adherent;
+
+    @ManyToOne(() => Visiteur, visiteur => visiteur.demandes)
+    visiteur: Visiteur;
+
     @OneToMany(() => AutreDemande, autreDemande => autreDemande.demande)
     autreDemandes: AutreDemande[];
 
@@ -52,7 +58,7 @@ export class Demande {
     @OneToMany(() => ParrainageDemande, parrainageDemande => parrainageDemande.demande)
     parrainageDemandes: ParrainageDemande[];
 
-    constructor(id: number, type: TypeDemande,dateDemande :Date,statut:StatutDemande ,emailVisiteur: string, evenementDemandes: EvenementDemande[], aideProjetDemandes:AideProjetDemande[], parrainageDemandes:ParrainageDemande[], autreDemandes: AutreDemande[]) {
+    constructor(id: number, type: TypeDemande,dateDemande :Date,statut:StatutDemande ,emailVisiteur: string, evenementDemandes: EvenementDemande[], aideProjetDemandes:AideProjetDemande[], parrainageDemandes:ParrainageDemande[], autreDemandes: AutreDemande[], adherent: Adherent, visiteur: Visiteur) {
         this.id = id
         this.type = type
         this.dateDemande = dateDemande
@@ -62,5 +68,7 @@ export class Demande {
         this.evenementDemandes = evenementDemandes
         this.aideProjetDemandes = aideProjetDemandes
         this.parrainageDemandes = parrainageDemandes
+        this.adherent = adherent
+        this.visiteur = visiteur    
     }
 }

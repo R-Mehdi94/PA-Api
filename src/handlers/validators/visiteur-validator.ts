@@ -6,7 +6,8 @@ export const createVisiteurValidation = Joi.object<CreateVisiteurValidationReque
     prenom: Joi.string().required(),
     age: Joi.number().required(),
     numTel: Joi.string().required(),
-    profession: Joi.string().required()
+    profession: Joi.string().required(),
+    estBanie: Joi.boolean().required()
 });
 
 export interface CreateVisiteurValidationRequest {
@@ -16,6 +17,7 @@ export interface CreateVisiteurValidationRequest {
     age: number
     numTel: string
     profession: string
+    estBanie: boolean
 }
 
 export const visiteurIdValidation = Joi.object<VisiteurIdRequest>({
@@ -33,7 +35,8 @@ export const updateVisiteurValidation = Joi.object<UpdateVisiteurRequest>({
     prenom: Joi.string().optional(),
     age: Joi.number().optional(),
     numTel: Joi.string().optional(),
-    profession: Joi.string().optional()
+    profession: Joi.string().optional(),
+    estBanie: Joi.boolean().optional()
 });
 
 export interface UpdateVisiteurRequest {
@@ -44,6 +47,7 @@ export interface UpdateVisiteurRequest {
     age?: number
     numTel?: string
     profession?: string
+    estBanie?: boolean
 }
 
 export const listVisiteurValidation = Joi.object<ListVisiteurRequest>({
@@ -54,7 +58,8 @@ export const listVisiteurValidation = Joi.object<ListVisiteurRequest>({
     prenom: Joi.string().optional(),
     age: Joi.number().optional(),
     numTel: Joi.string().optional(),
-    profession: Joi.string().optional()
+    profession: Joi.string().optional(),
+    estBanie: Joi.boolean().optional()
 });
 
 export interface ListVisiteurRequest {
@@ -66,4 +71,5 @@ export interface ListVisiteurRequest {
     age?: number
     numTel?: string
     profession?: string
+    estBanie?: boolean
 }
