@@ -59,6 +59,7 @@ export const authMiddlewareAdherent = async (req: Request, res: Response, next: 
     .where("token.token = :token", { token })
     .getOne();
 
+
     if (!tokenFound) {
         return res.status(403).json({"error": "Access Forbidden"})
     }

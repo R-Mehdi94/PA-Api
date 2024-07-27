@@ -191,17 +191,19 @@ export const UserHandler = (app: express.Express) => {
 
     app.patch("/users/:id",authMiddlewareAll ,async (req: Request, res: Response) => {
 
-
-
         try {
             const validationResult = updateUserValidation.validate({ ...req.params, ...req.body });
+            console.log("LAAAAAAAAAA")
 
             if (validationResult.error) {
                 res.status(400).send(generateValidationErrorMessage(validationResult.error.details));
                 return;
             }
-    
+            console.log("LAAAAAAAAAA")
+
             const userUsecase = new UserUsecase(AppDataSource);
+
+            console.log("LAAAAAAAAAA")
 
 
             if(validationResult.value.idAdmin !== undefined){
@@ -220,29 +222,35 @@ export const UserHandler = (app: express.Express) => {
                 } 
             }
 
+            console.log("LAAAAAAAAAA")
 
             if(validationResult.value.motDePasse !== undefined){
                 validationResult.value.motDePasse = await hash(validationResult.value.motDePasse, 10);
             }
-            
+            console.log("LAAAAAAAAAA")
+
             const updateUserRequest = validationResult.value;
+            console.log("LAAAAAAAAAA")
 
             const updatedUser = await userUsecase.updateUser(
                 updateUserRequest.id,
                 { ...updateUserRequest }
             );
 
+            console.log("LAAAAAAAAAA")
 
 
             if (updatedUser === null) {
                 res.status(404).send({ "error": `User ${updateUserRequest.id} not found` });
                 return;
-            }
+            }            console.log("LAAAAAAAAAA")
+
 
             if (updatedUser === "No update provided") {
                 res.status(400).send({ "error": `No update provided` });
                 return;
             }
+            console.log("LAAAAAAAAAA")
 
 
 

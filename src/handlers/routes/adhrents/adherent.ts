@@ -121,6 +121,7 @@ export const AdherentHandler = (app: express.Express) => {
     });
 
     app.patch("/adherents/:id",authMiddlewareAdherent, async (req: Request, res: Response) => {
+        console.log("ICIIIIIIIIIIIIIIIIIII",req.body)
         const validation = updateAdherentValidation.validate({ ...req.params, ...req.body });
 
         if (validation.error) {

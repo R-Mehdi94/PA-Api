@@ -116,6 +116,7 @@ const AdherentHandler = (app) => {
         }
     }));
     app.patch("/adherents/:id", auth_middleware_1.authMiddlewareAdherent, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        console.log("ICIIIIIIIIIIIIIIIIIII", req.body);
         const validation = adherent_validator_1.updateAdherentValidation.validate(Object.assign(Object.assign({}, req.params), req.body));
         if (validation.error) {
             res.status(400).send((0, generate_validation_message_1.generateValidationErrorMessage)(validation.error.details));
