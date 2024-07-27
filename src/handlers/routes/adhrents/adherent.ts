@@ -62,7 +62,7 @@ export const AdherentHandler = (app: express.Express) => {
 
     app.delete("/adherents/:id",authMiddlewareAdherent, async (req: Request, res: Response) => {
         try {
-            const validationResult = adherentIdValidation.validate(req.params);
+            const validationResult = adherentIdValidation.validate({ ...req.params, ...req.body });
 
             if (validationResult.error) {
                 res.status(400).send(generateValidationErrorMessage(validationResult.error.details));
@@ -94,7 +94,7 @@ export const AdherentHandler = (app: express.Express) => {
 
     app.get("/adherents/:id", authMiddlewareAdherent, async (req: Request, res: Response) => {
         try {
-            const validationResult = adherentIdValidation.validate(req.params);
+            const validationResult = adherentIdValidation.validate({ ...req.params, ...req.body });
 
             if (validationResult.error) {
                 res.status(400).send(generateValidationErrorMessage(validationResult.error.details));

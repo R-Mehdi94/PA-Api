@@ -65,7 +65,7 @@ const AdherentHandler = (app) => {
     }));
     app.delete("/adherents/:id", auth_middleware_1.authMiddlewareAdherent, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         try {
-            const validationResult = adherent_validator_1.adherentIdValidation.validate(req.params);
+            const validationResult = adherent_validator_1.adherentIdValidation.validate(Object.assign(Object.assign({}, req.params), req.body));
             if (validationResult.error) {
                 res.status(400).send((0, generate_validation_message_1.generateValidationErrorMessage)(validationResult.error.details));
                 return;
@@ -92,7 +92,7 @@ const AdherentHandler = (app) => {
     }));
     app.get("/adherents/:id", auth_middleware_1.authMiddlewareAdherent, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         try {
-            const validationResult = adherent_validator_1.adherentIdValidation.validate(req.params);
+            const validationResult = adherent_validator_1.adherentIdValidation.validate(Object.assign(Object.assign({}, req.params), req.body));
             if (validationResult.error) {
                 res.status(400).send((0, generate_validation_message_1.generateValidationErrorMessage)(validationResult.error.details));
                 return;
