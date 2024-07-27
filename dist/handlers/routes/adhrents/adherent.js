@@ -16,6 +16,9 @@ const adherent_usecase_1 = require("../../../domain/adherent-usecase");
 const adherent_validator_1 = require("../../validators/adherent-validator");
 const generate_validation_message_1 = require("../../validators/generate-validation-message");
 const auth_middleware_1 = require("../../middleware/auth-middleware");
+const user_1 = require("../../../database/entities/user");
+const user_usecase_1 = require("../../../domain/user-usecase");
+const bcrypt_1 = require("bcrypt");
 const AdherentHandler = (app) => {
     app.get("/adherents", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         var _a;
@@ -116,35 +119,43 @@ const AdherentHandler = (app) => {
         }
     }));
     app.patch("/adherents/:id", auth_middleware_1.authMiddlewareAdherent, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-        console.log("ICIIIIIIIIIIIIIIIIIII", req.body);
-        const validation = adherent_validator_1.updateAdherentValidation.validate(Object.assign(Object.assign({}, req.params), req.body));
-        if (validation.error) {
-            res.status(400).send((0, generate_validation_message_1.generateValidationErrorMessage)(validation.error.details));
-            return;
-        }
-        const adherentUsecase = new adherent_usecase_1.AdherentUsecase(database_1.AppDataSource);
-        if ((yield adherentUsecase.verifAdherentToken(+req.params.id, req.body.token)) === false) {
-            res.status(400).send({ "error": `Bad Adherent` });
-            return;
-        }
-        const updateAdherentRequest = validation.value;
         try {
-            const adherentUsecase = new adherent_usecase_1.AdherentUsecase(database_1.AppDataSource);
-            const validationResult = adherent_validator_1.adherentIdValidation.validate(req.params);
+            const validationResult = adherent_validator_1.updateAdherentValidation.validate(Object.assign(Object.assign({}, req.params), req.body));
             if (validationResult.error) {
                 res.status(400).send((0, generate_validation_message_1.generateValidationErrorMessage)(validationResult.error.details));
                 return;
             }
-            const updatedAdherent = yield adherentUsecase.updateAdherent(updateAdherentRequest.id, Object.assign({}, updateAdherentRequest));
-            if (updatedAdherent === null) {
+            const adherentUsecase = new adherent_usecase_1.AdherentUsecase(database_1.AppDataSource);
+            const userUsecase = new user_usecase_1.UserUsecase(database_1.AppDataSource);
+            if (validationResult.value.idAdmin !== undefined) {
+                let user = yield database_1.AppDataSource.getRepository(user_1.User).findOneBy({ id: validationResult.value.idAdmin });
+                if ((user === null || user === void 0 ? void 0 : user.role) !== "Administrateur") {
+                    if ((yield userUsecase.verifUser(+req.params.idAdmin, req.body.token)) === false) {
+                        res.status(400).send({ "error": `Bad user` });
+                        return;
+                    }
+                }
+            }
+            else {
+                if ((yield adherentUsecase.verifAdherentToken(+req.params.id, req.body.token)) === false) {
+                    res.status(400).send({ "error": `Bad user` });
+                    return;
+                }
+            }
+            if (validationResult.value.motDePasse !== undefined) {
+                validationResult.value.motDePasse = yield (0, bcrypt_1.hash)(validationResult.value.motDePasse, 10);
+            }
+            const updateAdherentRequest = validationResult.value;
+            const updateAdherent = yield adherentUsecase.updateAdherent(updateAdherentRequest.id, Object.assign({}, updateAdherentRequest));
+            if (updateAdherent === null) {
                 res.status(404).send({ "error": `Adherent ${updateAdherentRequest.id} not found` });
                 return;
             }
-            if (updatedAdherent === "No update provided") {
+            if (updateAdherent === "No update provided") {
                 res.status(400).send({ "error": `No update provided` });
                 return;
             }
-            res.status(200).send(updatedAdherent);
+            res.status(200).send(updateAdherent);
         }
         catch (error) {
             console.log(error);

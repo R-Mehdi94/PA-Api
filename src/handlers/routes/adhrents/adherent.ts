@@ -5,6 +5,9 @@ import { AdherentUsecase } from '../../../domain/adherent-usecase';
 import { listAdherentValidation, createAdherentValidation, adherentIdValidation, updateAdherentValidation, verifAdherent } from '../../validators/adherent-validator';
 import { generateValidationErrorMessage } from '../../validators/generate-validation-message';
 import { authMiddlewareAdherent } from '../../middleware/auth-middleware';
+import { User } from '../../../database/entities/user';
+import { UserUsecase } from '../../../domain/user-usecase';
+import { hash } from "bcrypt";
 
 
 export const AdherentHandler = (app: express.Express) => {
@@ -121,49 +124,64 @@ export const AdherentHandler = (app: express.Express) => {
     });
 
     app.patch("/adherents/:id",authMiddlewareAdherent, async (req: Request, res: Response) => {
-        console.log("ICIIIIIIIIIIIIIIIIIII",req.body)
-        const validation = updateAdherentValidation.validate({ ...req.params, ...req.body });
-
-        if (validation.error) {
-            res.status(400).send(generateValidationErrorMessage(validation.error.details));
-            return;
-        }
-
-        const adherentUsecase = new AdherentUsecase(AppDataSource);
-
-        if(await adherentUsecase.verifAdherentToken(+req.params.id, req.body.token) === false){
-            res.status(400).send({ "error": `Bad Adherent` });
-            return;
-        } 
-
-        const updateAdherentRequest = validation.value;
-
         try {
-            const adherentUsecase = new AdherentUsecase(AppDataSource);
-
-            const validationResult = adherentIdValidation.validate(req.params);
+            const validationResult = updateAdherentValidation.validate({ ...req.params, ...req.body });
 
             if (validationResult.error) {
                 res.status(400).send(generateValidationErrorMessage(validationResult.error.details));
                 return;
             }
 
-            const updatedAdherent = await adherentUsecase.updateAdherent(
+            const adherentUsecase = new AdherentUsecase(AppDataSource);
+            const userUsecase = new UserUsecase(AppDataSource);
+
+
+
+            if(validationResult.value.idAdmin !== undefined){
+                let user = await AppDataSource.getRepository(User).findOneBy({ id: validationResult.value.idAdmin });
+            
+                if(user?.role !== "Administrateur"){
+                    if(await userUsecase.verifUser(+req.params.idAdmin, req.body.token) === false){
+                        res.status(400).send({ "error": `Bad user` });
+                        return;
+                    } 
+                }
+            }else{
+                if(await adherentUsecase.verifAdherentToken(+req.params.id, req.body.token) === false){
+                    res.status(400).send({ "error": `Bad user` });
+                    return;
+                } 
+            }
+
+
+            if(validationResult.value.motDePasse !== undefined){
+                validationResult.value.motDePasse = await hash(validationResult.value.motDePasse, 10);
+            }
+
+            const updateAdherentRequest = validationResult.value;
+
+            const updateAdherent = await adherentUsecase.updateAdherent(
                 updateAdherentRequest.id,
                 { ...updateAdherentRequest }
             );
 
-            if (updatedAdherent === null) {
+
+
+            if (updateAdherent === null) {
                 res.status(404).send({ "error": `Adherent ${updateAdherentRequest.id} not found` });
                 return;
-            }
+            }            
 
-            if (updatedAdherent === "No update provided") {
+
+            if (updateAdherent === "No update provided") {
                 res.status(400).send({ "error": `No update provided` });
                 return;
             }
+       
 
-            res.status(200).send(updatedAdherent);
+
+
+            res.status(200).send(updateAdherent);
         } catch (error) {
             console.log(error);
             res.status(500).send({ error: "Internal error" });
