@@ -111,8 +111,16 @@ const UserHandler = (app) => {
                 return;
             }
             const userUsecase = new user_usecase_1.UserUsecase(database_1.AppDataSource);
-            const user2 = yield database_1.AppDataSource.getRepository(user_1.User).findOneBy({ id: validationResult.value.id });
-            if ((user2 === null || user2 === void 0 ? void 0 : user2.role) !== "Administrateur") {
+            if (validationResult.value.idAdmin !== undefined) {
+                let user = yield database_1.AppDataSource.getRepository(user_1.User).findOneBy({ id: validationResult.value.idAdmin });
+                if ((user === null || user === void 0 ? void 0 : user.role) !== "Administrateur") {
+                    if ((yield userUsecase.verifUser(+req.params.idAdmin, req.body.token)) === false) {
+                        res.status(400).send({ "error": `Bad user` });
+                        return;
+                    }
+                }
+            }
+            else {
                 if ((yield userUsecase.verifUser(+req.params.id, req.body.token)) === false) {
                     res.status(400).send({ "error": `Bad user` });
                     return;

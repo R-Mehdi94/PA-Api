@@ -41,13 +41,11 @@ export interface AdherentIdRequest {
 }
 
 export const adherentIdValidationUser = Joi.object<AdherentIdRequestUser>({
-    id: Joi.number().required(),
-    idAdmin: Joi.number().optional()
+    id: Joi.number().required()
 });
 
 export interface AdherentIdRequestUser {
     id: number
-    idAdmin?: number
 }
 
 export const updateAdherentValidation = Joi.object<UpdateAdherentRequest>({

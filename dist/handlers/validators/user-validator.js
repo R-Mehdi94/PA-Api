@@ -19,7 +19,8 @@ exports.createUserValidation = joi_1.default.object({
 }).options({ abortEarly: false });
 exports.userIdValidation = joi_1.default.object({
     id: joi_1.default.number().required(),
-    token: joi_1.default.string().required()
+    token: joi_1.default.string().required(),
+    idAdmin: joi_1.default.number().optional()
 });
 exports.getIdToken = joi_1.default.object({
     id: joi_1.default.number().required(),

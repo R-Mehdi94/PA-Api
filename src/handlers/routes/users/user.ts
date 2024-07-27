@@ -123,10 +123,17 @@ export const UserHandler = (app: express.Express) => {
 
             const userUsecase = new UserUsecase(AppDataSource);
 
-            const user2 = await AppDataSource.getRepository(User).findOneBy({ id: validationResult.value.id });
 
+            if(validationResult.value.idAdmin !== undefined){
+                let user = await AppDataSource.getRepository(User).findOneBy({ id: validationResult.value.idAdmin });
             
-            if(user2?.role !== "Administrateur"){
+                if(user?.role !== "Administrateur"){
+                    if(await userUsecase.verifUser(+req.params.idAdmin, req.body.token) === false){
+                        res.status(400).send({ "error": `Bad user` });
+                        return;
+                    } 
+                }
+            }else{
                 if(await userUsecase.verifUser(+req.params.id, req.body.token) === false){
                     res.status(400).send({ "error": `Bad user` });
                     return;
