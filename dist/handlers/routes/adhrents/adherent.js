@@ -118,7 +118,7 @@ const AdherentHandler = (app) => {
             res.status(500).send({ error: "Internal error" });
         }
     }));
-    app.patch("/adherents/:id", auth_middleware_1.authMiddlewareAdherent, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    app.patch("/adherents/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         try {
             const validationResult = adherent_validator_1.updateAdherentValidation.validate(Object.assign(Object.assign({}, req.params), req.body));
             if (validationResult.error) {
@@ -144,8 +144,7 @@ const AdherentHandler = (app) => {
             }
             // Handle password update separately
             if (validationResult.value.oldPassword !== undefined && validationResult.value.newPassword !== undefined) {
-                const oldPasswordHash = yield (0, bcrypt_1.hash)(validationResult.value.oldPassword, 10);
-                if ((yield adherentUsecase.verifMdp(+req.params.id, oldPasswordHash)) === false) {
+                if ((yield adherentUsecase.verifMdp(+req.params.id, validationResult.value.oldPassword)) === false) {
                     res.status(400).send({ "error": `Bad mot de passe` });
                     return;
                 }

@@ -3,6 +3,7 @@ import { Adherent } from "../database/entities/adherent";
 import { User } from "../database/entities/user";
 import { Token } from "../database/entities/token";
 import { compare } from "bcrypt";
+import { copyFile } from "fs";
 
 export interface ListAdherentRequest {
     page: number
@@ -49,10 +50,13 @@ export class AdherentUsecase {
         }
     
         const hashedPassword = result[0].motDePasse;
-    
-        // Comparer le mot de passe fourni avec le mot de passe haché
+
         const isPasswordValid = await compare(mdp, hashedPassword);
-    
+
+        console.log("Mot de passe saisi : ", mdp);
+        console.log("Mot de passe haché : ", hashedPassword);
+
+        console.log("Mot de passe valide : ", isPasswordValid);
         if (!isPasswordValid) {
             console.log("Mot de passe incorrect");
             return false;

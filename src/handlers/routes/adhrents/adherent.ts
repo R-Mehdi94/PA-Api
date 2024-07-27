@@ -123,7 +123,7 @@ export const AdherentHandler = (app: express.Express) => {
         }
     });
 
-    app.patch("/adherents/:id", authMiddlewareAdherent, async (req: Request, res: Response) => {
+    app.patch("/adherents/:id", async (req: Request, res: Response) => {
         try {
             const validationResult = updateAdherentValidation.validate({ ...req.params, ...req.body });
     
@@ -152,8 +152,7 @@ export const AdherentHandler = (app: express.Express) => {
             }
             // Handle password update separately
             if (validationResult.value.oldPassword !== undefined && validationResult.value.newPassword !== undefined) {
-                const oldPasswordHash = await hash(validationResult.value.oldPassword, 10);
-                if (await adherentUsecase.verifMdp(+req.params.id, oldPasswordHash) === false) {
+                if (await adherentUsecase.verifMdp(+req.params.id, validationResult.value.oldPassword) === false) {
                     res.status(400).send({ "error": `Bad mot de passe` });
                     return;
                 }
