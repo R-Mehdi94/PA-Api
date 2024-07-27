@@ -69,6 +69,7 @@ VALUES
 INSERT INTO inscription (adherentId, evenementId)
 VALUES 
 (1, 2),
+(1, 1),
 (2, 1);
 
 INSERT INTO ag (nom, date, description, type, quorum) VALUES

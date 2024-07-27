@@ -132,6 +132,30 @@ const InscriptionHandler = (app) => {
             res.status(500).send({ error: "Internal error" });
         }
     }));
+    app.post("/deleteInscriptionAdherent", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        try {
+            const validationResult = inscription_validator_1.deleteInscriptionAdherent.validate(req.body);
+            if (validationResult.error) {
+                res.status(400).send((0, generate_validation_message_1.generateValidationErrorMessage)(validationResult.error.details));
+                return;
+            }
+            const adherent = validationResult.value.adherent;
+            const evenement = validationResult.value.evenement;
+            const inscriptionUsecase = new inscription_usecase_1.InscriptionUsecase(database_1.AppDataSource);
+            const inscription = yield inscriptionUsecase.deleteInscriptionAdherent(adherent, evenement);
+            if (inscription === null) {
+                res.status(404).send({ "error": `Inscription not found` });
+                return;
+            }
+            const evenementUsecase = new evenement_usecase_1.EvenementUsecase(database_1.AppDataSource);
+            yield evenementUsecase.nbPlacePlusUn(evenement);
+            res.status(200).send("Inscription supprimée avec succès");
+        }
+        catch (error) {
+            console.log(error);
+            res.status(500).send({ error: "Internal error" });
+        }
+    }));
     app.get("/inscriptions/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         try {
             const validationResult = inscription_validator_1.inscriptionIdValidation.validate(req.params);

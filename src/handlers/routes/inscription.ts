@@ -3,7 +3,7 @@ import { AppDataSource } from '../../database/database';
 import { Inscription } from '../../database/entities/inscription';
 import { InscriptionUsecase } from '../../domain/inscription-usecase';
 import { generateValidationErrorMessage } from '../validators/generate-validation-message';
-import { listInscriptionValidation, createInscriptionValidation, inscriptionIdValidation, updateInscriptionValidation, verifEmail, deleteInscriptionValidationRequest } from '../validators/inscription-validator';
+import { listInscriptionValidation, createInscriptionValidation, inscriptionIdValidation, updateInscriptionValidation, verifEmail, deleteInscriptionValidationRequest, deleteInscriptionAdherent } from '../validators/inscription-validator';
 import { EvenementUsecase } from '../../domain/evenement-usecase';
 
 
@@ -130,6 +130,35 @@ export const InscriptionHandler = (app: express.Express) => {
 
             if (inscription === null) {
                 res.status(404).send({ "error": `Inscription ${emailVisiteur} not found` });
+                return;
+            }
+
+            const evenementUsecase = new EvenementUsecase(AppDataSource);
+            await evenementUsecase.nbPlacePlusUn(evenement);
+            res.status(200).send("Inscription supprimée avec succès");
+
+        } catch (error) {
+            console.log(error);
+            res.status(500).send({ error: "Internal error" });
+        }
+    });
+
+    app.post("/deleteInscriptionAdherent", async (req: Request, res: Response) => {
+        try {
+            const validationResult = deleteInscriptionAdherent.validate(req.body);
+
+            if (validationResult.error) {
+                res.status(400).send(generateValidationErrorMessage(validationResult.error.details));
+                return;
+            }
+            const adherent = validationResult.value.adherent;
+            const evenement = validationResult.value.evenement;
+
+            const inscriptionUsecase = new InscriptionUsecase(AppDataSource);
+            const inscription = await inscriptionUsecase.deleteInscriptionAdherent(adherent, evenement);
+
+            if (inscription === null) {
+                res.status(404).send({ "error": `Inscription not found` });
                 return;
             }
 

@@ -15,6 +15,14 @@ class InscriptionUsecase {
     constructor(db) {
         this.db = db;
     }
+    deleteInscriptionAdherent(idAdherent, idEvent) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const entityManager = this.db.getRepository(inscription_1.Inscription);
+            const sqlQuery = `delete from inscription where adherentId like ? and evenementId = ?;`;
+            const deleteInscriptionAdherent = yield entityManager.query(sqlQuery, [idAdherent, idEvent]);
+            return deleteInscriptionAdherent;
+        });
+    }
     deleteInscription(email, idEvent) {
         return __awaiter(this, void 0, void 0, function* () {
             const entityManager = this.db.getRepository(inscription_1.Inscription);

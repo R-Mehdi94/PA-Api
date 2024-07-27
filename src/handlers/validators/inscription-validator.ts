@@ -24,6 +24,17 @@ export interface DeleteInscriptionValidationRequest {
     emailVisiteur: string
     evenement: number
 }
+
+export const deleteInscriptionAdherent= Joi.object<DeleteInscriptionAdherent>({
+    adherent: Joi.number().required(),
+    evenement: Joi.number().required()
+}).options({ abortEarly: false })
+
+export interface DeleteInscriptionAdherent {
+    adherent: number
+    evenement: number
+}
+
 export const inscriptionIdValidation = Joi.object<InscriptionIdRequest>({
     id: Joi.number().required(),
 });

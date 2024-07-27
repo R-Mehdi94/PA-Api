@@ -22,6 +22,17 @@ export interface UpdateInscriptionParams {
 export class InscriptionUsecase {
     constructor(private readonly db: DataSource) { }
 
+    async deleteInscriptionAdherent(idAdherent:number, idEvent:number): Promise<any | null> {
+
+        const entityManager = this.db.getRepository(Inscription);
+    
+        const sqlQuery = `delete from inscription where adherentId like ? and evenementId = ?;`;
+    
+        const deleteInscriptionAdherent = await entityManager.query(sqlQuery, [idAdherent,idEvent]);
+    
+        return deleteInscriptionAdherent;
+    }
+
     async deleteInscription(email:string, idEvent:number): Promise<any | null> {
 
         const entityManager = this.db.getRepository(Inscription);

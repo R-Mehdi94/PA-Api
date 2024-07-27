@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.listInscriptionValidation = exports.verifEmail = exports.updateInscriptionValidation = exports.inscriptionIdValidation = exports.deleteInscriptionValidationRequest = exports.createInscriptionValidation = void 0;
+exports.listInscriptionValidation = exports.verifEmail = exports.updateInscriptionValidation = exports.inscriptionIdValidation = exports.deleteInscriptionAdherent = exports.deleteInscriptionValidationRequest = exports.createInscriptionValidation = void 0;
 const joi_1 = __importDefault(require("joi"));
 exports.createInscriptionValidation = joi_1.default.object({
     evenement: joi_1.default.number().required(),
@@ -12,6 +12,10 @@ exports.createInscriptionValidation = joi_1.default.object({
 });
 exports.deleteInscriptionValidationRequest = joi_1.default.object({
     emailVisiteur: joi_1.default.string().email().required(),
+    evenement: joi_1.default.number().required()
+}).options({ abortEarly: false });
+exports.deleteInscriptionAdherent = joi_1.default.object({
+    adherent: joi_1.default.number().required(),
     evenement: joi_1.default.number().required()
 }).options({ abortEarly: false });
 exports.inscriptionIdValidation = joi_1.default.object({
