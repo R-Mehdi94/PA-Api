@@ -37,7 +37,7 @@ export class AdherentUsecase {
 
     async deleteToken(id: number): Promise<DeleteResult> {
 
-        const TokenDelete = await this.db.createQueryBuilder().delete().from(Token).where("adherentId = :id", { id: id }).andWhere("blobName IS NOT NULL").execute();
+        const TokenDelete = await this.db.createQueryBuilder().delete().from(Token).where("adherentId = :id", { id: id }).andWhere("blobName IS NULL").execute();
 
         return TokenDelete;
 

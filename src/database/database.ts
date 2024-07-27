@@ -1,7 +1,7 @@
 
 import { DataSource } from "typeorm";
 import 'dotenv/config';
-    /*export const AppDataSource = new DataSource({
+    export const AppDataSource = new DataSource({
         type: "mysql",
         host: 'db',
         port: 3306,
@@ -14,12 +14,12 @@ import 'dotenv/config';
             "src/database/entities/*.ts"
         ]
     });
-  /*  ssl: {
+    /*ssl: {
         rejectUnauthorized: false // Ajustez selon vos besoins de sécurité
       },
     "driver": require('mysql2')*/
 
-export const AppDataSource = new DataSource({
+/*export const AppDataSource = new DataSource({
       type: process.env.TYPE as any,
       host: process.env.HOST,
       port: process.env.PORTDB as any,
@@ -43,4 +43,4 @@ export const AppDataSource = new DataSource({
         },
       "driver": require('mysql2')
   
-  })
+  })*/
