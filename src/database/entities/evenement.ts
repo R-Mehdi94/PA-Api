@@ -1,6 +1,5 @@
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, OneToMany } from "typeorm";
 import "reflect-metadata";
-import { Transaction } from "./transaction";
 import { Inscription } from "./inscription";
 import { EvenementUser } from "./evenementUser"; // Importez la nouvelle entité
 import { EvenementRessource } from "./evenementRessource";
@@ -31,8 +30,7 @@ export class Evenement {
     @OneToMany(() => EvenementRessource, evenementRessource => evenementRessource.evenement)
     evenementRessources: EvenementRessource[]; // Ajoutez cette relation
 
-    @OneToMany(() => Transaction, transactions => transactions.evenement)
-    transactions: Transaction[];
+
 
     @OneToMany(() => Inscription, inscriptions => inscriptions.evenement)
     inscriptions: Inscription[];
@@ -40,7 +38,7 @@ export class Evenement {
     @OneToMany(() => EvenementUser, evenementUser => evenementUser.evenement)
     evenementUsers: EvenementUser[]; // Ajoutez cette relation 
 
-    constructor(id: number, nom: string, date: Date, description: string, lieu: string, transactions: Transaction[], inscriptions: Inscription[], evenementRessource: EvenementRessource[], estReserve: boolean, nbPlace: number, evenementUsers: EvenementUser[]) {
+    constructor(id: number, nom: string, date: Date, description: string, lieu: string, inscriptions: Inscription[], evenementRessource: EvenementRessource[], estReserve: boolean, nbPlace: number, evenementUsers: EvenementUser[]) {
         this.id = id;
         this.nom = nom;
         this.date = date;
@@ -48,7 +46,6 @@ export class Evenement {
         this.lieu = lieu;
         this.estReserve = estReserve;
         this.nbPlace = nbPlace;
-        this.transactions = transactions;
         this.inscriptions = inscriptions;
         this.evenementRessources = evenementRessource;
         this.evenementUsers = evenementUsers

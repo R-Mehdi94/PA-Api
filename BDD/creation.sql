@@ -183,15 +183,13 @@ CREATE TABLE transaction (
     montant FLOAT NOT NULL,
     type ENUM('Don', 'Cotisation', 'Inscription') NOT NULL,
     dateTransaction TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    emailVisiteur VARCHAR(255) NOT NULL,
-    evenementId INT DEFAULT NULL,
+    visiteurId INT,
+    adherentId INT,
     methodePaiement VARCHAR(255),
     PRIMARY KEY (id),
-    FOREIGN KEY (evenementId) REFERENCES evenement(id) ON DELETE CASCADE ON UPDATE CASCADE
+    FOREIGN KEY (visiteurId) REFERENCES visiteur(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (adherentId) REFERENCES adherent(id) ON DELETE CASCADE ON UPDATE CASCADE
 );
-
-
-
 
 
 

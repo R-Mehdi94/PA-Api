@@ -18,11 +18,8 @@ class TransactionUsecase {
     listTransactions(listTransactionRequest) {
         return __awaiter(this, void 0, void 0, function* () {
             const query = this.db.createQueryBuilder(transaction_1.Transaction, 'transaction');
-            if (listTransactionRequest.emailVisiteur) {
-                query.andWhere("transaction.emailVisiteur = :emailVisiteur", { emailVisiteur: listTransactionRequest.emailVisiteur });
-            }
-            if (listTransactionRequest.evenement) {
-                query.andWhere("transaction.evenementId = :evenement", { evenement: listTransactionRequest.evenement });
+            if (listTransactionRequest.type) {
+                query.andWhere("transaction.type = :type", { type: listTransactionRequest.type });
             }
             if (listTransactionRequest.montant) {
                 query.andWhere("transaction.montant = :montant", { montant: listTransactionRequest.montant });
@@ -30,13 +27,14 @@ class TransactionUsecase {
             if (listTransactionRequest.methodePaiement) {
                 query.andWhere("transaction.methodePaiement = :methodePaiement", { methodePaiement: listTransactionRequest.methodePaiement });
             }
-            if (listTransactionRequest.type) {
-                query.andWhere("transaction.type = :type", { type: listTransactionRequest.type });
+            if (listTransactionRequest.visiteur) {
+                query.andWhere("transaction.visiteurId = :visiteur", { visiteur: listTransactionRequest.visiteur });
             }
-            if (listTransactionRequest.dateTransaction) {
-                query.andWhere("transaction.dateTransaction = :dateTransaction", { dateTransaction: listTransactionRequest.dateTransaction });
+            if (listTransactionRequest.adherent) {
+                query.andWhere("transaction.adherentId = :adherent", { adherent: listTransactionRequest.adherent });
             }
-            query.leftJoinAndSelect('transaction.evenement', 'evenement')
+            query.leftJoinAndSelect('transaction.visiteur', 'visiteur')
+                .leftJoinAndSelect('transaction.adherent', 'adherent')
                 .skip((listTransactionRequest.page - 1) * listTransactionRequest.limit)
                 .take(listTransactionRequest.limit);
             const [Transactions, totalCount] = yield query.getManyAndCount();
@@ -49,7 +47,8 @@ class TransactionUsecase {
     getOneTransaction(id) {
         return __awaiter(this, void 0, void 0, function* () {
             const query = this.db.createQueryBuilder(transaction_1.Transaction, 'transaction')
-                .leftJoinAndSelect('transaction.evenement', 'evenement')
+                .leftJoinAndSelect('transaction.visiteur', 'visiteur')
+                .leftJoinAndSelect('transaction.adherent', 'adherent')
                 .where("transaction.id = :id", { id: id });
             const transaction = yield query.getOne();
             if (!transaction) {
@@ -60,19 +59,16 @@ class TransactionUsecase {
         });
     }
     updateTransaction(id_1, _a) {
-        return __awaiter(this, arguments, void 0, function* (id, { emailVisiteur, evenement, montant, methodePaiement, type, dateTransaction }) {
+        return __awaiter(this, arguments, void 0, function* (id, { type, montant, methodePaiement, visiteur, adherent }) {
             const repo = this.db.getRepository(transaction_1.Transaction);
             const transactionFound = yield repo.findOneBy({ id });
             if (transactionFound === null)
                 return null;
-            if (emailVisiteur === undefined && evenement === undefined && montant === undefined && methodePaiement === undefined && type === undefined && dateTransaction === undefined) {
+            if (type === undefined && montant === undefined && methodePaiement === undefined && visiteur === undefined && adherent === undefined) {
                 return "No changes";
             }
-            if (emailVisiteur) {
-                transactionFound.emailVisiteur = emailVisiteur;
-            }
-            if (evenement) {
-                transactionFound.evenement = evenement;
+            if (type) {
+                transactionFound.type = type;
             }
             if (montant !== undefined) {
                 transactionFound.montant = montant;
@@ -80,11 +76,11 @@ class TransactionUsecase {
             if (methodePaiement) {
                 transactionFound.methodePaiement = methodePaiement;
             }
-            if (type) {
-                transactionFound.type = type;
+            if (visiteur) {
+                transactionFound.visiteur = visiteur;
             }
-            if (dateTransaction) {
-                transactionFound.dateTransaction = dateTransaction;
+            if (adherent) {
+                transactionFound.adherent = adherent;
             }
             const transactionUpdate = yield repo.save(transactionFound);
             return transactionUpdate;

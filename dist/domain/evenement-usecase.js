@@ -53,7 +53,6 @@ class EvenementUsecase {
                 query.andWhere("evenement.nbPlace = :nbPlace", { nbPlace: listEvenementRequest.nbPlace });
             }
             query.leftJoinAndSelect('evenement.evenementRessources', 'evenementRessources')
-                .leftJoinAndSelect('evenement.transactions', 'transactions')
                 .leftJoinAndSelect('evenement.inscriptions', 'inscriptions')
                 .leftJoinAndSelect('evenement.evenementUsers', 'evenementUsers')
                 .skip((listEvenementRequest.page - 1) * listEvenementRequest.limit)
@@ -69,7 +68,6 @@ class EvenementUsecase {
         return __awaiter(this, void 0, void 0, function* () {
             const query = this.db.createQueryBuilder(evenement_1.Evenement, 'evenement')
                 .leftJoinAndSelect('evenement.evenementRessources', 'evenementRessources')
-                .leftJoinAndSelect('evenement.transactions', 'transactions')
                 .leftJoinAndSelect('evenement.inscriptions', 'inscriptions')
                 .leftJoinAndSelect('evenement.evenementUsers', 'evenementUsers')
                 .where("evenement.id = :id", { id: id });

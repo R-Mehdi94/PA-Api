@@ -89,9 +89,13 @@ INSERT INTO vote (propositionId, userId, choix) VALUES
 (1, 1, 'Oui'),
 (2, 2, 'Non');
 
-INSERT INTO transaction (montant, type, dateTransaction, emailVisiteur) VALUES
-(50.00, 'Cotisation', NOW(), 'test@gmail.com'),
-(100.00, 'Don', NOW(), 'test@gmail.com');
+INSERT INTO transaction (montant, type, dateTransaction, visiteurId, methodePaiement) VALUES
+(50.00, 'Cotisation', NOW(), 2, 'Paypal'),
+(10.00, 'Don', NOW(), 1, 'Virement');
+
+INSERT INTO transaction (montant, type, dateTransaction, adherentId, methodePaiement) VALUES
+(20.00, 'Don', NOW(), 1, 'VISA'),
+(100.00, 'Don', NOW(), 2, 'Mastercard');
 
 
 /*INSERT INTO transaction (montant, type, dateTransaction, emailVisiteur, evenementId) VALUES

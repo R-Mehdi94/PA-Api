@@ -1,8 +1,9 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, OneToMany, ManyToOne, PrimaryColumn} from "typeorm"
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, OneToMany} from "typeorm"
 import "reflect-metadata"
 import { User } from "./user"
 import { Inscription } from "./inscription"
 import { Cotisation } from "./cotisation"
+import { Transaction } from "./transaction"
 
 
 @Entity()
@@ -37,11 +38,12 @@ export class Visiteur {
     inscriptions: Inscription[];
 
 
+    @OneToMany(() => Transaction, transactions => transactions.visiteur)
+    transactions: Transaction[];
 
 
 
-
-    constructor(id:number,nom: string, prenom: string, email: string, age: number, numTel: string, adresse: string, profession: string, dateInscription: Date, estBenevole: boolean, parrain: User, inscriptions: Inscription[], cotisations: Cotisation[]) {
+    constructor(id:number,nom: string, prenom: string, email: string, age: number, numTel: string, adresse: string, profession: string, dateInscription: Date, estBenevole: boolean, parrain: User, inscriptions: Inscription[], cotisations: Cotisation[], transactions: Transaction[]) {
         this.id = id;
         this.nom = nom
         this.prenom = prenom
@@ -51,5 +53,6 @@ export class Visiteur {
         this.profession = profession
         this.dateInscription = dateInscription
         this.inscriptions = inscriptions
+        this.transactions = transactions
     }
 }

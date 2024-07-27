@@ -1,25 +1,24 @@
 import { DataSource } from "typeorm";
 import { Transaction, TypeTransaction } from "../database/entities/transaction";
-import { Evenement } from "../database/entities/evenement";
+import { Adherent } from "../database/entities/adherent";
+import { Visiteur } from "../database/entities/visiteur";
 
 export interface ListTransactionRequest {
     page: number
     limit: number
-    emailVisiteur?: string
-    evenement?: number
+    type?: TypeTransaction
     montant?: number
     methodePaiement?: string
-    type?: TypeTransaction
-    dateTransaction?: Date
+    visiteur?: number
+    adherent?: number
 }
 
 export interface UpdateTransactionParams {
-    emailVisiteur?: string
-    evenement?: Evenement
+    type?: TypeTransaction
     montant?: number
     methodePaiement?: string
-    type?: TypeTransaction
-    dateTransaction?: Date
+    visiteur?: Visiteur
+    adherent?: Adherent
 }
 
 export class TransactionUsecase {
@@ -27,12 +26,8 @@ export class TransactionUsecase {
 
     async listTransactions(listTransactionRequest: ListTransactionRequest): Promise<{ Transactions: Transaction[]; totalCount: number; }> {
         const query = this.db.createQueryBuilder(Transaction, 'transaction');
-        if (listTransactionRequest.emailVisiteur) {
-            query.andWhere("transaction.emailVisiteur = :emailVisiteur", { emailVisiteur: listTransactionRequest.emailVisiteur });
-        }
-
-        if (listTransactionRequest.evenement) {
-            query.andWhere("transaction.evenementId = :evenement", { evenement: listTransactionRequest.evenement });
+        if (listTransactionRequest.type) {
+            query.andWhere("transaction.type = :type", { type: listTransactionRequest.type });
         }
 
         if (listTransactionRequest.montant) {
@@ -43,15 +38,16 @@ export class TransactionUsecase {
             query.andWhere("transaction.methodePaiement = :methodePaiement", { methodePaiement: listTransactionRequest.methodePaiement });
         }
 
-        if (listTransactionRequest.type) {
-            query.andWhere("transaction.type = :type", { type: listTransactionRequest.type });
+        if (listTransactionRequest.visiteur) {
+            query.andWhere("transaction.visiteurId = :visiteur", { visiteur: listTransactionRequest.visiteur });
         }
 
-        if (listTransactionRequest.dateTransaction) {
-            query.andWhere("transaction.dateTransaction = :dateTransaction", { dateTransaction: listTransactionRequest.dateTransaction });
+        if (listTransactionRequest.adherent) {
+            query.andWhere("transaction.adherentId = :adherent", { adherent: listTransactionRequest.adherent });
         }
 
-        query.leftJoinAndSelect('transaction.evenement', 'evenement')
+        query.leftJoinAndSelect('transaction.visiteur', 'visiteur')
+            .leftJoinAndSelect('transaction.adherent', 'adherent')
             .skip((listTransactionRequest.page - 1) * listTransactionRequest.limit)
             .take(listTransactionRequest.limit);
 
@@ -64,7 +60,8 @@ export class TransactionUsecase {
 
     async getOneTransaction(id: number): Promise<Transaction | null> {
         const query = this.db.createQueryBuilder(Transaction, 'transaction')
-            .leftJoinAndSelect('transaction.evenement', 'evenement')
+            .leftJoinAndSelect('transaction.visiteur', 'visiteur')
+            .leftJoinAndSelect('transaction.adherent', 'adherent')
             .where("transaction.id = :id", { id: id });
 
         const transaction = await query.getOne();
@@ -76,20 +73,17 @@ export class TransactionUsecase {
         return transaction;
     }
 
-    async updateTransaction(id: number, { emailVisiteur, evenement, montant, methodePaiement, type, dateTransaction }: UpdateTransactionParams): Promise<Transaction | string | null> {
+    async updateTransaction(id: number, { type, montant, methodePaiement, visiteur, adherent }: UpdateTransactionParams): Promise<Transaction | string | null> {
         const repo = this.db.getRepository(Transaction);
         const transactionFound = await repo.findOneBy({ id });
         if (transactionFound === null) return null;
 
-        if (emailVisiteur === undefined && evenement === undefined && montant === undefined && methodePaiement === undefined && type === undefined && dateTransaction === undefined) {
+        if (type === undefined && montant === undefined && methodePaiement === undefined && visiteur === undefined && adherent === undefined) {
             return "No changes";
         }
 
-        if (emailVisiteur) {
-            transactionFound.emailVisiteur = emailVisiteur;
-        }
-        if (evenement) {
-            transactionFound.evenement = evenement;
+        if (type) {
+            transactionFound.type = type;
         }
         if (montant !== undefined) {
             transactionFound.montant = montant;
@@ -97,11 +91,11 @@ export class TransactionUsecase {
         if (methodePaiement) {
             transactionFound.methodePaiement = methodePaiement;
         }
-        if (type) {
-            transactionFound.type = type;
+        if (visiteur) {
+            transactionFound.visiteur = visiteur;
         }
-        if (dateTransaction) {
-            transactionFound.dateTransaction = dateTransaction;
+        if (adherent) {
+            transactionFound.adherent = adherent;
         }
 
         const transactionUpdate = await repo.save(transactionFound);

@@ -12,7 +12,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Transaction = exports.TypeTransaction = void 0;
 const typeorm_1 = require("typeorm");
 require("reflect-metadata");
-const evenement_1 = require("./evenement");
+const visiteur_1 = require("./visiteur");
+const adherent_1 = require("./adherent");
 var TypeTransaction;
 (function (TypeTransaction) {
     TypeTransaction["Don"] = "Don";
@@ -20,13 +21,13 @@ var TypeTransaction;
     TypeTransaction["Inscription"] = "Inscription";
 })(TypeTransaction || (exports.TypeTransaction = TypeTransaction = {}));
 let Transaction = class Transaction {
-    constructor(id, montant, type, methodePaiement, emailVisiteur, evenement) {
+    constructor(id, montant, type, methodePaiement, visiteur, adherent) {
         this.id = id;
         this.montant = montant;
         this.type = type;
         this.methodePaiement = methodePaiement;
-        this.emailVisiteur = emailVisiteur;
-        this.evenement = evenement;
+        this.visiteur = visiteur;
+        this.adherent = adherent;
     }
 };
 exports.Transaction = Transaction;
@@ -34,14 +35,6 @@ __decorate([
     (0, typeorm_1.PrimaryGeneratedColumn)(),
     __metadata("design:type", Number)
 ], Transaction.prototype, "id", void 0);
-__decorate([
-    (0, typeorm_1.Column)(),
-    __metadata("design:type", String)
-], Transaction.prototype, "emailVisiteur", void 0);
-__decorate([
-    (0, typeorm_1.ManyToOne)(() => evenement_1.Evenement, evenement => evenement.transactions),
-    __metadata("design:type", evenement_1.Evenement)
-], Transaction.prototype, "evenement", void 0);
 __decorate([
     (0, typeorm_1.Column)(),
     __metadata("design:type", Number)
@@ -61,7 +54,15 @@ __decorate([
     (0, typeorm_1.CreateDateColumn)({ type: "datetime" }),
     __metadata("design:type", Date)
 ], Transaction.prototype, "dateTransaction", void 0);
+__decorate([
+    (0, typeorm_1.ManyToOne)(() => visiteur_1.Visiteur, visiteur => visiteur.transactions),
+    __metadata("design:type", visiteur_1.Visiteur)
+], Transaction.prototype, "visiteur", void 0);
+__decorate([
+    (0, typeorm_1.ManyToOne)(() => adherent_1.Adherent, adherent => adherent.transactions),
+    __metadata("design:type", adherent_1.Adherent)
+], Transaction.prototype, "adherent", void 0);
 exports.Transaction = Transaction = __decorate([
     (0, typeorm_1.Entity)(),
-    __metadata("design:paramtypes", [Number, Number, String, String, String, evenement_1.Evenement])
+    __metadata("design:paramtypes", [Number, Number, String, String, visiteur_1.Visiteur, adherent_1.Adherent])
 ], Transaction);

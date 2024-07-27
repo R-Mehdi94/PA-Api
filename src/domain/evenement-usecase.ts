@@ -76,7 +76,6 @@ export class EvenementUsecase {
         }
 
         query.leftJoinAndSelect('evenement.evenementRessources', 'evenementRessources')
-            .leftJoinAndSelect('evenement.transactions', 'transactions')
             .leftJoinAndSelect('evenement.inscriptions', 'inscriptions')
             .leftJoinAndSelect('evenement.evenementUsers', 'evenementUsers')
             .skip((listEvenementRequest.page - 1) * listEvenementRequest.limit)
@@ -92,7 +91,6 @@ export class EvenementUsecase {
     async getOneEvenement(id: number): Promise<Evenement | null> {
         const query = this.db.createQueryBuilder(Evenement, 'evenement')
             .leftJoinAndSelect('evenement.evenementRessources', 'evenementRessources')
-            .leftJoinAndSelect('evenement.transactions', 'transactions')
             .leftJoinAndSelect('evenement.inscriptions', 'inscriptions')
             .leftJoinAndSelect('evenement.evenementUsers', 'evenementUsers')
             .where("evenement.id = :id", { id: id });
