@@ -9,8 +9,8 @@ const cotisation_1 = require("../../database/entities/cotisation");
 exports.createCotisationValidation = joi_1.default.object({
     type: joi_1.default.string().valid(...Object.values(cotisation_1.typeCotisation)).required(),
     Ajours: joi_1.default.boolean().required(),
-    user: joi_1.default.number().required(),
-    adherent: joi_1.default.number().required()
+    user: joi_1.default.number().optional(),
+    adherent: joi_1.default.number().optional()
 });
 exports.cotisationIdValidation = joi_1.default.object({
     id: joi_1.default.number().required(),

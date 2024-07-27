@@ -16,9 +16,13 @@ VALUES
 ('Durand', 'Luc', 'luc.durand@example.com', '$2b$10$JuqVnm5ov5EBsi158eE4FOJFVXjnkOCqrc5k2s87M.ya2dwOTS.wG', 28, '0634567890', '456 Avenue de Lyon', 'Designer', FALSE, 2, FALSE),
 ('Leroy', 'Anne', 'anne.leroy@example.com', '$2b$10$JuqVnm5ov5EBsi158eE4FOJFVXjnkOCqrc5k2s87M.ya2dwOTS.wG', 32, '0645678901', '789 Boulevard de Marseille', 'Avocate', TRUE, 2, TRUE);
 
+INSERT INTO cotisation (adherentId, type,date, Ajours)
+VALUES 
+(1, 'cadre', '2023-07-24 00:00:00', false),
+(1, 'cadre', '2022-07-25 00:00:00',false);
+
 INSERT INTO cotisation (adherentId, type)
 VALUES 
-(1, 'cadre'),
 (2, 'etudiant'),
 (3, 'autre');
 

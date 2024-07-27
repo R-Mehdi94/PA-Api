@@ -6,15 +6,15 @@ import { User } from "../../database/entities/user";
 export const createCotisationValidation = Joi.object<CreateCotisationValidationRequest>({
     type: Joi.string().valid(...Object.values(typeCotisation)).required(),
     Ajours: Joi.boolean().required(),
-    user: Joi.number().required(),
-    adherent: Joi.number().required()
+    user: Joi.number().optional(),
+    adherent: Joi.number().optional()
 });
 
 export interface CreateCotisationValidationRequest {
     type: typeCotisation
     Ajours: boolean
-    user: User
-    adherent: Adherent
+    user?: User
+    adherent?: Adherent
 }
 
 export const cotisationIdValidation = Joi.object<CotisationIdRequest>({
