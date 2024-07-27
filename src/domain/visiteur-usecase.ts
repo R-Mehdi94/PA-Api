@@ -59,6 +59,10 @@ export class VisiteurUsecase {
         query.leftJoinAndSelect('visiteur.inscriptions', 'inscriptions')
             .leftJoinAndSelect('visiteur.transactions', 'transactions')
             .leftJoinAndSelect('visiteur.demandes', 'demandes')
+            .leftJoinAndSelect('demandes.evenementDemandes', 'evenementDemandes')
+            .leftJoinAndSelect('demandes.aideProjetDemandes', 'aideProjetDemandes')
+            .leftJoinAndSelect('demandes.parrainageDemandes', 'parrainageDemandes')
+            .leftJoinAndSelect('demandes.autreDemandes', 'autreDemandes')
             .skip((listVisiteurRequest.page - 1) * listVisiteurRequest.limit)
             .take(listVisiteurRequest.limit);
 
@@ -73,6 +77,10 @@ export class VisiteurUsecase {
         const query = this.db.createQueryBuilder(Visiteur, 'visiteur')
             .leftJoinAndSelect('visiteur.inscriptions', 'inscriptions')
             .leftJoinAndSelect('visiteur.transactions', 'transactions')
+            .leftJoinAndSelect('demandes.evenementDemandes', 'evenementDemandes')
+            .leftJoinAndSelect('demandes.aideProjetDemandes', 'aideProjetDemandes')
+            .leftJoinAndSelect('demandes.parrainageDemandes', 'parrainageDemandes')
+            .leftJoinAndSelect('demandes.autreDemandes', 'autreDemandes')
             .where("visiteur.id = :id", { id: id });
 
         const visiteur = await query.getOne();

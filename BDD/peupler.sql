@@ -121,8 +121,8 @@ INSERT INTO tache (Description, dateDebut, dateFin, statut, responsableId, resso
 INSERT INTO demande (type, dateDemande, statut, adherentId)
 VALUES 
 ('Evénement', '2024-05-19 14:30:00', 'En attente', 1),
-('Projet', '2024-05-20 10:00:00', 'Acceptée', 1),
-('Parrainage', '2024-05-21 08:45:00', 'Refusée', 2);
+('Evénement', '2024-05-19 14:30:00', 'Refusée', 1),
+('Projet', '2024-05-20 10:00:00', 'Acceptée', 1);
 
 INSERT INTO demande (type, dateDemande, statut, visiteurId)
 VALUES 
@@ -132,7 +132,8 @@ VALUES
 
 INSERT INTO evenement_demande (id, titre, date, description, lieu, demandeId)
 VALUES 
-(1, 'Festival de Musique', '2024-07-15 18:00:00', 'Un grand festival de musique avec des artistes internationaux.', 'Parc Central', 1);
+(1, 'Festival de Musique', '2024-07-15 18:00:00', 'Un grand festival de musique avec des artistes internationaux.', 'Parc Central', 1),
+(2, 'Festival de Musique', '2024-07-15 18:00:00', 'Un grand festival de musique avec des artistes internationaux.', 'Parc Central', 2);
 
 INSERT INTO aide_projet (titre, descriptionProjet, budget, deadline)
 VALUES 
@@ -140,7 +141,7 @@ VALUES
 
 INSERT INTO aide_projet_demande (id, titre, descriptionProjet, budget, deadline, demandeId)
 VALUES 
-(2, 'Projet de Reforestation', 'Un projet visant à planter des arbres dans les zones déforestées.', 5000.00, '2024-12-31 00:00:00', 2);
+(2, 'Projet de Reforestation', 'Un projet visant à planter des arbres dans les zones déforestées.', 5000.00, '2024-12-31 00:00:00', 3);
 
 INSERT INTO parrainage_demande (id, parrainId, detailsParrainage, demandeId)
 VALUES 
