@@ -240,11 +240,6 @@ const UserHandler = (app) => {
         const updateAdherentRequest = validation.value;
         try {
             const adherentUsecase = new adherent_usecase_1.AdherentUsecase(database_1.AppDataSource);
-            const validationResult = adherent_validator_1.adherentIdValidation.validate(req.params);
-            if (validationResult.error) {
-                res.status(400).send((0, generate_validation_message_1.generateValidationErrorMessage)(validationResult.error.details));
-                return;
-            }
             const updatedAdherent = yield adherentUsecase.updateAdherent(updateAdherentRequest.id, Object.assign({}, updateAdherentRequest));
             if (updatedAdherent === null) {
                 res.status(404).send({ "error": `Adherent ${updateAdherentRequest.id} not found` });

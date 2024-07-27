@@ -293,13 +293,6 @@ export const UserHandler = (app: express.Express) => {
         try {
             const adherentUsecase = new AdherentUsecase(AppDataSource);
 
-            const validationResult = adherentIdValidation.validate(req.params);
-
-            if (validationResult.error) {
-                res.status(400).send(generateValidationErrorMessage(validationResult.error.details));
-                return;
-            }
-
             const updatedAdherent = await adherentUsecase.updateAdherent(
                 updateAdherentRequest.id,
                 { ...updateAdherentRequest }
