@@ -82,6 +82,7 @@ const UserHandlerAuthentication = (app) => {
                 res.status(400).send({ error: "username or password not valid" });
                 return;
             }
+            console.log(loginUserRequest.motDePasse, user.motDePasse);
             const isValid = yield (0, bcrypt_1.compare)(loginUserRequest.motDePasse, user.motDePasse);
             if (!isValid) {
                 res.status(400).send({ error: "username or password not valid" });

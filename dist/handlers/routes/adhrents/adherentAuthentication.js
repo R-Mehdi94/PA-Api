@@ -11,13 +11,13 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AdherentHandlerAuthentication = void 0;
 const database_1 = require("../../../database/database");
-const bcrypt_1 = require("bcrypt");
 const generate_validation_message_1 = require("../../validators/generate-validation-message");
 const jsonwebtoken_1 = require("jsonwebtoken");
 const token_1 = require("../../../database/entities/token");
 const adherent_validator_1 = require("../../validators/adherent-validator");
 const adherent_1 = require("../../../database/entities/adherent");
 const adherent_usecase_1 = require("../../../domain/adherent-usecase");
+const bcrypt_1 = require("bcrypt");
 const AdherentHandlerAuthentication = (app) => {
     app.post('/auth/signupAdherent', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         try {
@@ -85,6 +85,8 @@ const AdherentHandlerAuthentication = (app) => {
                 res.status(400).send({ error: "username or password not valid" });
                 return;
             }
+            console.log(loginAdherentRequest.motDePasse);
+            console.log(adherent.motDePasse);
             const isValid = yield (0, bcrypt_1.compare)(loginAdherentRequest.motDePasse, adherent.motDePasse);
             if (!isValid) {
                 res.status(400).send({ error: "username or password not valid" });

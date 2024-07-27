@@ -1,12 +1,12 @@
 import express, { Request, Response } from "express"
 import { AppDataSource } from "../../../database/database"
-import { compare, hash } from "bcrypt";
 import { generateValidationErrorMessage } from "../../validators/generate-validation-message";
 import { sign } from "jsonwebtoken";
 import { Token } from "../../../database/entities/token";
 import { adherentIdValidation, createAdherentValidation, LoginValidationValidation } from "../../validators/adherent-validator";
 import { Adherent } from "../../../database/entities/adherent";
 import { AdherentUsecase } from "../../../domain/adherent-usecase";
+import { compare, hash } from "bcrypt";
 
 
 export const AdherentHandlerAuthentication = (app: express.Express) => {
@@ -82,6 +82,10 @@ export const AdherentHandlerAuthentication = (app: express.Express) => {
                 res.status(400).send({ error: "username or password not valid" })
                 return
             }
+
+
+            console.log(loginAdherentRequest.motDePasse)
+            console.log(adherent.motDePasse)
 
             const isValid = await compare(loginAdherentRequest.motDePasse, adherent.motDePasse);
             if (!isValid) {

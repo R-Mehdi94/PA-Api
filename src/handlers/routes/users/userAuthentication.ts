@@ -80,6 +80,8 @@ export const UserHandlerAuthentication = (app: express.Express) => {
                 return
             }
 
+            console.log(loginUserRequest.motDePasse, user.motDePasse)
+
             const isValid = await compare(loginUserRequest.motDePasse, user.motDePasse);
             if (!isValid) {
                 res.status(400).send({ error: "username or password not valid" })
