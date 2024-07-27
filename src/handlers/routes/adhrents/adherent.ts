@@ -197,7 +197,6 @@ export const AdherentHandler = (app: express.Express) => {
 
     app.post("/visiteursEmail", async (req: Request, res: Response) => {
 
-
         try {
             const adherentUsecase = new AdherentUsecase(AppDataSource);
             const listAdherentEmail = await adherentUsecase.getAdherentEmail()
