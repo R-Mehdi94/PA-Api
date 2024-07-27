@@ -26,7 +26,7 @@ class UserUsecase {
     }
     deleteToken(id) {
         return __awaiter(this, void 0, void 0, function* () {
-            const TokenDelete = yield this.db.createQueryBuilder().delete().from(token_1.Token).where("userId = :id", { id: id }).execute();
+            const TokenDelete = yield this.db.createQueryBuilder().delete().from(token_1.Token).where("userId = :id", { id: id }).andWhere("blobName IS NOT NULL").execute();
             return TokenDelete;
         });
     }

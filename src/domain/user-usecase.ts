@@ -46,13 +46,13 @@ export class UserUsecase {
 
     async deleteToken(id: number): Promise<DeleteResult> {
 
-        const TokenDelete = await this.db.createQueryBuilder().delete().from(Token).where("userId = :id", { id: id }).execute();
+        const TokenDelete = await this.db.createQueryBuilder().delete().from(Token).where("userId = :id", { id: id }).andWhere("blobName IS NOT NULL").execute();
 
         return TokenDelete;
 
     }
 
-    async verifUser(id: number, token: string): Promise<boolean> { 
+    async verifUser(id: number, token: string): Promise<boolean> {  
         const user = await this.getOneUser(id);
         if (!user) {
             return false;
