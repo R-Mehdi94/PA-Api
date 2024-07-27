@@ -12,6 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.AdherentUsecase = void 0;
 const adherent_1 = require("../database/entities/adherent");
 const token_1 = require("../database/entities/token");
+const bcrypt_1 = require("bcrypt");
 class AdherentUsecase {
     constructor(db) {
         this.db = db;
@@ -19,9 +20,16 @@ class AdherentUsecase {
     verifMdp(id, mdp) {
         return __awaiter(this, void 0, void 0, function* () {
             const entityManager = this.db.getRepository(adherent_1.Adherent);
-            const sqlQuery = `select count(*) from adherent where motDePasse like ? and id = ?;`;
-            const verifVisiteur = yield entityManager.query(sqlQuery, [mdp, id]);
-            if (verifVisiteur[0]['count(*)'] === 0) {
+            // Récupérer le mot de passe haché de l'utilisateur avec l'ID spécifié
+            const sqlQuery = `SELECT motDePasse FROM adherent WHERE id = ?;`;
+            const result = yield entityManager.query(sqlQuery, [id]);
+            if (result.length === 0) {
+                console.log("Utilisateur non trouvé");
+                return false;
+            }
+            const hashedPassword = result[0].motDePasse;
+            const isPasswordValid = yield (0, bcrypt_1.compare)(mdp, hashedPassword);
+            if (!isPasswordValid) {
                 console.log("Mot de passe incorrect");
                 return false;
             }
