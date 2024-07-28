@@ -44,13 +44,24 @@ export class InscriptionUsecase {
         return deleteInscription;
     }
     
-    async verifEmail(email:string, id: number): Promise<any | null> {
+    async verifEmailAdherent(adherentId:number, id: number): Promise<any | null> {
     
         const entityManager = this.db.getRepository(Inscription);
     
-        const sqlQuery = `select count(*) from inscription where emailVisiteur=? and evenementId=?;`;
+        const sqlQuery = `select count(*) from inscription where adherentId=? and evenementId=?;`;
     
-        const verifEmail = await entityManager.query(sqlQuery, [email,id]);
+        const verifEmail = await entityManager.query(sqlQuery, [adherentId,id]);
+    
+        return verifEmail;
+    }
+
+    async verifEmailVisiteur(visiteurId:number, id: number): Promise<any | null> {
+    
+        const entityManager = this.db.getRepository(Inscription);
+    
+        const sqlQuery = `select count(*) from inscription where visiteurId=? and evenementId=?;`;
+    
+        const verifEmail = await entityManager.query(sqlQuery, [visiteurId,id]);
     
         return verifEmail;
     }

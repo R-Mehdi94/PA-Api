@@ -58,13 +58,13 @@ export interface UpdateInscriptionRequest {
 }
 
 
-export const verifEmail = Joi.object<VerifEmail>({
-    emailVisiteur: Joi.string().email().required(),
+export const verifEmail = Joi.object<VerifEmailAdherent>({
+    id: Joi.number().required(),
     evenement: Joi.number().required()
 }).options({ abortEarly: false })
 
-export interface VerifEmail {
-    emailVisiteur: string
+export interface VerifEmailAdherent {
+    id: number
     evenement: number
 }
 

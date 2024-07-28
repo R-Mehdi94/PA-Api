@@ -31,11 +31,19 @@ class InscriptionUsecase {
             return deleteInscription;
         });
     }
-    verifEmail(email, id) {
+    verifEmailAdherent(adherentId, id) {
         return __awaiter(this, void 0, void 0, function* () {
             const entityManager = this.db.getRepository(inscription_1.Inscription);
-            const sqlQuery = `select count(*) from inscription where emailVisiteur=? and evenementId=?;`;
-            const verifEmail = yield entityManager.query(sqlQuery, [email, id]);
+            const sqlQuery = `select count(*) from inscription where adherentId=? and evenementId=?;`;
+            const verifEmail = yield entityManager.query(sqlQuery, [adherentId, id]);
+            return verifEmail;
+        });
+    }
+    verifEmailVisiteur(visiteurId, id) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const entityManager = this.db.getRepository(inscription_1.Inscription);
+            const sqlQuery = `select count(*) from inscription where visiteurId=? and evenementId=?;`;
+            const verifEmail = yield entityManager.query(sqlQuery, [visiteurId, id]);
             return verifEmail;
         });
     }

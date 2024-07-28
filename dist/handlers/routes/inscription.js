@@ -40,8 +40,7 @@ const InscriptionHandler = (app) => {
             res.status(500).send({ error: "Internal error" });
         }
     }));
-    app.post("/verifEmail", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-        console.log(req.body);
+    app.post("/verifEmailVisiteur", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const validation = inscription_validator_1.verifEmail.validate(req.body);
         if (validation.error) {
             res.status(400).send((0, generate_validation_message_1.generateValidationErrorMessage)(validation.error.details));
@@ -49,7 +48,27 @@ const InscriptionHandler = (app) => {
         }
         try {
             const inscriptionUsecase = new inscription_usecase_1.InscriptionUsecase(database_1.AppDataSource);
-            const verifEmail = yield inscriptionUsecase.verifEmail(validation.value.emailVisiteur, validation.value.evenement);
+            const verifEmail = yield inscriptionUsecase.verifEmailVisiteur(validation.value.id, validation.value.evenement);
+            if (verifEmail[0]['count(*)'] > 0) {
+                res.status(200).send({ response: "Email inscrit" });
+                return;
+            }
+            res.status(201).send({ response: "Email non inscrit" });
+        }
+        catch (error) {
+            console.log(error);
+            res.status(500).send({ error: "Internal error" });
+        }
+    }));
+    app.post("/verifEmailAdherent", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        const validation = inscription_validator_1.verifEmail.validate(req.body);
+        if (validation.error) {
+            res.status(400).send((0, generate_validation_message_1.generateValidationErrorMessage)(validation.error.details));
+            return;
+        }
+        try {
+            const inscriptionUsecase = new inscription_usecase_1.InscriptionUsecase(database_1.AppDataSource);
+            const verifEmail = yield inscriptionUsecase.verifEmailAdherent(validation.value.id, validation.value.evenement);
             if (verifEmail[0]['count(*)'] > 0) {
                 res.status(200).send({ response: "Email inscrit" });
                 return;

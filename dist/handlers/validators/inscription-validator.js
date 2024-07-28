@@ -28,7 +28,7 @@ exports.updateInscriptionValidation = joi_1.default.object({
     adherent: joi_1.default.number().optional()
 });
 exports.verifEmail = joi_1.default.object({
-    emailVisiteur: joi_1.default.string().email().required(),
+    id: joi_1.default.number().required(),
     evenement: joi_1.default.number().required()
 }).options({ abortEarly: false });
 exports.listInscriptionValidation = joi_1.default.object({
