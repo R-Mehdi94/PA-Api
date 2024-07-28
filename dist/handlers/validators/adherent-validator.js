@@ -16,7 +16,7 @@ exports.createAdherentValidation = joi_1.default.object({
     profession: joi_1.default.string().required(),
     estBanie: joi_1.default.boolean().required(),
     estBenevole: joi_1.default.boolean().required(),
-    parrain: joi_1.default.number().required()
+    parrain: joi_1.default.number().optional()
 });
 exports.adherentIdValidation = joi_1.default.object({
     id: joi_1.default.number().required(),

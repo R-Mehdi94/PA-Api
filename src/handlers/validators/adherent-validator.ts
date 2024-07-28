@@ -12,7 +12,7 @@ export const createAdherentValidation = Joi.object<CreateAdherentValidationReque
     profession: Joi.string().required(),
     estBanie: Joi.boolean().required(),
     estBenevole: Joi.boolean().required(),
-    parrain: Joi.number().required()
+    parrain: Joi.number().optional()
 });
 
 export interface CreateAdherentValidationRequest {
@@ -26,7 +26,7 @@ export interface CreateAdherentValidationRequest {
     profession: string
     estBanie: boolean
     estBenevole: boolean
-    parrain: User
+    parrain?: User
 }
 
 export const adherentIdValidation = Joi.object<AdherentIdRequest>({
