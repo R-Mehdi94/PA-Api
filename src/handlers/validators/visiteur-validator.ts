@@ -28,6 +28,15 @@ export interface VisiteurIdRequest {
     id: number
 }
 
+export const verifVisiteur = Joi.object<VerifVisiteur>({
+    email: Joi.string().email().required(),
+
+}).options({ abortEarly: false })
+
+export interface VerifVisiteur {
+    email: string
+}
+
 export const updateVisiteurValidation = Joi.object<UpdateVisiteurRequest>({
     id: Joi.number().required(),
     email: Joi.string().email().optional(),

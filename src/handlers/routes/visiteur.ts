@@ -3,7 +3,7 @@ import { AppDataSource } from '../../database/database';
 import { Visiteur } from '../../database/entities/visiteur';
 import { VisiteurUsecase } from '../../domain/visiteur-usecase';
 import { generateValidationErrorMessage } from '../validators/generate-validation-message';
-import { listVisiteurValidation, createVisiteurValidation, visiteurIdValidation, updateVisiteurValidation } from '../validators/visiteur-validator';
+import { listVisiteurValidation, createVisiteurValidation, visiteurIdValidation, updateVisiteurValidation, verifVisiteur } from '../validators/visiteur-validator';
 
 
 export const VisiteurHandler = (app: express.Express) => {
@@ -141,4 +141,31 @@ export const VisiteurHandler = (app: express.Express) => {
             res.status(500).send({ error: "Internal error" });
         }
     });
+
+    app.post("/verifVisiteur", async (req: Request, res: Response) => {
+
+        const validation = verifVisiteur.validate(req.body);
+
+        if (validation.error) {
+            res.status(400).send(generateValidationErrorMessage(validation.error.details));
+            return;
+        }
+
+        try {
+            const visiteurUsecase = new VisiteurUsecase(AppDataSource);
+            const verifVisiteur = await visiteurUsecase.verifVisiteur(validation.value.email)
+
+            if(verifVisiteur[0]['count(*)'] > 0){
+                res.status(200).send({ response: "Adherent existant" });
+                return;
+            }
+            res.status(201).send({ response: "Adherent non existant" });
+
+        } catch (error) {
+            console.log(error);
+            res.status(500).send({ error: "Internal error" });
+        }
+    });
+
+
 };

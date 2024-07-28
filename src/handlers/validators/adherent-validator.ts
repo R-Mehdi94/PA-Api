@@ -154,16 +154,7 @@ export interface AdherentEmailRequest {
     email: string
 }
 
-export const verifAdherent = Joi.object<VerifAdherent>({
-    email: Joi.string().email().required(),
-    numTel: Joi.string().required(),
 
-}).options({ abortEarly: false })
-
-export interface VerifAdherent {
-    email: string
-    numTel: string
-}
 
 export const LoginValidationValidation = Joi.object<LoginValidationValidationRequest>({
     email: Joi.string().email().required(),

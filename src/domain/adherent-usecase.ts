@@ -80,16 +80,7 @@ export class AdherentUsecase {
         return false;
     }
 
-    async verifAdherent(email:string,numTel: string): Promise<any | null> {
 
-        const entityManager = this.db.getRepository(Adherent);
-
-        const sqlQuery = `select count(*) from adherent where email like ? and numTel = ?;`;
-
-        const verifVisiteur = await entityManager.query(sqlQuery, [email,numTel]);
-
-        return verifVisiteur;
-    }
 
     async getAdherentEmail(): Promise<any | null> {
 

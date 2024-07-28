@@ -56,14 +56,6 @@ class AdherentUsecase {
             return false;
         });
     }
-    verifAdherent(email, numTel) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const entityManager = this.db.getRepository(adherent_1.Adherent);
-            const sqlQuery = `select count(*) from adherent where email like ? and numTel = ?;`;
-            const verifVisiteur = yield entityManager.query(sqlQuery, [email, numTel]);
-            return verifVisiteur;
-        });
-    }
     getAdherentEmail() {
         return __awaiter(this, void 0, void 0, function* () {
             const entityManager = this.db.getRepository(adherent_1.Adherent);

@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.listVisiteurValidation = exports.updateVisiteurValidation = exports.visiteurIdValidation = exports.createVisiteurValidation = void 0;
+exports.listVisiteurValidation = exports.updateVisiteurValidation = exports.verifVisiteur = exports.visiteurIdValidation = exports.createVisiteurValidation = void 0;
 const joi_1 = __importDefault(require("joi"));
 exports.createVisiteurValidation = joi_1.default.object({
     email: joi_1.default.string().email().required(),
@@ -17,6 +17,9 @@ exports.createVisiteurValidation = joi_1.default.object({
 exports.visiteurIdValidation = joi_1.default.object({
     id: joi_1.default.number().required(),
 });
+exports.verifVisiteur = joi_1.default.object({
+    email: joi_1.default.string().email().required(),
+}).options({ abortEarly: false });
 exports.updateVisiteurValidation = joi_1.default.object({
     id: joi_1.default.number().required(),
     email: joi_1.default.string().email().optional(),

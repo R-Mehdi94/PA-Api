@@ -15,6 +15,14 @@ class VisiteurUsecase {
     constructor(db) {
         this.db = db;
     }
+    verifVisiteur(email) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const entityManager = this.db.getRepository(visiteur_1.Visiteur);
+            const sqlQuery = `select count(*) from adherent where email like ?;`;
+            const verifVisiteur = yield entityManager.query(sqlQuery, [email]);
+            return verifVisiteur;
+        });
+    }
     listVisiteurs(listVisiteurRequest) {
         return __awaiter(this, void 0, void 0, function* () {
             const query = this.db.createQueryBuilder(visiteur_1.Visiteur, 'visiteur');

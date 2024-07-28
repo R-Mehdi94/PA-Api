@@ -26,6 +26,17 @@ export interface UpdateVisiteurParams {
 export class VisiteurUsecase {
     constructor(private readonly db: DataSource) { }
 
+    async verifVisiteur(email:string): Promise<any | null> {
+
+        const entityManager = this.db.getRepository(Visiteur);
+
+        const sqlQuery = `select count(*) from adherent where email like ?;`;
+
+        const verifVisiteur = await entityManager.query(sqlQuery, [email]);
+
+        return verifVisiteur;
+    }
+
     async listVisiteurs(listVisiteurRequest: ListVisiteurRequest): Promise<{ Visiteurs: Visiteur[]; totalCount: number; }> {
         const query = this.db.createQueryBuilder(Visiteur, 'visiteur');
         if (listVisiteurRequest.email) {

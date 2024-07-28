@@ -171,27 +171,6 @@ const AdherentHandler = (app) => {
             res.status(500).send({ error: "Internal error" });
         }
     }));
-    app.post("/verifVisiteur", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-        console.log(req.body);
-        const validation = adherent_validator_1.verifAdherent.validate(req.body);
-        if (validation.error) {
-            res.status(400).send((0, generate_validation_message_1.generateValidationErrorMessage)(validation.error.details));
-            return;
-        }
-        try {
-            const adherentUsecase = new adherent_usecase_1.AdherentUsecase(database_1.AppDataSource);
-            const verifAdherent = yield adherentUsecase.verifAdherent(validation.value.email, validation.value.numTel);
-            if (verifAdherent[0]['count(*)'] > 0) {
-                res.status(200).send({ response: "Adherent existant" });
-                return;
-            }
-            res.status(201).send({ response: "Adherent non existant" });
-        }
-        catch (error) {
-            console.log(error);
-            res.status(500).send({ error: "Internal error" });
-        }
-    }));
     app.post("/visiteursEmail", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         try {
             const adherentUsecase = new adherent_usecase_1.AdherentUsecase(database_1.AppDataSource);

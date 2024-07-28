@@ -2,7 +2,7 @@ import express, { Request, Response } from 'express';
 import { AppDataSource } from '../../../database/database';
 import { Adherent } from '../../../database/entities/adherent';
 import { AdherentUsecase } from '../../../domain/adherent-usecase';
-import { listAdherentValidation, createAdherentValidation, adherentIdValidation, updateAdherentValidation, verifAdherent } from '../../validators/adherent-validator';
+import { listAdherentValidation, createAdherentValidation, adherentIdValidation, updateAdherentValidation } from '../../validators/adherent-validator';
 import { generateValidationErrorMessage } from '../../validators/generate-validation-message';
 import { authMiddlewareAdherent } from '../../middleware/auth-middleware';
 import { User } from '../../../database/entities/user';
@@ -188,31 +188,7 @@ export const AdherentHandler = (app: express.Express) => {
     });
     
 
-    app.post("/verifVisiteur", async (req: Request, res: Response) => {
 
-        console.log(req.body)
-        const validation = verifAdherent.validate(req.body);
-
-        if (validation.error) {
-            res.status(400).send(generateValidationErrorMessage(validation.error.details));
-            return;
-        }
-
-        try {
-            const adherentUsecase = new AdherentUsecase(AppDataSource);
-            const verifAdherent = await adherentUsecase.verifAdherent(validation.value.email, validation.value.numTel)
-
-            if(verifAdherent[0]['count(*)'] > 0){
-                res.status(200).send({ response: "Adherent existant" });
-                return;
-            }
-            res.status(201).send({ response: "Adherent non existant" });
-
-        } catch (error) {
-            console.log(error);
-            res.status(500).send({ error: "Internal error" });
-        }
-    });
 
     app.post("/visiteursEmail", async (req: Request, res: Response) => {
 

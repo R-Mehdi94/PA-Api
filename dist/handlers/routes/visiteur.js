@@ -129,5 +129,25 @@ const VisiteurHandler = (app) => {
             res.status(500).send({ error: "Internal error" });
         }
     }));
+    app.post("/verifVisiteur", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        const validation = visiteur_validator_1.verifVisiteur.validate(req.body);
+        if (validation.error) {
+            res.status(400).send((0, generate_validation_message_1.generateValidationErrorMessage)(validation.error.details));
+            return;
+        }
+        try {
+            const visiteurUsecase = new visiteur_usecase_1.VisiteurUsecase(database_1.AppDataSource);
+            const verifVisiteur = yield visiteurUsecase.verifVisiteur(validation.value.email);
+            if (verifVisiteur[0]['count(*)'] > 0) {
+                res.status(200).send({ response: "Adherent existant" });
+                return;
+            }
+            res.status(201).send({ response: "Adherent non existant" });
+        }
+        catch (error) {
+            console.log(error);
+            res.status(500).send({ error: "Internal error" });
+        }
+    }));
 };
 exports.VisiteurHandler = VisiteurHandler;
