@@ -123,7 +123,7 @@ export const AdherentHandler = (app: express.Express) => {
         }
     });
 
-    app.patch("/adherents/:id", async (req: Request, res: Response) => {
+    app.patch("/adherents/:id",async (req: Request, res: Response) => {
         try {
             const validationResult = updateAdherentValidation.validate({ ...req.params, ...req.body });
     

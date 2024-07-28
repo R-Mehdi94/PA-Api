@@ -29,9 +29,6 @@ class AdherentUsecase {
             }
             const hashedPassword = result[0].motDePasse;
             const isPasswordValid = yield (0, bcrypt_1.compare)(mdp, hashedPassword);
-            console.log("Mot de passe saisi : ", mdp);
-            console.log("Mot de passe haché : ", hashedPassword);
-            console.log("Mot de passe valide : ", isPasswordValid);
             if (!isPasswordValid) {
                 console.log("Mot de passe incorrect");
                 return false;

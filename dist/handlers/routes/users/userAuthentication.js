@@ -41,6 +41,7 @@ const UserHandlerAuthentication = (app) => {
                 dateInscription: new Date(),
                 estBenevole: req.body.estBenevole,
                 numTel: req.body.numTel,
+                profession: req.body.profession,
             });
             res.status(201).send({ id: user.id, nom: user.nom, prenom: user.prenom, email: user.email, role: user.role });
             return;

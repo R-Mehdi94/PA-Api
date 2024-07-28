@@ -53,10 +53,6 @@ export class AdherentUsecase {
 
         const isPasswordValid = await compare(mdp, hashedPassword);
 
-        console.log("Mot de passe saisi : ", mdp);
-        console.log("Mot de passe haché : ", hashedPassword);
-
-        console.log("Mot de passe valide : ", isPasswordValid);
         if (!isPasswordValid) {
             console.log("Mot de passe incorrect");
             return false;
