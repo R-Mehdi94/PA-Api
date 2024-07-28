@@ -14,11 +14,12 @@ const typeorm_1 = require("typeorm");
 const proposition_1 = require("./proposition");
 const user_1 = require("./user");
 let Vote = class Vote {
-    constructor(id, proposition, user, choix) {
+    constructor(id, proposition, user, choix, numTour) {
         this.id = id;
         this.proposition = proposition;
         this.user = user;
         this.choix = choix;
+        this.numTour = numTour;
     }
 };
 exports.Vote = Vote;
@@ -31,6 +32,10 @@ __decorate([
     __metadata("design:type", String)
 ], Vote.prototype, "choix", void 0);
 __decorate([
+    (0, typeorm_1.Column)(),
+    __metadata("design:type", Number)
+], Vote.prototype, "numTour", void 0);
+__decorate([
     (0, typeorm_1.ManyToOne)(() => proposition_1.Proposition, proposition => proposition.votes),
     __metadata("design:type", proposition_1.Proposition)
 ], Vote.prototype, "proposition", void 0);
@@ -40,5 +45,5 @@ __decorate([
 ], Vote.prototype, "user", void 0);
 exports.Vote = Vote = __decorate([
     (0, typeorm_1.Entity)(),
-    __metadata("design:paramtypes", [Number, proposition_1.Proposition, user_1.User, String])
+    __metadata("design:paramtypes", [Number, proposition_1.Proposition, user_1.User, String, Number])
 ], Vote);

@@ -1,7 +1,13 @@
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
 import { Proposition } from './proposition';
 
+export enum TypeSondage {
+    unTour = "UN_TOUR",
+    deuxTours = "DEUX_TOURS",
+}
+
 @Entity()
+
 export class Sondage {
     @PrimaryGeneratedColumn()
     id: number;
@@ -10,23 +16,27 @@ export class Sondage {
     nom: string;
 
     @Column('datetime')
-    date: Date;
+    dateDebut: Date;
+
+    @Column('datetime')
+    dateFin: Date;
 
     @Column('text')
     description: string;
 
-    @Column({ length: 50, nullable: true })
-    type: string;
+    @Column()
+    typeSondage: TypeSondage;
 
     @OneToMany(() => Proposition, proposition => proposition.sondage)
     propositions: Proposition[];
 
-    constructor(id:number,nom: string, date: Date, description: string, type: string, propositions:Proposition[]) {
+    constructor(id:number,nom: string, dateFin: Date,dateDebut:Date,  description: string, type: TypeSondage, propositions:Proposition[]) {
         this.id = id;
         this.nom = nom;
-        this.date = date;
+        this.dateDebut = dateDebut;
+        this.dateFin = dateFin;
         this.description = description;
-        this.type = type;
+        this.typeSondage = type;
         this.propositions = propositions
     }
 }

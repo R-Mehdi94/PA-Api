@@ -7,12 +7,14 @@ export interface ListVoteRequest {
     page: number
     limit: number
     choix?: string
+    numTour?: number
     proposition?: number
     user?: number
 }
 
 export interface UpdateVoteParams {
     choix?: string
+    numTour?: number
     proposition?: Proposition
     user?: User
 }
@@ -24,6 +26,10 @@ export class VoteUsecase {
         const query = this.db.createQueryBuilder(Vote, 'vote');
         if (listVoteRequest.choix) {
             query.andWhere("vote.choix = :choix", { choix: listVoteRequest.choix });
+        }
+
+        if (listVoteRequest.numTour) {
+            query.andWhere("vote.numTour = :numTour", { numTour: listVoteRequest.numTour });
         }
 
         if (listVoteRequest.proposition) {
@@ -61,17 +67,20 @@ export class VoteUsecase {
         return vote;
     }
 
-    async updateVote(id: number, { choix, proposition, user }: UpdateVoteParams): Promise<Vote | string | null> {
+    async updateVote(id: number, { choix, numTour, proposition, user }: UpdateVoteParams): Promise<Vote | string | null> {
         const repo = this.db.getRepository(Vote);
         const voteFound = await repo.findOneBy({ id });
         if (voteFound === null) return null;
 
-        if (choix === undefined && proposition === undefined && user === undefined) {
+        if (choix === undefined && numTour === undefined && proposition === undefined && user === undefined) {
             return "No changes";
         }
 
         if (choix) {
             voteFound.choix = choix;
+        }
+        if (numTour !== undefined) {
+            voteFound.numTour = numTour;
         }
         if (proposition) {
             voteFound.proposition = proposition;

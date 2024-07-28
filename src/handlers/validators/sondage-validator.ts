@@ -1,17 +1,20 @@
 import Joi from "joi";
+import { TypeSondage } from "../../database/entities/sondage";
 
 export const createSondageValidation = Joi.object<CreateSondageValidationRequest>({
     nom: Joi.string().max(255).required(),
-    date: Joi.date().required(),
+    dateDebut: Joi.date().required(),
+    dateFin: Joi.date().required(),
     description: Joi.string().required(),
-    type: Joi.string().max(50).optional().allow(null)
-}).options({ abortEarly: false })
+    typeSondage: Joi.string().valid(...Object.values(TypeSondage)).required()
+});
 
 export interface CreateSondageValidationRequest {
     nom: string
-    date: Date
+    dateDebut: Date
+    dateFin: Date
     description: string
-    type?: string
+    typeSondage: TypeSondage
 }
 
 export const sondageIdValidation = Joi.object<SondageIdRequest>({
@@ -25,33 +28,35 @@ export interface SondageIdRequest {
 export const updateSondageValidation = Joi.object<UpdateSondageRequest>({
     id: Joi.number().required(),
     nom: Joi.string().max(255).optional(),
-    date: Joi.date().optional(),
+    dateDebut: Joi.date().optional(),
+    dateFin: Joi.date().optional(),
     description: Joi.string().optional(),
-    type: Joi.string().max(50).optional().allow(null)
-}).options({ abortEarly: false });
+    typeSondage: Joi.string().valid(...Object.values(TypeSondage)).optional()
+});
 
 export interface UpdateSondageRequest {
     id: number
     nom?: string
-    date?: Date
+    dateDebut?: Date
+    dateFin?: Date
     description?: string
-    type?: string
+    typeSondage?: TypeSondage
 }
 
 export const listSondageValidation = Joi.object<ListSondageRequest>({
     page: Joi.number().min(1).optional(),
     limit: Joi.number().min(1).optional(),
     nom: Joi.string().optional(),
-    date: Joi.date().optional(),
-    description: Joi.string().optional(),
-    type: Joi.string().optional()
+    dateDebut: Joi.date().optional(),
+    dateFin: Joi.date().optional(),
+    typeSondage: Joi.string().valid(...Object.values(TypeSondage)).optional()
 });
 
 export interface ListSondageRequest {
     page: number
     limit: number
     nom?: string
-    date?: Date
-    description?: string
-    type?: string
+    dateDebut?: Date
+    dateFin?: Date
+    typeSondage?: TypeSondage
 }

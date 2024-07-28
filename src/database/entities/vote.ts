@@ -11,16 +11,21 @@ export class Vote {
     @Column({ length: 255 })
     choix: string;
 
+    @Column()
+    numTour: number;
+
     @ManyToOne(() => Proposition, proposition => proposition.votes)
     proposition: Proposition;
 
     @ManyToOne(() => User, user => user.votes)
     user: User;
 
-    constructor(id:number,proposition: Proposition, user: User, choix: string) {
+    constructor(id:number,proposition: Proposition, user: User, choix: string,numTour:number) {
         this.id = id;
         this.proposition = proposition;
         this.user = user;
         this.choix = choix;
+        this.numTour = numTour;
+
     }
 }

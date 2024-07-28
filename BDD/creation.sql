@@ -137,9 +137,10 @@ CREATE TABLE inscription (
 CREATE TABLE sondage (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nom VARCHAR(255) NOT NULL,
-    date DATETIME NOT NULL,
+    dateDebut DATETIME NOT NULL,
+    dateFin DATETIME NOT NULL,
     description TEXT,
-    type VARCHAR(50)
+    typeSondage ENUM('UN_TOUR', 'DEUX_TOURS') NOT NULL
 );
 
 CREATE TABLE ag (
@@ -175,6 +176,7 @@ CREATE TABLE vote (
     propositionId INT NOT NULL,
     userId INT NOT NULL,
     choix VARCHAR(255) NOT NULL,
+    numTour INT NOT NULL,
     FOREIGN KEY (propositionId) REFERENCES proposition(id) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY (userId) REFERENCES user(id) ON DELETE CASCADE ON UPDATE CASCADE
 );

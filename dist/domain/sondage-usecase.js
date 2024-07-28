@@ -21,14 +21,14 @@ class SondageUsecase {
             if (listSondageRequest.nom) {
                 query.andWhere("sondage.nom = :nom", { nom: listSondageRequest.nom });
             }
-            if (listSondageRequest.date) {
-                query.andWhere("sondage.date = :date", { date: listSondageRequest.date });
+            if (listSondageRequest.typeSondage) {
+                query.andWhere("sondage.typeSondage = :typeSondage", { typeSondage: listSondageRequest.typeSondage });
             }
-            if (listSondageRequest.description) {
-                query.andWhere("sondage.description = :description", { description: listSondageRequest.description });
+            if (listSondageRequest.dateDebut) {
+                query.andWhere("sondage.dateDebut = :dateDebut", { dateDebut: listSondageRequest.dateDebut });
             }
-            if (listSondageRequest.type) {
-                query.andWhere("sondage.type = :type", { type: listSondageRequest.type });
+            if (listSondageRequest.dateFin) {
+                query.andWhere("sondage.dateFin = :dateFin", { dateFin: listSondageRequest.dateFin });
             }
             query.leftJoinAndSelect('sondage.propositions', 'propositions')
                 .skip((listSondageRequest.page - 1) * listSondageRequest.limit)
@@ -54,25 +54,28 @@ class SondageUsecase {
         });
     }
     updateSondage(id_1, _a) {
-        return __awaiter(this, arguments, void 0, function* (id, { nom, date, description, type }) {
+        return __awaiter(this, arguments, void 0, function* (id, { nom, typeSondage, dateDebut, dateFin, description }) {
             const repo = this.db.getRepository(sondage_1.Sondage);
             const sondageFound = yield repo.findOneBy({ id });
             if (sondageFound === null)
                 return null;
-            if (nom === undefined && date === undefined && description === undefined && type === undefined) {
+            if (nom === undefined && typeSondage === undefined && dateDebut === undefined && dateFin === undefined && description === undefined) {
                 return "No changes";
             }
             if (nom) {
                 sondageFound.nom = nom;
             }
-            if (date) {
-                sondageFound.date = date;
+            if (typeSondage) {
+                sondageFound.typeSondage = typeSondage;
+            }
+            if (dateDebut !== undefined) {
+                sondageFound.dateDebut = dateDebut;
+            }
+            if (dateFin !== undefined) {
+                sondageFound.dateFin = dateFin;
             }
             if (description) {
                 sondageFound.description = description;
-            }
-            if (type) {
-                sondageFound.type = type;
             }
             const sondageUpdate = yield repo.save(sondageFound);
             return sondageUpdate;

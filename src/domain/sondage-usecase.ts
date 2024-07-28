@@ -1,20 +1,22 @@
 import { DataSource } from "typeorm";
 import { Sondage } from "../database/entities/sondage";
+import { TypeSondage } from "../database/entities/sondage";
 
 export interface ListSondageRequest {
     page: number
     limit: number
     nom?: string
-    date?: Date
-    description?: string
-    type?: string
+    typeSondage?: TypeSondage
+    dateDebut?: Date
+    dateFin?: Date
 }
 
 export interface UpdateSondageParams {
     nom?: string
-    date?: Date
+    typeSondage?: TypeSondage
+    dateDebut?: Date
+    dateFin?: Date
     description?: string
-    type?: string
 }
 
 export class SondageUsecase {
@@ -26,16 +28,16 @@ export class SondageUsecase {
             query.andWhere("sondage.nom = :nom", { nom: listSondageRequest.nom });
         }
 
-        if (listSondageRequest.date) {
-            query.andWhere("sondage.date = :date", { date: listSondageRequest.date });
+        if (listSondageRequest.typeSondage) {
+            query.andWhere("sondage.typeSondage = :typeSondage", { typeSondage: listSondageRequest.typeSondage });
         }
 
-        if (listSondageRequest.description) {
-            query.andWhere("sondage.description = :description", { description: listSondageRequest.description });
+        if (listSondageRequest.dateDebut) {
+            query.andWhere("sondage.dateDebut = :dateDebut", { dateDebut: listSondageRequest.dateDebut });
         }
 
-        if (listSondageRequest.type) {
-            query.andWhere("sondage.type = :type", { type: listSondageRequest.type });
+        if (listSondageRequest.dateFin) {
+            query.andWhere("sondage.dateFin = :dateFin", { dateFin: listSondageRequest.dateFin });
         }
 
         query.leftJoinAndSelect('sondage.propositions', 'propositions')
@@ -63,26 +65,29 @@ export class SondageUsecase {
         return sondage;
     }
 
-    async updateSondage(id: number, { nom, date, description, type }: UpdateSondageParams): Promise<Sondage | string | null> {
+    async updateSondage(id: number, { nom, typeSondage, dateDebut, dateFin, description }: UpdateSondageParams): Promise<Sondage | string | null> {
         const repo = this.db.getRepository(Sondage);
         const sondageFound = await repo.findOneBy({ id });
         if (sondageFound === null) return null;
 
-        if (nom === undefined && date === undefined && description === undefined && type === undefined) {
+        if (nom === undefined && typeSondage === undefined && dateDebut === undefined && dateFin === undefined && description === undefined) {
             return "No changes";
         }
 
         if (nom) {
             sondageFound.nom = nom;
         }
-        if (date) {
-            sondageFound.date = date;
+        if (typeSondage) {
+            sondageFound.typeSondage = typeSondage;
+        }
+        if (dateDebut !== undefined) {
+            sondageFound.dateDebut = dateDebut;
+        }
+        if (dateFin !== undefined) {
+            sondageFound.dateFin = dateFin;
         }
         if (description) {
             sondageFound.description = description;
-        }
-        if (type) {
-            sondageFound.type = type;
         }
 
         const sondageUpdate = await repo.save(sondageFound);

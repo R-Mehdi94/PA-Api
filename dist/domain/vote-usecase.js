@@ -21,6 +21,9 @@ class VoteUsecase {
             if (listVoteRequest.choix) {
                 query.andWhere("vote.choix = :choix", { choix: listVoteRequest.choix });
             }
+            if (listVoteRequest.numTour) {
+                query.andWhere("vote.numTour = :numTour", { numTour: listVoteRequest.numTour });
+            }
             if (listVoteRequest.proposition) {
                 query.andWhere("vote.propositionId = :proposition", { proposition: listVoteRequest.proposition });
             }
@@ -53,16 +56,19 @@ class VoteUsecase {
         });
     }
     updateVote(id_1, _a) {
-        return __awaiter(this, arguments, void 0, function* (id, { choix, proposition, user }) {
+        return __awaiter(this, arguments, void 0, function* (id, { choix, numTour, proposition, user }) {
             const repo = this.db.getRepository(vote_1.Vote);
             const voteFound = yield repo.findOneBy({ id });
             if (voteFound === null)
                 return null;
-            if (choix === undefined && proposition === undefined && user === undefined) {
+            if (choix === undefined && numTour === undefined && proposition === undefined && user === undefined) {
                 return "No changes";
             }
             if (choix) {
                 voteFound.choix = choix;
+            }
+            if (numTour !== undefined) {
+                voteFound.numTour = numTour;
             }
             if (proposition) {
                 voteFound.proposition = proposition;

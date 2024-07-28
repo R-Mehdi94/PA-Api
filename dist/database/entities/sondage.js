@@ -9,16 +9,22 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Sondage = void 0;
+exports.Sondage = exports.TypeSondage = void 0;
 const typeorm_1 = require("typeorm");
 const proposition_1 = require("./proposition");
+var TypeSondage;
+(function (TypeSondage) {
+    TypeSondage["unTour"] = "UN_TOUR";
+    TypeSondage["deuxTours"] = "DEUX_TOURS";
+})(TypeSondage || (exports.TypeSondage = TypeSondage = {}));
 let Sondage = class Sondage {
-    constructor(id, nom, date, description, type, propositions) {
+    constructor(id, nom, dateFin, dateDebut, description, type, propositions) {
         this.id = id;
         this.nom = nom;
-        this.date = date;
+        this.dateDebut = dateDebut;
+        this.dateFin = dateFin;
         this.description = description;
-        this.type = type;
+        this.typeSondage = type;
         this.propositions = propositions;
     }
 };
@@ -34,20 +40,24 @@ __decorate([
 __decorate([
     (0, typeorm_1.Column)('datetime'),
     __metadata("design:type", Date)
-], Sondage.prototype, "date", void 0);
+], Sondage.prototype, "dateDebut", void 0);
+__decorate([
+    (0, typeorm_1.Column)('datetime'),
+    __metadata("design:type", Date)
+], Sondage.prototype, "dateFin", void 0);
 __decorate([
     (0, typeorm_1.Column)('text'),
     __metadata("design:type", String)
 ], Sondage.prototype, "description", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ length: 50, nullable: true }),
+    (0, typeorm_1.Column)(),
     __metadata("design:type", String)
-], Sondage.prototype, "type", void 0);
+], Sondage.prototype, "typeSondage", void 0);
 __decorate([
     (0, typeorm_1.OneToMany)(() => proposition_1.Proposition, proposition => proposition.sondage),
     __metadata("design:type", Array)
 ], Sondage.prototype, "propositions", void 0);
 exports.Sondage = Sondage = __decorate([
     (0, typeorm_1.Entity)(),
-    __metadata("design:paramtypes", [Number, String, Date, String, String, Array])
+    __metadata("design:paramtypes", [Number, String, Date, Date, String, String, Array])
 ], Sondage);
