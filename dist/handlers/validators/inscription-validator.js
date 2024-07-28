@@ -7,8 +7,8 @@ exports.listInscriptionValidation = exports.verifEmail = exports.updateInscripti
 const joi_1 = __importDefault(require("joi"));
 exports.createInscriptionValidation = joi_1.default.object({
     evenement: joi_1.default.number().required(),
-    visiteur: joi_1.default.number().required(),
-    adherent: joi_1.default.number().required()
+    visiteur: joi_1.default.number().optional(),
+    adherent: joi_1.default.number().optional()
 });
 exports.deleteInscriptionValidationRequest = joi_1.default.object({
     emailVisiteur: joi_1.default.string().email().required(),

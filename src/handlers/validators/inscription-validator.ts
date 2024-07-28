@@ -5,14 +5,14 @@ import { Adherent } from "../../database/entities/adherent";
 
 export const createInscriptionValidation = Joi.object<CreateInscriptionValidationRequest>({
     evenement: Joi.number().required(),
-    visiteur: Joi.number().required(),
-    adherent: Joi.number().required()
+    visiteur: Joi.number().optional(),
+    adherent: Joi.number().optional()
 });
 
 export interface CreateInscriptionValidationRequest {
     evenement: Evenement
-    visiteur: Visiteur
-    adherent: Adherent
+    visiteur?: Visiteur
+    adherent?: Adherent
 }
 
 export const deleteInscriptionValidationRequest = Joi.object<DeleteInscriptionValidationRequest>({
