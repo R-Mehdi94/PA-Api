@@ -139,10 +139,10 @@ const VisiteurHandler = (app) => {
             const visiteurUsecase = new visiteur_usecase_1.VisiteurUsecase(database_1.AppDataSource);
             const verifVisiteur = yield visiteurUsecase.verifVisiteur(validation.value.email);
             if (verifVisiteur[0]['count(*)'] > 0) {
-                res.status(200).send({ response: "Adherent existant" });
+                res.status(200).send({ response: "Visiteur existant" });
                 return;
             }
-            res.status(201).send({ response: "Adherent non existant" });
+            res.status(201).send({ response: "Visiteur non existant" });
         }
         catch (error) {
             console.log(error);

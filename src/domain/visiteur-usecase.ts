@@ -30,7 +30,7 @@ export class VisiteurUsecase {
 
         const entityManager = this.db.getRepository(Visiteur);
 
-        const sqlQuery = `select count(*) from adherent where email like ?;`;
+        const sqlQuery = `select count(*) from visiteur where email like ?;`;
 
         const verifVisiteur = await entityManager.query(sqlQuery, [email]);
 

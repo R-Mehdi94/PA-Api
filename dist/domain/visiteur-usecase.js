@@ -18,7 +18,7 @@ class VisiteurUsecase {
     verifVisiteur(email) {
         return __awaiter(this, void 0, void 0, function* () {
             const entityManager = this.db.getRepository(visiteur_1.Visiteur);
-            const sqlQuery = `select count(*) from adherent where email like ?;`;
+            const sqlQuery = `select count(*) from visiteur where email like ?;`;
             const verifVisiteur = yield entityManager.query(sqlQuery, [email]);
             return verifVisiteur;
         });

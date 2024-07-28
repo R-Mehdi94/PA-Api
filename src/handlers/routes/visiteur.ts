@@ -156,10 +156,10 @@ export const VisiteurHandler = (app: express.Express) => {
             const verifVisiteur = await visiteurUsecase.verifVisiteur(validation.value.email)
 
             if(verifVisiteur[0]['count(*)'] > 0){
-                res.status(200).send({ response: "Adherent existant" });
+                res.status(200).send({ response: "Visiteur existant" });
                 return;
             }
-            res.status(201).send({ response: "Adherent non existant" });
+            res.status(201).send({ response: "Visiteur non existant" });
 
         } catch (error) {
             console.log(error);

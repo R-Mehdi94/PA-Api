@@ -186,9 +186,6 @@ export const AdherentHandler = (app: express.Express) => {
             res.status(500).send({ error: "Internal error" });
         }
     });
-    
-
-
 
     app.post("/visiteursEmail", async (req: Request, res: Response) => {
 
