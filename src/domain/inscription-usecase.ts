@@ -33,13 +33,13 @@ export class InscriptionUsecase {
         return deleteInscriptionAdherent;
     }
 
-    async deleteInscription(email:string, idEvent:number): Promise<any | null> {
+    async deleteInscription(id:number, idEvent:number): Promise<any | null> {
 
         const entityManager = this.db.getRepository(Inscription);
     
-        const sqlQuery = `delete from inscription where emailVisiteur like ? and evenementId = ?;`;
+        const sqlQuery = `delete from inscription where visiteurId like ? and evenementId = ?;`;
     
-        const deleteInscription = await entityManager.query(sqlQuery, [email,idEvent]);
+        const deleteInscription = await entityManager.query(sqlQuery, [id,idEvent]);
     
         return deleteInscription;
     }

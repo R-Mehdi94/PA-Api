@@ -134,12 +134,12 @@ const InscriptionHandler = (app) => {
                 res.status(400).send((0, generate_validation_message_1.generateValidationErrorMessage)(validationResult.error.details));
                 return;
             }
-            const emailVisiteur = validationResult.value.emailVisiteur;
+            const visiteur = validationResult.value.visiteur;
             const evenement = validationResult.value.evenement;
             const inscriptionUsecase = new inscription_usecase_1.InscriptionUsecase(database_1.AppDataSource);
-            const inscription = yield inscriptionUsecase.deleteInscription(emailVisiteur, evenement);
+            const inscription = yield inscriptionUsecase.deleteInscription(visiteur, evenement);
             if (inscription === null) {
-                res.status(404).send({ "error": `Inscription ${emailVisiteur} not found` });
+                res.status(404).send({ "error": `Inscription not found` });
                 return;
             }
             const evenementUsecase = new evenement_usecase_1.EvenementUsecase(database_1.AppDataSource);

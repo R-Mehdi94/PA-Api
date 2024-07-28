@@ -11,7 +11,7 @@ exports.createInscriptionValidation = joi_1.default.object({
     adherent: joi_1.default.number().optional()
 });
 exports.deleteInscriptionValidationRequest = joi_1.default.object({
-    emailVisiteur: joi_1.default.string().email().required(),
+    visiteur: joi_1.default.number().required(),
     evenement: joi_1.default.number().required()
 }).options({ abortEarly: false });
 exports.deleteInscriptionAdherent = joi_1.default.object({

@@ -145,14 +145,14 @@ export const InscriptionHandler = (app: express.Express) => {
                 res.status(400).send(generateValidationErrorMessage(validationResult.error.details));
                 return;
             }
-            const emailVisiteur = validationResult.value.emailVisiteur;
+            const visiteur = validationResult.value.visiteur;
             const evenement = validationResult.value.evenement;
 
             const inscriptionUsecase = new InscriptionUsecase(AppDataSource);
-            const inscription = await inscriptionUsecase.deleteInscription(emailVisiteur, evenement);
+            const inscription = await inscriptionUsecase.deleteInscription(visiteur, evenement);
 
             if (inscription === null) {
-                res.status(404).send({ "error": `Inscription ${emailVisiteur} not found` });
+                res.status(404).send({ "error": `Inscription not found` });
                 return;
             }
 

@@ -23,11 +23,11 @@ class InscriptionUsecase {
             return deleteInscriptionAdherent;
         });
     }
-    deleteInscription(email, idEvent) {
+    deleteInscription(id, idEvent) {
         return __awaiter(this, void 0, void 0, function* () {
             const entityManager = this.db.getRepository(inscription_1.Inscription);
-            const sqlQuery = `delete from inscription where emailVisiteur like ? and evenementId = ?;`;
-            const deleteInscription = yield entityManager.query(sqlQuery, [email, idEvent]);
+            const sqlQuery = `delete from inscription where visiteurId like ? and evenementId = ?;`;
+            const deleteInscription = yield entityManager.query(sqlQuery, [id, idEvent]);
             return deleteInscription;
         });
     }

@@ -16,12 +16,12 @@ export interface CreateInscriptionValidationRequest {
 }
 
 export const deleteInscriptionValidationRequest = Joi.object<DeleteInscriptionValidationRequest>({
-    emailVisiteur: Joi.string().email().required(),
+    visiteur: Joi.number().required(),
     evenement: Joi.number().required()
 }).options({ abortEarly: false })
 
 export interface DeleteInscriptionValidationRequest {
-    emailVisiteur: string
+    visiteur: number
     evenement: number
 }
 
