@@ -11,13 +11,17 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AideProjet = void 0;
 const typeorm_1 = require("typeorm");
+const visiteur_1 = require("./visiteur");
+const adherent_1 = require("./adherent");
 let AideProjet = class AideProjet {
-    constructor(id, nom, descriptionProjet, budget, deadline) {
+    constructor(id, nom, descriptionProjet, budget, deadline, visiteur, adherent) {
         this.id = id;
         this.titre = nom;
         this.descriptionProjet = descriptionProjet;
         this.budget = budget;
         this.deadline = deadline;
+        this.visiteur = visiteur;
+        this.adherent = adherent;
     }
 };
 exports.AideProjet = AideProjet;
@@ -41,7 +45,15 @@ __decorate([
     (0, typeorm_1.Column)(),
     __metadata("design:type", Date)
 ], AideProjet.prototype, "deadline", void 0);
+__decorate([
+    (0, typeorm_1.ManyToOne)(() => visiteur_1.Visiteur, visiteur => visiteur.aideProjets),
+    __metadata("design:type", visiteur_1.Visiteur)
+], AideProjet.prototype, "visiteur", void 0);
+__decorate([
+    (0, typeorm_1.ManyToOne)(() => adherent_1.Adherent, adherent => adherent.aideProjets),
+    __metadata("design:type", adherent_1.Adherent)
+], AideProjet.prototype, "adherent", void 0);
 exports.AideProjet = AideProjet = __decorate([
     (0, typeorm_1.Entity)(),
-    __metadata("design:paramtypes", [Number, String, String, Number, Date])
+    __metadata("design:paramtypes", [Number, String, String, Number, Date, visiteur_1.Visiteur, adherent_1.Adherent])
 ], AideProjet);

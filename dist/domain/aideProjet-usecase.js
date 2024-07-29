@@ -24,13 +24,21 @@ class AideProjetUsecase {
             if (listAideProjetRequest.descriptionProjet) {
                 query.andWhere("aideProjet.descriptionProjet = :descriptionProjet", { descriptionProjet: listAideProjetRequest.descriptionProjet });
             }
-            if (listAideProjetRequest.budget) {
+            if (listAideProjetRequest.budget !== undefined) {
                 query.andWhere("aideProjet.budget = :budget", { budget: listAideProjetRequest.budget });
             }
             if (listAideProjetRequest.deadline) {
                 query.andWhere("aideProjet.deadline = :deadline", { deadline: listAideProjetRequest.deadline });
             }
-            query.skip((listAideProjetRequest.page - 1) * listAideProjetRequest.limit)
+            if (listAideProjetRequest.visiteur) {
+                query.andWhere("aideProjet.visiteurId = :visiteur", { visiteur: listAideProjetRequest.visiteur });
+            }
+            if (listAideProjetRequest.adherent) {
+                query.andWhere("aideProjet.adherentId = :adherent", { adherent: listAideProjetRequest.adherent });
+            }
+            query.leftJoinAndSelect('aideProjet.visiteur', 'visiteur')
+                .leftJoinAndSelect('aideProjet.adherent', 'adherent')
+                .skip((listAideProjetRequest.page - 1) * listAideProjetRequest.limit)
                 .take(listAideProjetRequest.limit);
             const [AideProjets, totalCount] = yield query.getManyAndCount();
             return {
@@ -42,6 +50,8 @@ class AideProjetUsecase {
     getOneAideProjet(id) {
         return __awaiter(this, void 0, void 0, function* () {
             const query = this.db.createQueryBuilder(aideProjet_1.AideProjet, 'aideProjet')
+                .leftJoinAndSelect('aideProjet.visiteur', 'visiteur')
+                .leftJoinAndSelect('aideProjet.adherent', 'adherent')
                 .where("aideProjet.id = :id", { id: id });
             const aideProjet = yield query.getOne();
             if (!aideProjet) {
@@ -52,12 +62,12 @@ class AideProjetUsecase {
         });
     }
     updateAideProjet(id_1, _a) {
-        return __awaiter(this, arguments, void 0, function* (id, { titre, descriptionProjet, budget, deadline }) {
+        return __awaiter(this, arguments, void 0, function* (id, { titre, descriptionProjet, budget, deadline, visiteur, adherent }) {
             const repo = this.db.getRepository(aideProjet_1.AideProjet);
             const aideProjetFound = yield repo.findOneBy({ id });
             if (aideProjetFound === null)
                 return null;
-            if (titre === undefined && descriptionProjet === undefined && budget === undefined && deadline === undefined) {
+            if (titre === undefined && descriptionProjet === undefined && budget === undefined && deadline === undefined && visiteur === undefined && adherent === undefined) {
                 return "No changes";
             }
             if (titre) {
@@ -66,11 +76,17 @@ class AideProjetUsecase {
             if (descriptionProjet) {
                 aideProjetFound.descriptionProjet = descriptionProjet;
             }
-            if (budget) {
+            if (budget !== undefined) {
                 aideProjetFound.budget = budget;
             }
-            if (deadline) {
+            if (deadline !== undefined) {
                 aideProjetFound.deadline = deadline;
+            }
+            if (visiteur) {
+                aideProjetFound.visiteur = visiteur;
+            }
+            if (adherent) {
+                aideProjetFound.adherent = adherent;
             }
             const aideProjetUpdate = yield repo.save(aideProjetFound);
             return aideProjetUpdate;

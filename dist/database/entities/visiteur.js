@@ -16,8 +16,9 @@ const user_1 = require("./user");
 const inscription_1 = require("./inscription");
 const transaction_1 = require("./transaction");
 const demande_1 = require("./demande");
+const aideProjet_1 = require("./aideProjet");
 let Visiteur = class Visiteur {
-    constructor(id, nom, prenom, email, age, numTel, adresse, profession, dateInscription, estBenevole, parrain, inscriptions, cotisations, transactions, estBanie, demandes) {
+    constructor(id, nom, prenom, email, age, numTel, adresse, profession, dateInscription, estBenevole, parrain, inscriptions, cotisations, transactions, estBanie, demandes, aideProjets) {
         this.id = id;
         this.nom = nom;
         this.prenom = prenom;
@@ -30,6 +31,7 @@ let Visiteur = class Visiteur {
         this.transactions = transactions;
         this.estBanie = estBanie;
         this.demandes = demandes;
+        this.aideProjets = aideProjets;
     }
 };
 exports.Visiteur = Visiteur;
@@ -82,7 +84,11 @@ __decorate([
     (0, typeorm_1.OneToMany)(() => demande_1.Demande, demandes => demandes.visiteur),
     __metadata("design:type", Array)
 ], Visiteur.prototype, "demandes", void 0);
+__decorate([
+    (0, typeorm_1.OneToMany)(() => aideProjet_1.AideProjet, aideProjets => aideProjets.visiteur),
+    __metadata("design:type", Array)
+], Visiteur.prototype, "aideProjets", void 0);
 exports.Visiteur = Visiteur = __decorate([
     (0, typeorm_1.Entity)(),
-    __metadata("design:paramtypes", [Number, String, String, String, Number, String, String, String, Date, Boolean, user_1.User, Array, Array, Array, Boolean, Array])
+    __metadata("design:paramtypes", [Number, String, String, String, Number, String, String, String, Date, Boolean, user_1.User, Array, Array, Array, Boolean, Array, Array])
 ], Visiteur);

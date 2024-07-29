@@ -50,6 +50,7 @@ class VisiteurUsecase {
             query.leftJoinAndSelect('visiteur.inscriptions', 'inscriptions')
                 .leftJoinAndSelect('visiteur.transactions', 'transactions')
                 .leftJoinAndSelect('visiteur.demandes', 'demandes')
+                .leftJoinAndSelect('visiteur.aideProjets', 'aideProjets')
                 .skip((listVisiteurRequest.page - 1) * listVisiteurRequest.limit)
                 .take(listVisiteurRequest.limit);
             const [Visiteurs, totalCount] = yield query.getManyAndCount();
@@ -65,6 +66,7 @@ class VisiteurUsecase {
                 .leftJoinAndSelect('visiteur.inscriptions', 'inscriptions')
                 .leftJoinAndSelect('visiteur.transactions', 'transactions')
                 .leftJoinAndSelect('visiteur.demandes', 'demandes')
+                .leftJoinAndSelect('visiteur.aideProjets', 'aideProjets')
                 .where("visiteur.id = :id", { id: id });
             const visiteur = yield query.getOne();
             if (!visiteur) {

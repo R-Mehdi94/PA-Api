@@ -1,5 +1,7 @@
 import { DataSource } from "typeorm";
 import { AideProjet } from "../database/entities/aideProjet";
+import { Adherent } from "../database/entities/adherent";
+import { Visiteur } from "../database/entities/visiteur";
 
 export interface ListAideProjetRequest {
     page: number
@@ -8,6 +10,8 @@ export interface ListAideProjetRequest {
     descriptionProjet?: string
     budget?: number
     deadline?: Date
+    visiteur?: number
+    adherent?: number
 }
 
 export interface UpdateAideProjetParams {
@@ -15,6 +19,8 @@ export interface UpdateAideProjetParams {
     descriptionProjet?: string
     budget?: number
     deadline?: Date
+    visiteur?: Visiteur
+    adherent?: Adherent
 }
 
 export class AideProjetUsecase {
@@ -30,7 +36,7 @@ export class AideProjetUsecase {
             query.andWhere("aideProjet.descriptionProjet = :descriptionProjet", { descriptionProjet: listAideProjetRequest.descriptionProjet });
         }
 
-        if (listAideProjetRequest.budget) {
+        if (listAideProjetRequest.budget !== undefined) {
             query.andWhere("aideProjet.budget = :budget", { budget: listAideProjetRequest.budget });
         }
 
@@ -38,7 +44,17 @@ export class AideProjetUsecase {
             query.andWhere("aideProjet.deadline = :deadline", { deadline: listAideProjetRequest.deadline });
         }
 
-        query.skip((listAideProjetRequest.page - 1) * listAideProjetRequest.limit)
+        if (listAideProjetRequest.visiteur) {
+            query.andWhere("aideProjet.visiteurId = :visiteur", { visiteur: listAideProjetRequest.visiteur });
+        }
+
+        if (listAideProjetRequest.adherent) {
+            query.andWhere("aideProjet.adherentId = :adherent", { adherent: listAideProjetRequest.adherent });
+        }
+
+        query.leftJoinAndSelect('aideProjet.visiteur', 'visiteur')
+            .leftJoinAndSelect('aideProjet.adherent', 'adherent')
+            .skip((listAideProjetRequest.page - 1) * listAideProjetRequest.limit)
             .take(listAideProjetRequest.limit);
 
         const [AideProjets, totalCount] = await query.getManyAndCount();
@@ -50,6 +66,8 @@ export class AideProjetUsecase {
 
     async getOneAideProjet(id: number): Promise<AideProjet | null> {
         const query = this.db.createQueryBuilder(AideProjet, 'aideProjet')
+            .leftJoinAndSelect('aideProjet.visiteur', 'visiteur')
+            .leftJoinAndSelect('aideProjet.adherent', 'adherent')
             .where("aideProjet.id = :id", { id: id });
 
         const aideProjet = await query.getOne();
@@ -61,12 +79,12 @@ export class AideProjetUsecase {
         return aideProjet;
     }
 
-    async updateAideProjet(id: number, { titre, descriptionProjet, budget, deadline }: UpdateAideProjetParams): Promise<AideProjet | string | null> {
+    async updateAideProjet(id: number, { titre, descriptionProjet, budget, deadline, visiteur, adherent }: UpdateAideProjetParams): Promise<AideProjet | string | null> {
         const repo = this.db.getRepository(AideProjet);
         const aideProjetFound = await repo.findOneBy({ id });
         if (aideProjetFound === null) return null;
 
-        if (titre === undefined && descriptionProjet === undefined && budget === undefined && deadline === undefined) {
+        if (titre === undefined && descriptionProjet === undefined && budget === undefined && deadline === undefined && visiteur === undefined && adherent === undefined) {
             return "No changes";
         }
 
@@ -76,11 +94,17 @@ export class AideProjetUsecase {
         if (descriptionProjet) {
             aideProjetFound.descriptionProjet = descriptionProjet;
         }
-        if (budget) {
+        if (budget !== undefined) {
             aideProjetFound.budget = budget;
         }
-        if (deadline) {
+        if (deadline !== undefined) {
             aideProjetFound.deadline = deadline;
+        }
+        if (visiteur) {
+            aideProjetFound.visiteur = visiteur;
+        }
+        if (adherent) {
+            aideProjetFound.adherent = adherent;
         }
 
         const aideProjetUpdate = await repo.save(aideProjetFound);

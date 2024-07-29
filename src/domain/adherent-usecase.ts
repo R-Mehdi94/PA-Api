@@ -151,7 +151,7 @@ export class AdherentUsecase {
             .leftJoinAndSelect('adherent.cotisations', 'cotisations')
             .leftJoinAndSelect('adherent.tokens', 'tokens')
             .leftJoinAndSelect('adherent.demandes', 'demandes')
-
+            .leftJoinAndSelect('adherent.aideProjets', 'aideProjets')
             .skip((listAdherentRequest.page - 1) * listAdherentRequest.limit)
             .take(listAdherentRequest.limit);
 
@@ -169,7 +169,7 @@ export class AdherentUsecase {
             .leftJoinAndSelect('adherent.cotisations', 'cotisations')
             .leftJoinAndSelect('adherent.tokens', 'tokens')
             .leftJoinAndSelect('adherent.demandes', 'demandes')
-
+            .leftJoinAndSelect('adherent.aideProjets', 'aideProjets')
 
             .where("adherent.id = :id", { id: id });
 

@@ -1,17 +1,23 @@
 import Joi from "joi";
+import { Visiteur } from "../../database/entities/visiteur";
+import { Adherent } from "../../database/entities/adherent";
 
 export const createAideProjetValidation = Joi.object<CreateAideProjetValidationRequest>({
     titre: Joi.string().required(),
     descriptionProjet: Joi.string().required(),
     budget: Joi.number().required(),
-    deadline: Joi.date().required()
-}).options({ abortEarly: false });
+    deadline: Joi.date().required(),
+    visiteur: Joi.number().required(),
+    adherent: Joi.number().required()
+});
 
 export interface CreateAideProjetValidationRequest {
     titre: string
     descriptionProjet: string
     budget: number
     deadline: Date
+    visiteur: Visiteur
+    adherent: Adherent
 }
 
 export const aideProjetIdValidation = Joi.object<AideProjetIdRequest>({
@@ -27,7 +33,9 @@ export const updateAideProjetValidation = Joi.object<UpdateAideProjetRequest>({
     titre: Joi.string().optional(),
     descriptionProjet: Joi.string().optional(),
     budget: Joi.number().optional(),
-    deadline: Joi.date().optional()
+    deadline: Joi.date().optional(),
+    visiteur: Joi.number().optional(),
+    adherent: Joi.number().optional()
 });
 
 export interface UpdateAideProjetRequest {
@@ -36,6 +44,8 @@ export interface UpdateAideProjetRequest {
     descriptionProjet?: string
     budget?: number
     deadline?: Date
+    visiteur?: Visiteur
+    adherent?: Adherent
 }
 
 export const listAideProjetValidation = Joi.object<ListAideProjetRequest>({
@@ -44,7 +54,9 @@ export const listAideProjetValidation = Joi.object<ListAideProjetRequest>({
     titre: Joi.string().optional(),
     descriptionProjet: Joi.string().optional(),
     budget: Joi.number().optional(),
-    deadline: Joi.date().optional()
+    deadline: Joi.date().optional(),
+    visiteur: Joi.number().optional(),
+    adherent: Joi.number().optional()
 });
 
 export interface ListAideProjetRequest {
@@ -54,4 +66,6 @@ export interface ListAideProjetRequest {
     descriptionProjet?: string
     budget?: number
     deadline?: Date
+    visiteur?: number
+    adherent?: number
 }

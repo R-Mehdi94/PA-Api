@@ -110,6 +110,7 @@ class AdherentUsecase {
                 .leftJoinAndSelect('adherent.cotisations', 'cotisations')
                 .leftJoinAndSelect('adherent.tokens', 'tokens')
                 .leftJoinAndSelect('adherent.demandes', 'demandes')
+                .leftJoinAndSelect('adherent.aideProjets', 'aideProjets')
                 .skip((listAdherentRequest.page - 1) * listAdherentRequest.limit)
                 .take(listAdherentRequest.limit);
             const [Adherents, totalCount] = yield query.getManyAndCount();
@@ -127,6 +128,7 @@ class AdherentUsecase {
                 .leftJoinAndSelect('adherent.cotisations', 'cotisations')
                 .leftJoinAndSelect('adherent.tokens', 'tokens')
                 .leftJoinAndSelect('adherent.demandes', 'demandes')
+                .leftJoinAndSelect('adherent.aideProjets', 'aideProjets')
                 .where("adherent.id = :id", { id: id });
             const adherent = yield query.getOne();
             if (!adherent) {

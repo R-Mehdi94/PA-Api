@@ -18,8 +18,9 @@ const cotisation_1 = require("./cotisation");
 const token_1 = require("./token");
 const transaction_1 = require("./transaction");
 const demande_1 = require("./demande");
+const aideProjet_1 = require("./aideProjet");
 let Adherent = class Adherent {
-    constructor(id, motDePasse, estBanie, nom, prenom, email, age, numTel, adresse, profession, dateInscription, estBenevole, parrain, inscriptions, cotisations, tokens, transactions, demandes) {
+    constructor(id, motDePasse, estBanie, nom, prenom, email, age, numTel, adresse, profession, dateInscription, estBenevole, parrain, inscriptions, cotisations, tokens, transactions, demandes, aideProjets) {
         this.id = id;
         this.motDePasse = motDePasse;
         this.estBanie = estBanie;
@@ -38,6 +39,7 @@ let Adherent = class Adherent {
         this.tokens = tokens;
         this.transactions = transactions;
         this.demandes = demandes;
+        this.aideProjets = aideProjets;
     }
 };
 exports.Adherent = Adherent;
@@ -114,7 +116,11 @@ __decorate([
     (0, typeorm_1.OneToMany)(() => demande_1.Demande, demandes => demandes.visiteur),
     __metadata("design:type", Array)
 ], Adherent.prototype, "demandes", void 0);
+__decorate([
+    (0, typeorm_1.OneToMany)(() => aideProjet_1.AideProjet, aideProjets => aideProjets.adherent),
+    __metadata("design:type", Array)
+], Adherent.prototype, "aideProjets", void 0);
 exports.Adherent = Adherent = __decorate([
     (0, typeorm_1.Entity)(),
-    __metadata("design:paramtypes", [Number, String, Boolean, String, String, String, Number, String, String, String, Date, Boolean, user_1.User, Array, Array, Array, Array, Array])
+    __metadata("design:paramtypes", [Number, String, Boolean, String, String, String, Number, String, String, String, Date, Boolean, user_1.User, Array, Array, Array, Array, Array, Array])
 ], Adherent);
