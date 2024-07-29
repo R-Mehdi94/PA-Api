@@ -41,8 +41,11 @@ class DossierUsecase {
                         'dossier' AS Type 
                     FROM 
                         dossier d 
+
+                    LEFT JOIN token t
+                    ON d.tokenId = t.id
                     WHERE 
-                        d.dossierId IS NULL AND d.userId = ?;`;
+                        d.dossierId IS NULL AND d.userId = ? AND t.blobName is NULL;`;
             const racine = yield entityManager.query(sqlQuery, [id, id]);
             if (!racine.length) {
                 return null;

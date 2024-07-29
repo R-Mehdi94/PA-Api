@@ -147,11 +147,7 @@ INSERT INTO parrainage_demande (id, parrainId, detailsParrainage, demandeId)
 VALUES 
 (3, 2, 'Parrainage pour les enfants défavorisés.', 3);
 
-INSERT INTO token (token, blobName, userId) VALUES
-('abc123', 'document1.pdf', 1),
-('def456', 'document2.pdf', 1),
-('def456', 'document3.pdf', 1),
-('def456', 'document4.pdf', 1);
+
 
 
 INSERT INTO dossier (nom, tokenId, dossierId, userId) VALUES
