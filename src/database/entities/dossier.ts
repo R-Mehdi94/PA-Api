@@ -9,6 +9,8 @@ export class Dossier {
 
     @Column()
     nom: string;
+    @Column()
+    type: string;
 
     @ManyToOne(() => Token, token => token.dossiers)
     token: Token;
@@ -22,9 +24,12 @@ export class Dossier {
     @ManyToOne(() => Token, user => user.dossiers)
     user: User;
 
-    constructor(id :number ,nom: string, token: Token, dossier: Dossier, enfants: Dossier[], user: User) {
+
+
+    constructor(id :number ,nom: string, type: string, token: Token, dossier: Dossier, enfants: Dossier[], user: User) {
         this.id = id;
         this.nom = nom;
+        this.type = type;
         this.token = token;
         this.dossier = dossier;
         this.enfants = enfants;

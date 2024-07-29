@@ -8,6 +8,7 @@ export interface ListDossierRequest {
     page: number
     limit: number
     nom?: string
+    type?: string
     token?: number
     dossier?: number
     user?: number
@@ -15,6 +16,7 @@ export interface ListDossierRequest {
 
 export interface UpdateDossierParams {
     nom?: string
+    type?: string
     token?: Token
     dossier?: Dossier
     user?: User
@@ -43,7 +45,9 @@ export class DossierUsecase {
 
         const entityManager = this.db.getRepository(Token);
 
-        const sqlQuery = `SELECT DISTINCT T.blobName as nomFichier, T.id, 'fichier' AS Type FROM token T, dossier D  WHERE D.tokenId IS NULL AND T.userId = ? and T.blobName is not NULL
+        const sqlQuery = `
+                    
+                        SELECT DISTINCT T.blobName as nomFichier, T.id, 'fichier' AS Type FROM token T, dossier D  WHERE D.dossierId IS NULL AND T.userId = 1 and T.blobName is not NULL
 
                     UNION ALL
 
@@ -57,20 +61,8 @@ export class DossierUsecase {
                     LEFT JOIN token t
                     ON d.tokenId = t.id
                     WHERE 
-                        d.dossierId IS NULL AND d.userId = ? AND t.blobName is NULL;`;
+                        d.dossierId IS NULL AND d.userId = 1 AND t.blobName is NULL;`;
 
-
-
-
-
-
-
-
-
-
-                        
-
-                    
                         
 
         const racine = await entityManager.query(sqlQuery, [id,id]);
@@ -149,6 +141,10 @@ export class DossierUsecase {
             query.andWhere("dossier.nom = :nom", { nom: listDossierRequest.nom });
         }
 
+        if (listDossierRequest.type) {
+            query.andWhere("dossier.type = :type", { type: listDossierRequest.type });
+        }
+
         if (listDossierRequest.token) {
             query.andWhere("dossier.tokenId = :token", { token: listDossierRequest.token });
         }
@@ -162,6 +158,8 @@ export class DossierUsecase {
         }
 
         query.leftJoinAndSelect('dossier.token', 'token')
+            .leftJoinAndSelect('dossier.dossier', 'dossier')
+            .leftJoinAndSelect('dossier.enfants', 'enfants')
             .leftJoinAndSelect('dossier.user', 'user')
             .skip((listDossierRequest.page - 1) * listDossierRequest.limit)
             .take(listDossierRequest.limit);
@@ -176,6 +174,8 @@ export class DossierUsecase {
     async getOneDossier(id: number): Promise<Dossier | null> {
         const query = this.db.createQueryBuilder(Dossier, 'dossier')
             .leftJoinAndSelect('dossier.token', 'token')
+            .leftJoinAndSelect('dossier.dossier', 'dossier')
+            .leftJoinAndSelect('dossier.enfants', 'enfants')
             .leftJoinAndSelect('dossier.user', 'user')
             .where("dossier.id = :id", { id: id });
 
@@ -188,17 +188,20 @@ export class DossierUsecase {
         return dossier;
     }
 
-    async updateDossier(id: number, { nom, token, dossier, user }: UpdateDossierParams): Promise<Dossier | string | null> {
+    async updateDossier(id: number, { nom, type, token, dossier, user }: UpdateDossierParams): Promise<Dossier | string | null> {
         const repo = this.db.getRepository(Dossier);
         const dossierFound = await repo.findOneBy({ id });
         if (dossierFound === null) return null;
 
-        if (nom === undefined && token === undefined && dossier === undefined && user === undefined) {
+        if (nom === undefined && type === undefined && token === undefined && dossier === undefined && user === undefined) {
             return "No changes";
         }
 
         if (nom) {
             dossierFound.nom = nom;
+        }
+        if (type) {
+            dossierFound.type = type;
         }
         if (token) {
             dossierFound.token = token;
@@ -213,4 +216,5 @@ export class DossierUsecase {
         const dossierUpdate = await repo.save(dossierFound);
         return dossierUpdate;
     }
+    
 }

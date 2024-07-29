@@ -150,11 +150,11 @@ VALUES
 
 
 
-INSERT INTO dossier (nom, tokenId, dossierId, userId) VALUES
-('Dossier 1', 1, NULL,1),
-('Dossier 2', 2, NULL,1),
-('Dossier 3', NULL, 2,1),
-('Dossier 4', NULL, NULL,1);
+INSERT INTO dossier (nom, tokenId, dossierId, userId,type) VALUES
+('Dossier 1', 1, NULL,1,'Dossier'),
+('Dossier 2', 2, NULL,1, 'Dossier'),
+('Dossier 3', NULL, 2,1, 'Dossier'),
+('Dossier 4', NULL, NULL,1, 'Dossier');
 
 
 /*
