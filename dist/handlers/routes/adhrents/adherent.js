@@ -118,6 +118,26 @@ const AdherentHandler = (app) => {
             res.status(500).send({ error: "Internal error" });
         }
     }));
+    app.post("/verifAdherentMdp", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        const validation = adherent_validator_1.verifChangementMdp.validate(req.body);
+        if (validation.error) {
+            res.status(400).send((0, generate_validation_message_1.generateValidationErrorMessage)(validation.error.details));
+            return;
+        }
+        try {
+            const inscriptionUsecase = new adherent_usecase_1.AdherentUsecase(database_1.AppDataSource);
+            const verifEmail = yield inscriptionUsecase.verifInfoMdp(validation.value.email, validation.value.numTel);
+            if (verifEmail[0]['count(*)'] > 0) {
+                res.status(200).send({ response: "Compte trouvé" });
+                return;
+            }
+            res.status(201).send({ response: "Compte non trouvé" });
+        }
+        catch (error) {
+            console.log(error);
+            res.status(500).send({ error: "Internal error" });
+        }
+    }));
     app.patch("/adherents/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         try {
             const validationResult = adherent_validator_1.updateAdherentValidation.validate(Object.assign(Object.assign({}, req.params), req.body));
@@ -176,6 +196,24 @@ const AdherentHandler = (app) => {
             const adherentUsecase = new adherent_usecase_1.AdherentUsecase(database_1.AppDataSource);
             const listAdherentEmail = yield adherentUsecase.getAdherentEmail();
             res.status(200).send(listAdherentEmail);
+        }
+        catch (error) {
+            console.log(error);
+            res.status(500).send({ error: "Internal error" });
+        }
+    }));
+    app.patch("/adherentsMdp/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        const validation = adherent_validator_1.updateAdherentValidationMdp.validate(Object.assign(Object.assign({}, req.params), req.body));
+        if (validation.error) {
+            res.status(400).send((0, generate_validation_message_1.generateValidationErrorMessage)(validation.error.details));
+            return;
+        }
+        const updateAdherentRequest = validation.value;
+        try {
+            const adherentUsecase = new adherent_usecase_1.AdherentUsecase(database_1.AppDataSource);
+            const hashedPassword = yield (0, bcrypt_1.hash)(updateAdherentRequest.motDePasse, 10);
+            const updateAdherentmDP = yield adherentUsecase.modifMdp(updateAdherentRequest.email, hashedPassword);
+            res.status(200).send({ response: updateAdherentmDP });
         }
         catch (error) {
             console.log(error);

@@ -17,6 +17,22 @@ class AdherentUsecase {
     constructor(db) {
         this.db = db;
     }
+    modifMdp(email, motDePasse) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const entityManager = this.db.getRepository(adherent_1.Adherent);
+            const sqlQuery = `UPDATE adherent SET motDePasse = ? where email=?;`;
+            const verifEmail = yield entityManager.query(sqlQuery, [email, motDePasse]);
+            return verifEmail;
+        });
+    }
+    verifInfoMdp(email, numTel) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const entityManager = this.db.getRepository(adherent_1.Adherent);
+            const sqlQuery = `select count(*) from adherent where email=? and numTel=?;`;
+            const verifEmail = yield entityManager.query(sqlQuery, [email, numTel]);
+            return verifEmail;
+        });
+    }
     verifMdp(id, mdp) {
         return __awaiter(this, void 0, void 0, function* () {
             const entityManager = this.db.getRepository(adherent_1.Adherent);
