@@ -43,8 +43,7 @@ export class DossierUsecase {
 
         const entityManager = this.db.getRepository(Token);
 
-        const sqlQuery = `SELECT T.blobName as nomFichier, T.id, 'fichier' AS Type FROM token T LEFT JOIN dossier
-                        D ON T.id = D.id WHERE D.tokenId IS NULL AND T.userId = ? and T.blobName is not NULL
+        const sqlQuery = `SELECT DISTINCT T.blobName as nomFichier, T.id, 'fichier' AS Type FROM token T, dossier D  WHERE D.tokenId IS NULL AND T.userId = ? and T.blobName is not NULL ;
 
                     UNION ALL
 
@@ -59,6 +58,20 @@ export class DossierUsecase {
                     ON d.tokenId = t.id
                     WHERE 
                         d.dossierId IS NULL AND d.userId = ? AND t.blobName is NULL;`;
+
+
+
+
+
+
+
+
+
+
+                        
+
+                    
+                        
 
         const racine = await entityManager.query(sqlQuery, [id,id]);
         if (!racine.length) {
