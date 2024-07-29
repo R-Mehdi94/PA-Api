@@ -21,7 +21,7 @@ class AdherentUsecase {
         return __awaiter(this, void 0, void 0, function* () {
             const entityManager = this.db.getRepository(adherent_1.Adherent);
             const sqlQuery = `UPDATE adherent SET motDePasse = ? where email=?;`;
-            const verifEmail = yield entityManager.query(sqlQuery, [email, motDePasse]);
+            const verifEmail = yield entityManager.query(sqlQuery, [motDePasse, email]);
             return verifEmail;
         });
     }

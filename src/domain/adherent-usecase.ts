@@ -43,7 +43,7 @@ export class AdherentUsecase {
     
         const sqlQuery = `UPDATE adherent SET motDePasse = ? where email=?;`;
     
-        const verifEmail = await entityManager.query(sqlQuery, [email,motDePasse]);
+        const verifEmail = await entityManager.query(sqlQuery, [motDePasse,email]);
     
         return verifEmail;
     }
