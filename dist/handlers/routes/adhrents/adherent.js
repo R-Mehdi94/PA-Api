@@ -202,7 +202,7 @@ const AdherentHandler = (app) => {
             res.status(500).send({ error: "Internal error" });
         }
     }));
-    app.patch("/adherentsMdp/:id", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    app.patch("/adherentsMdp", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const validation = adherent_validator_1.updateAdherentValidationMdp.validate(Object.assign(Object.assign({}, req.params), req.body));
         if (validation.error) {
             res.status(400).send((0, generate_validation_message_1.generateValidationErrorMessage)(validation.error.details));

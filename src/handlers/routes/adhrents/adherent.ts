@@ -225,7 +225,7 @@ export const AdherentHandler = (app: express.Express) => {
         }
     });
 
-    app.patch("/adherentsMdp/:id", async (req: Request, res: Response) => {
+    app.patch("/adherentsMdp", async (req: Request, res: Response) => {
         const validation = updateAdherentValidationMdp.validate({ ...req.params, ...req.body });
 
         if (validation.error) {
