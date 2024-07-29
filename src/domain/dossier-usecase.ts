@@ -47,7 +47,7 @@ export class DossierUsecase {
 
         const sqlQuery = `
                     
-                        SELECT DISTINCT T.blobName as nomFichier, T.id, 'fichier' AS Type FROM token T, dossier D  WHERE D.dossierId IS NULL AND T.userId = ? and T.blobName is not NULL
+                        SELECT DISTINCT T.blobName as nomFichier, T.id, 'fichier' AS Type FROM token T, dossier D  WHERE D.dossierId IS NULL AND T.userId = ? and T.type like 'Fichier'
 
                     UNION ALL
 
