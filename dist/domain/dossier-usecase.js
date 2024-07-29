@@ -71,7 +71,7 @@ class DossierUsecase {
             const entityManager = this.db.getRepository(token_1.Token);
             const sqlQuery = `WITH Combined AS (
                                     SELECT 
-                                        token.blobName AS Nom, 
+                                        dossier.nomUtilisateur AS Nom, 
                                         token.id, 
                                         'fichier' AS Type 
                                     FROM 
@@ -87,7 +87,7 @@ class DossierUsecase {
                                     UNION ALL
 
                                     SELECT 
-                                        d1.nom AS Nom, 
+                                        d1.nomUtilisateur AS Nom, 
                                         d1.id AS id,
                                         'dossier' AS Type 
                                     FROM 
@@ -116,7 +116,7 @@ class DossierUsecase {
     getDossierParent(id, dossierId) {
         return __awaiter(this, void 0, void 0, function* () {
             const entityManager = this.db.getRepository(token_1.Token);
-            const sqlQuery = `SELECT      d2.nom AS nom,      d2.id AS id,      'dossier' AS Type  FROM      dossier d1 INNER JOIN      dossier d2  ON      d1.dossierId = d2.id  WHERE      d1.id = ? and d1.userId = ? UNION ALL SELECT 'Racine' AS nom, NULL AS id, 'racine' AS Type WHERE EXISTS (SELECT 1 FROM dossier d1 WHERE d1.id = ? AND d1.dossierId IS NULL AND d1.userId = ?);`;
+            const sqlQuery = `SELECT      d2.nomUtilisateur AS nom,      d2.id AS id,      'dossier' AS Type  FROM      dossier d1 INNER JOIN      dossier d2  ON      d1.dossierId = d2.id  WHERE      d1.id = ? and d1.userId = ? UNION ALL SELECT 'Racine' AS nom, NULL AS id, 'racine' AS Type WHERE EXISTS (SELECT 1 FROM dossier d1 WHERE d1.id = ? AND d1.dossierId IS NULL AND d1.userId = ?);`;
             const dossierParent = yield entityManager.query(sqlQuery, [dossierId, id, dossierId, id]);
             if (!dossierParent.length) {
                 return null;
