@@ -8,7 +8,7 @@ const joi_1 = __importDefault(require("joi"));
 exports.createDossierValidation = joi_1.default.object({
     nom: joi_1.default.string().required(),
     type: joi_1.default.string().required(),
-    token: joi_1.default.number().required(),
+    token: joi_1.default.number().optional(),
     dossier: joi_1.default.number().optional(),
     user: joi_1.default.number().required()
 });
