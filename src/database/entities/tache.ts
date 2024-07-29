@@ -29,9 +29,10 @@ export class Tache {
         type: "enum",
         enum: StatutTache,
     })
-
     statut: StatutTache;
 
+    @Column()
+    sync_status: string
     
     @ManyToOne(() => User, user => user.taches)
     responsable: User
@@ -41,7 +42,7 @@ export class Tache {
 
 
 
-    constructor(id: number, description:string,dateDebut:Date,dateFin:Date,statut:StatutTache,responsable:User,ressource:Ressource){ 
+    constructor(id: number, description:string,dateDebut:Date,dateFin:Date,statut:StatutTache,responsable:User,ressource:Ressource, sync_status:string){ 
         this.id = id;
         this.description = description;
         this.dateDebut = dateDebut;
@@ -49,6 +50,7 @@ export class Tache {
         this.statut = statut;
         this.responsable = responsable;
         this.ressource = ressource;
+        this.sync_status = sync_status;
 
     }
 

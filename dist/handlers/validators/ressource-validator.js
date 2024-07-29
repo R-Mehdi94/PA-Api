@@ -10,6 +10,7 @@ exports.createRessourceValidation = joi_1.default.object({
     nom: joi_1.default.string().required(),
     type: joi_1.default.string().valid(...Object.values(ressource_1.TypeRessource)).required(),
     quantite: joi_1.default.number().required(),
+    sync_status: joi_1.default.string().required(),
     emplacement: joi_1.default.string().required()
 });
 exports.ressourceIdValidation = joi_1.default.object({
@@ -20,6 +21,7 @@ exports.updateRessourceValidation = joi_1.default.object({
     nom: joi_1.default.string().optional(),
     type: joi_1.default.string().valid(...Object.values(ressource_1.TypeRessource)).optional(),
     quantite: joi_1.default.number().optional(),
+    sync_status: joi_1.default.string().optional(),
     emplacement: joi_1.default.string().optional()
 });
 exports.listRessourceValidation = joi_1.default.object({
@@ -28,5 +30,6 @@ exports.listRessourceValidation = joi_1.default.object({
     nom: joi_1.default.string().optional(),
     type: joi_1.default.string().valid(...Object.values(ressource_1.TypeRessource)).optional(),
     quantite: joi_1.default.number().optional(),
+    sync_status: joi_1.default.string().optional(),
     emplacement: joi_1.default.string().optional()
 });

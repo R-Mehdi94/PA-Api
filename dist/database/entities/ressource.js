@@ -25,7 +25,7 @@ var TypeRessource;
     TypeRessource["Autre"] = "Autre";
 })(TypeRessource || (exports.TypeRessource = TypeRessource = {}));
 let Ressource = class Ressource {
-    constructor(id, nom, type, emplacement, quantite, evenementRessources, evenementUsers, taches) {
+    constructor(id, nom, type, emplacement, quantite, evenementRessources, evenementUsers, taches, sync_status) {
         this.id = id;
         this.nom = nom;
         this.type = type;
@@ -34,6 +34,7 @@ let Ressource = class Ressource {
         this.evenementRessources = evenementRessources;
         this.evenementUsers = evenementUsers;
         this.taches = taches;
+        this.sync_status = sync_status;
     }
 };
 exports.Ressource = Ressource;
@@ -59,6 +60,10 @@ __decorate([
 __decorate([
     (0, typeorm_1.Column)(),
     __metadata("design:type", String)
+], Ressource.prototype, "sync_status", void 0);
+__decorate([
+    (0, typeorm_1.Column)(),
+    __metadata("design:type", String)
 ], Ressource.prototype, "emplacement", void 0);
 __decorate([
     (0, typeorm_1.OneToMany)(() => evenementRessource_1.EvenementRessource, evenementRessource => evenementRessource.ressource),
@@ -74,5 +79,5 @@ __decorate([
 ], Ressource.prototype, "taches", void 0);
 exports.Ressource = Ressource = __decorate([
     (0, typeorm_1.Entity)(),
-    __metadata("design:paramtypes", [Number, String, String, String, Number, Array, Array, Array])
+    __metadata("design:paramtypes", [Number, String, String, String, Number, Array, Array, Array, String])
 ], Ressource);

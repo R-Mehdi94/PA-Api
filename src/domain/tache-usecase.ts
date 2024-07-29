@@ -10,6 +10,7 @@ export interface ListTacheRequest {
     dateDebut?: Date
     dateFin?: Date
     statut?: StatutTache
+    sync_status?: string
     responsable?: number
     ressource?: number
 }
@@ -19,6 +20,7 @@ export interface UpdateTacheParams {
     dateDebut?: Date
     dateFin?: Date
     statut?: StatutTache
+    sync_status?: string
     responsable?: User
     ressource?: Ressource
 }
@@ -42,6 +44,10 @@ export class TacheUsecase {
 
         if (listTacheRequest.statut) {
             query.andWhere("tache.statut = :statut", { statut: listTacheRequest.statut });
+        }
+
+        if (listTacheRequest.sync_status) {
+            query.andWhere("tache.sync_status = :sync_status", { sync_status: listTacheRequest.sync_status });
         }
 
         if (listTacheRequest.responsable) {
@@ -79,26 +85,29 @@ export class TacheUsecase {
         return tache;
     }
 
-    async updateTache(id: number, { description, dateDebut, dateFin, statut, responsable, ressource }: UpdateTacheParams): Promise<Tache | string | null> {
+    async updateTache(id: number, { description, dateDebut, dateFin, statut, sync_status, responsable, ressource }: UpdateTacheParams): Promise<Tache | string | null> {
         const repo = this.db.getRepository(Tache);
         const tacheFound = await repo.findOneBy({ id });
         if (tacheFound === null) return null;
 
-        if (description === undefined && dateDebut === undefined && dateFin === undefined && statut === undefined && responsable === undefined && ressource === undefined) {
+        if (description === undefined && dateDebut === undefined && dateFin === undefined && statut === undefined && sync_status === undefined && responsable === undefined && ressource === undefined) {
             return "No changes";
         }
 
         if (description) {
             tacheFound.description = description;
         }
-        if (dateDebut) {
+        if (dateDebut !== undefined) {
             tacheFound.dateDebut = dateDebut;
         }
-        if (dateFin) {
+        if (dateFin !== undefined) {
             tacheFound.dateFin = dateFin;
         }
         if (statut) {
             tacheFound.statut = statut;
+        }
+        if (sync_status) {
+            tacheFound.sync_status = sync_status;
         }
         if (responsable) {
             tacheFound.responsable = responsable;

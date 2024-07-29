@@ -20,7 +20,7 @@ var StatutTache;
     StatutTache["EnCours"] = "En cours";
 })(StatutTache || (exports.StatutTache = StatutTache = {}));
 let Tache = class Tache {
-    constructor(id, description, dateDebut, dateFin, statut, responsable, ressource) {
+    constructor(id, description, dateDebut, dateFin, statut, responsable, ressource, sync_status) {
         this.id = id;
         this.description = description;
         this.dateDebut = dateDebut;
@@ -28,6 +28,7 @@ let Tache = class Tache {
         this.statut = statut;
         this.responsable = responsable;
         this.ressource = ressource;
+        this.sync_status = sync_status;
     }
 };
 exports.Tache = Tache;
@@ -55,6 +56,10 @@ __decorate([
     __metadata("design:type", String)
 ], Tache.prototype, "statut", void 0);
 __decorate([
+    (0, typeorm_1.Column)(),
+    __metadata("design:type", String)
+], Tache.prototype, "sync_status", void 0);
+__decorate([
     (0, typeorm_1.ManyToOne)(() => user_1.User, user => user.taches),
     __metadata("design:type", user_1.User)
 ], Tache.prototype, "responsable", void 0);
@@ -64,5 +69,5 @@ __decorate([
 ], Tache.prototype, "ressource", void 0);
 exports.Tache = Tache = __decorate([
     (0, typeorm_1.Entity)(),
-    __metadata("design:paramtypes", [Number, String, Date, Date, String, user_1.User, ressource_1.Ressource])
+    __metadata("design:paramtypes", [Number, String, Date, Date, String, user_1.User, ressource_1.Ressource, String])
 ], Tache);

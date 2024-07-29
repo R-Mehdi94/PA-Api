@@ -24,8 +24,11 @@ class RessourceUsecase {
             if (listRessourceRequest.type) {
                 query.andWhere("ressource.type = :type", { type: listRessourceRequest.type });
             }
-            if (listRessourceRequest.quantite) {
+            if (listRessourceRequest.quantite !== undefined) {
                 query.andWhere("ressource.quantite = :quantite", { quantite: listRessourceRequest.quantite });
+            }
+            if (listRessourceRequest.sync_status) {
+                query.andWhere("ressource.sync_status = :sync_status", { sync_status: listRessourceRequest.sync_status });
             }
             if (listRessourceRequest.emplacement) {
                 query.andWhere("ressource.emplacement = :emplacement", { emplacement: listRessourceRequest.emplacement });
@@ -58,12 +61,12 @@ class RessourceUsecase {
         });
     }
     updateRessource(id_1, _a) {
-        return __awaiter(this, arguments, void 0, function* (id, { nom, type, quantite, emplacement }) {
+        return __awaiter(this, arguments, void 0, function* (id, { nom, type, quantite, sync_status, emplacement }) {
             const repo = this.db.getRepository(ressource_1.Ressource);
             const ressourceFound = yield repo.findOneBy({ id });
             if (ressourceFound === null)
                 return null;
-            if (nom === undefined && type === undefined && quantite === undefined && emplacement === undefined) {
+            if (nom === undefined && type === undefined && quantite === undefined && sync_status === undefined && emplacement === undefined) {
                 return "No changes";
             }
             if (nom) {
@@ -74,6 +77,9 @@ class RessourceUsecase {
             }
             if (quantite !== undefined) {
                 ressourceFound.quantite = quantite;
+            }
+            if (sync_status) {
+                ressourceFound.sync_status = sync_status;
             }
             if (emplacement) {
                 ressourceFound.emplacement = emplacement;

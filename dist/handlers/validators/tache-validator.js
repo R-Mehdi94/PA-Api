@@ -11,6 +11,7 @@ exports.createTacheValidation = joi_1.default.object({
     dateDebut: joi_1.default.date().required(),
     dateFin: joi_1.default.date().required(),
     statut: joi_1.default.string().valid(...Object.values(tache_1.StatutTache)).required(),
+    sync_status: joi_1.default.string().required(),
     responsable: joi_1.default.number().required(),
     ressource: joi_1.default.number().required()
 });
@@ -23,6 +24,7 @@ exports.updateTacheValidation = joi_1.default.object({
     dateDebut: joi_1.default.date().optional(),
     dateFin: joi_1.default.date().optional(),
     statut: joi_1.default.string().valid(...Object.values(tache_1.StatutTache)).optional(),
+    sync_status: joi_1.default.string().optional(),
     responsable: joi_1.default.number().optional(),
     ressource: joi_1.default.number().optional()
 });
@@ -33,6 +35,7 @@ exports.listTacheValidation = joi_1.default.object({
     dateDebut: joi_1.default.date().optional(),
     dateFin: joi_1.default.date().optional(),
     statut: joi_1.default.string().valid(...Object.values(tache_1.StatutTache)).optional(),
+    sync_status: joi_1.default.string().optional(),
     responsable: joi_1.default.number().optional(),
     ressource: joi_1.default.number().optional()
 });

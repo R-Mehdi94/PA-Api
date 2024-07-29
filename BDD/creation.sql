@@ -81,6 +81,7 @@ CREATE TABLE ressource (
     nom VARCHAR(255) NOT NULL,
     type ENUM('Vetement', 'Argent', 'Alimentaire','Jouet','Matériel maison divers','Materiel','Autre') NOT NULL,
     quantite INT DEFAULT 1,
+    sync_status TEXT,
     emplacement VARCHAR(255) DEFAULT NULL
 );
 
@@ -92,6 +93,7 @@ CREATE TABLE tache (
     statut ENUM('En cours', 'Fini') NOT NULL,
     responsableId INT,
     ressourceId INT,
+    sync_status TEXT,
     FOREIGN KEY (responsableId) REFERENCES user(id) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY (ressourceId) REFERENCES ressource(id) ON DELETE CASCADE ON UPDATE CASCADE
 );

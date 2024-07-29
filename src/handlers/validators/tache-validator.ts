@@ -8,6 +8,7 @@ export const createTacheValidation = Joi.object<CreateTacheValidationRequest>({
     dateDebut: Joi.date().required(),
     dateFin: Joi.date().required(),
     statut: Joi.string().valid(...Object.values(StatutTache)).required(),
+    sync_status: Joi.string().required(),
     responsable: Joi.number().required(),
     ressource: Joi.number().required()
 });
@@ -17,6 +18,7 @@ export interface CreateTacheValidationRequest {
     dateDebut: Date
     dateFin: Date
     statut: StatutTache
+    sync_status: string
     responsable: User
     ressource: Ressource
 }
@@ -35,6 +37,7 @@ export const updateTacheValidation = Joi.object<UpdateTacheRequest>({
     dateDebut: Joi.date().optional(),
     dateFin: Joi.date().optional(),
     statut: Joi.string().valid(...Object.values(StatutTache)).optional(),
+    sync_status: Joi.string().optional(),
     responsable: Joi.number().optional(),
     ressource: Joi.number().optional()
 });
@@ -45,6 +48,7 @@ export interface UpdateTacheRequest {
     dateDebut?: Date
     dateFin?: Date
     statut?: StatutTache
+    sync_status?: string
     responsable?: User
     ressource?: Ressource
 }
@@ -56,6 +60,7 @@ export const listTacheValidation = Joi.object<ListTacheRequest>({
     dateDebut: Joi.date().optional(),
     dateFin: Joi.date().optional(),
     statut: Joi.string().valid(...Object.values(StatutTache)).optional(),
+    sync_status: Joi.string().optional(),
     responsable: Joi.number().optional(),
     ressource: Joi.number().optional()
 });
@@ -67,6 +72,7 @@ export interface ListTacheRequest {
     dateDebut?: Date
     dateFin?: Date
     statut?: StatutTache
+    sync_status?: string
     responsable?: number
     ressource?: number
 }

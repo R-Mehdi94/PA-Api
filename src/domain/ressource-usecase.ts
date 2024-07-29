@@ -1,5 +1,6 @@
 import { DataSource } from "typeorm";
-import { Ressource, TypeRessource } from "../database/entities/ressource";
+import { Ressource } from "../database/entities/ressource";
+import { TypeRessource } from "../database/entities/ressource";
 
 export interface ListRessourceRequest {
     page: number
@@ -7,6 +8,7 @@ export interface ListRessourceRequest {
     nom?: string
     type?: TypeRessource
     quantite?: number
+    sync_status?: string
     emplacement?: string
 }
 
@@ -14,6 +16,7 @@ export interface UpdateRessourceParams {
     nom?: string
     type?: TypeRessource
     quantite?: number
+    sync_status?: string
     emplacement?: string
 }
 
@@ -30,8 +33,12 @@ export class RessourceUsecase {
             query.andWhere("ressource.type = :type", { type: listRessourceRequest.type });
         }
 
-        if (listRessourceRequest.quantite) {
+        if (listRessourceRequest.quantite !== undefined) {
             query.andWhere("ressource.quantite = :quantite", { quantite: listRessourceRequest.quantite });
+        }
+
+        if (listRessourceRequest.sync_status) {
+            query.andWhere("ressource.sync_status = :sync_status", { sync_status: listRessourceRequest.sync_status });
         }
 
         if (listRessourceRequest.emplacement) {
@@ -67,12 +74,12 @@ export class RessourceUsecase {
         return ressource;
     }
 
-    async updateRessource(id: number, { nom, type, quantite, emplacement }: UpdateRessourceParams): Promise<Ressource | string | null> {
+    async updateRessource(id: number, { nom, type, quantite, sync_status, emplacement }: UpdateRessourceParams): Promise<Ressource | string | null> {
         const repo = this.db.getRepository(Ressource);
         const ressourceFound = await repo.findOneBy({ id });
         if (ressourceFound === null) return null;
 
-        if (nom === undefined && type === undefined && quantite === undefined && emplacement === undefined) {
+        if (nom === undefined && type === undefined && quantite === undefined && sync_status === undefined && emplacement === undefined) {
             return "No changes";
         }
 
@@ -84,6 +91,9 @@ export class RessourceUsecase {
         }
         if (quantite !== undefined) {
             ressourceFound.quantite = quantite;
+        }
+        if (sync_status) {
+            ressourceFound.sync_status = sync_status;
         }
         if (emplacement) {
             ressourceFound.emplacement = emplacement;

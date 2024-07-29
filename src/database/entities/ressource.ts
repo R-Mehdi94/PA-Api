@@ -32,6 +32,10 @@ export class Ressource {
     @Column()
     quantite: number
 
+
+    @Column()
+    sync_status: string
+
     @Column()
     emplacement: string
 
@@ -45,7 +49,7 @@ export class Ressource {
     taches: Tache[]; 
 
 
-    constructor(id: number, nom:string,type:TypeRessource,emplacement:string, quantite:number ,evenementRessources:EvenementRessource[], evenementUsers:EvenementUser[], taches:Tache[]){ 
+    constructor(id: number, nom:string,type:TypeRessource,emplacement:string, quantite:number ,evenementRessources:EvenementRessource[], evenementUsers:EvenementUser[], taches:Tache[], sync_status:string){ 
         this.id = id;
         this.nom = nom;
         this.type = type;
@@ -54,5 +58,6 @@ export class Ressource {
         this.evenementRessources = evenementRessources;
         this.evenementUsers = evenementUsers;
         this.taches = taches;
+        this.sync_status = sync_status
     }
 }

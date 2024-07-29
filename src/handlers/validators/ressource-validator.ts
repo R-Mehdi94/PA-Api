@@ -5,6 +5,7 @@ export const createRessourceValidation = Joi.object<CreateRessourceValidationReq
     nom: Joi.string().required(),
     type: Joi.string().valid(...Object.values(TypeRessource)).required(),
     quantite: Joi.number().required(),
+    sync_status: Joi.string().required(),
     emplacement: Joi.string().required()
 });
 
@@ -12,6 +13,7 @@ export interface CreateRessourceValidationRequest {
     nom: string
     type: TypeRessource
     quantite: number
+    sync_status: string
     emplacement: string
 }
 
@@ -28,6 +30,7 @@ export const updateRessourceValidation = Joi.object<UpdateRessourceRequest>({
     nom: Joi.string().optional(),
     type: Joi.string().valid(...Object.values(TypeRessource)).optional(),
     quantite: Joi.number().optional(),
+    sync_status: Joi.string().optional(),
     emplacement: Joi.string().optional()
 });
 
@@ -36,6 +39,7 @@ export interface UpdateRessourceRequest {
     nom?: string
     type?: TypeRessource
     quantite?: number
+    sync_status?: string
     emplacement?: string
 }
 
@@ -45,6 +49,7 @@ export const listRessourceValidation = Joi.object<ListRessourceRequest>({
     nom: Joi.string().optional(),
     type: Joi.string().valid(...Object.values(TypeRessource)).optional(),
     quantite: Joi.number().optional(),
+    sync_status: Joi.string().optional(),
     emplacement: Joi.string().optional()
 });
 
@@ -54,5 +59,6 @@ export interface ListRessourceRequest {
     nom?: string
     type?: TypeRessource
     quantite?: number
+    sync_status?: string
     emplacement?: string
 }
