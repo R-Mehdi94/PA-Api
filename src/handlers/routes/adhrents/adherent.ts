@@ -163,7 +163,7 @@ export const AdherentHandler = (app: express.Express) => {
             if (validationResult.value.idAdmin !== undefined) {
                 let user = await AppDataSource.getRepository(User).findOneBy({ id: validationResult.value.idAdmin });
     
-                if (user?.role !== "Administrateur") {
+                if (user?.role !== "Administrateur" && user?.role !== "Utilisateur") {
                     if (await userUsecase.verifUser(+req.params.idAdmin, req.body.token) === false) {
                         res.status(400).send({ "error": `Bad user` });
                         return;
