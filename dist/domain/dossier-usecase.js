@@ -32,7 +32,7 @@ class DossierUsecase {
             const entityManager = this.db.getRepository(token_1.Token);
             const sqlQuery = `
                     
-                    select nom as nomFichier, tokenId, 'fichier' AS Type from dossier where type like 'Fichier' AND (dossierId = 0 OR dossierId = NULL) AND userId = ?
+                    select nom as nomFichier, tokenId as id, 'fichier' AS Type from dossier where type like 'Fichier' AND (dossierId = 0 OR dossierId = NULL) AND userId = ?
                     UNION ALL
 
                     SELECT 
@@ -46,6 +46,19 @@ class DossierUsecase {
                     ON d.tokenId = t.id
                     WHERE 
                         d.dossierId IS NULL AND d.userId = ? AND t.blobName is NULL;`;
+            /*const sqlQuery = `SELECT T.blobName as nomFichier, T.id, 'fichier' AS Type FROM token T LEFT JOIN dossier
+                D ON T.id = D.id WHERE D.tokenId IS NULL AND T.userId = ? and T.blobName is not NULL
+
+            UNION ALL
+
+            SELECT
+                d.nom,
+                d.id AS ID,
+                'dossier' AS Type
+            FROM
+                dossier d
+            WHERE
+                d.dossierId IS NULL AND d.userId = ?;`;  */
             const racine = yield entityManager.query(sqlQuery, [id, id]);
             if (!racine.length) {
                 return null;
