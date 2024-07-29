@@ -89,9 +89,9 @@ INSERT INTO proposition (question, type, choix, agId) VALUES
 ('Satisfais de l asso ?', 'radio', 'Oui' ,2),
 ('Satisfais de l asso ?', 'radio', 'Non' ,2);
 
-INSERT INTO vote (propositionId, userId, choix) VALUES
-(1, 1, 'Oui'),
-(2, 2, 'Non');
+INSERT INTO vote (propositionId, userId, choix, numTour) VALUES
+(1, 1, 'Oui',1),
+(2, 2, 'Non',1);
 
 INSERT INTO transaction (montant, type, dateTransaction, visiteurId, methodePaiement) VALUES
 (50.00, 'Cotisation', NOW(), 2, 'Paypal'),
@@ -135,9 +135,9 @@ VALUES
 (1, 'Festival de Musique', '2024-07-15 18:00:00', 'Un grand festival de musique avec des artistes internationaux.', 'Parc Central', 1),
 (2, 'Festival de Musique', '2024-07-15 18:00:00', 'Un grand festival de musique avec des artistes internationaux.', 'Parc Central', 2);
 
-INSERT INTO aide_projet (titre, descriptionProjet, budget, deadline)
+INSERT INTO aide_projet (titre, descriptionProjet, budget, deadline,adherentId)
 VALUES 
-('Projet de Reforestation', 'Un projet visant à planter des arbres dans les zones déforestées.', 5000.00, '2024-12-31 00:00:00');
+('Projet de Reforestation', 'Un projet visant à planter des arbres dans les zones déforestées.', 5000.00, '2024-12-31 00:00:00', 1);
 
 INSERT INTO aide_projet_demande (id, titre, descriptionProjet, budget, deadline, demandeId)
 VALUES 

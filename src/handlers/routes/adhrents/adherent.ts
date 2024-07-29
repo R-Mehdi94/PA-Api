@@ -2,7 +2,7 @@ import express, { Request, Response } from 'express';
 import { AppDataSource } from '../../../database/database';
 import { Adherent } from '../../../database/entities/adherent';
 import { AdherentUsecase } from '../../../domain/adherent-usecase';
-import { listAdherentValidation, createAdherentValidation, adherentIdValidation, updateAdherentValidation } from '../../validators/adherent-validator';
+import { listAdherentValidation, createAdherentValidation, adherentIdValidation, updateAdherentValidation, verifChangementMdp, updateAdherentValidationMdp } from '../../validators/adherent-validator';
 import { generateValidationErrorMessage } from '../../validators/generate-validation-message';
 import { authMiddlewareAdherent } from '../../middleware/auth-middleware';
 import { User } from '../../../database/entities/user';
@@ -123,6 +123,31 @@ export const AdherentHandler = (app: express.Express) => {
         }
     });
 
+
+    app.post("/verifAdherentMdp", async (req: Request, res: Response) => {
+
+
+        const validation = verifChangementMdp.validate(req.body);
+
+        if (validation.error) {
+            res.status(400).send(generateValidationErrorMessage(validation.error.details));
+            return;
+        }
+        
+        try {
+            const inscriptionUsecase = new AdherentUsecase(AppDataSource);
+            const verifEmail = await inscriptionUsecase.verifInfoMdp(validation.value.email, validation.value.numTel);
+            if(verifEmail[0]['count(*)'] > 0){
+                res.status(200).send({ response: "Compte trouvé" });
+                return;
+            }
+            res.status(201).send({ response: "Compte non trouvé" });
+        } catch (error) {
+            console.log(error);
+            res.status(500).send({ error: "Internal error" });
+        }
+    });
+
     app.patch("/adherents/:id",async (req: Request, res: Response) => {
         try {
             const validationResult = updateAdherentValidation.validate({ ...req.params, ...req.body });
@@ -200,6 +225,29 @@ export const AdherentHandler = (app: express.Express) => {
         }
     });
 
+    app.patch("/adherentsMdp/:id", async (req: Request, res: Response) => {
+        const validation = updateAdherentValidationMdp.validate({ ...req.params, ...req.body });
+
+        if (validation.error) {
+            res.status(400).send(generateValidationErrorMessage(validation.error.details));
+            return;
+        }
+
+        const updateAdherentRequest = validation.value;
+
+        try {
+
+            const adherentUsecase = new AdherentUsecase(AppDataSource);
+            const hashedPassword = await hash(updateAdherentRequest.motDePasse, 10);
+
+            const updateAdherentmDP = await adherentUsecase.modifMdp(updateAdherentRequest.email, hashedPassword);
+
+            res.status(200).send({response: updateAdherentmDP});
+        } catch (error) {
+            console.log(error);
+            res.status(500).send({ error: "Internal error" });
+        }
+    });
 
 };
 

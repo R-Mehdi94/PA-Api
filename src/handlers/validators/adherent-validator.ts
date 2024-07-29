@@ -15,6 +15,16 @@ export const createAdherentValidation = Joi.object<CreateAdherentValidationReque
     parrain: Joi.number().optional()
 });
 
+export const verifChangementMdp = Joi.object<VerifChangementMdp>({
+    email: Joi.string().required(),
+    numTel: Joi.string().required()
+}).options({ abortEarly: false })
+
+export interface VerifChangementMdp {
+    email: string
+    numTel: string
+}
+
 export interface CreateAdherentValidationRequest {
     email: string
     motDePasse: string
@@ -66,6 +76,16 @@ export const updateAdherentValidation = Joi.object<UpdateAdherentRequest>({
     token: Joi.string().required(),
     idAdmin: Joi.number().optional()
 });
+
+export const updateAdherentValidationMdp = Joi.object<UpdateAdherentValidationMdp>({
+    email: Joi.string().email().required(),
+    motDePasse: Joi.string().required()
+});
+
+export interface UpdateAdherentValidationMdp {
+    email: string
+    motDePasse: string
+}
 
 export interface UpdateAdherentRequest {
     id: number

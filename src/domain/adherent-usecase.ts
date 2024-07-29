@@ -35,7 +35,29 @@ export interface UpdateAdherentParams {
 }
 
 export class AdherentUsecase {
-    constructor(private readonly db: DataSource) { }
+    constructor(private readonly db: DataSource) { } 
+
+    async modifMdp(email:string, motDePasse: string): Promise<any | null> {
+    
+        const entityManager = this.db.getRepository(Adherent);
+    
+        const sqlQuery = `UPDATE adherent SET motDePasse = ? where email=?;`;
+    
+        const verifEmail = await entityManager.query(sqlQuery, [email,motDePasse]);
+    
+        return verifEmail;
+    }
+
+    async verifInfoMdp(email:string, numTel: string): Promise<any | null> {
+    
+        const entityManager = this.db.getRepository(Adherent);
+    
+        const sqlQuery = `select count(*) from adherent where email=? and numTel=?;`;
+    
+        const verifEmail = await entityManager.query(sqlQuery, [email,numTel]);
+    
+        return verifEmail;
+    }
 
     async verifMdp(id: number, mdp: string): Promise<boolean> {
         const entityManager = this.db.getRepository(Adherent);

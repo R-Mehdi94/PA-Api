@@ -81,7 +81,7 @@ CREATE TABLE ressource (
     nom VARCHAR(255) NOT NULL,
     type ENUM('Vetement', 'Argent', 'Alimentaire','Jouet','Matériel maison divers','Materiel','Autre') NOT NULL,
     quantite INT DEFAULT 1,
-    sync_status VARCHAR(255) DEFAULT 'NEW',
+    sync_status VARCHAR(255) DEFAULT 'synced',
     emplacement VARCHAR(255) DEFAULT NULL
 );
 
@@ -93,7 +93,7 @@ CREATE TABLE tache (
     statut ENUM('En cours', 'Fini') NOT NULL,
     responsableId INT,
     ressourceId INT,
-    sync_status VARCHAR(255) DEFAULT 'NEW',
+    sync_status VARCHAR(255) DEFAULT 'synced',
     FOREIGN KEY (responsableId) REFERENCES user(id) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY (ressourceId) REFERENCES ressource(id) ON DELETE CASCADE ON UPDATE CASCADE
 );
@@ -282,5 +282,9 @@ CREATE TABLE aide_projet(
     titre VARCHAR(255),
     descriptionProjet TEXT,
     budget FLOAT DEFAULT 0.0,
-    deadline DATETIME
+    deadline DATETIME,
+    visiteurId INT,
+    adherentId INT,
+    FOREIGN KEY (visiteurId) REFERENCES visiteur(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (adherentId) REFERENCES adherent(id) ON DELETE CASCADE ON UPDATE CASCADE
 );
