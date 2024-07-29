@@ -14,9 +14,10 @@ const typeorm_1 = require("typeorm");
 const token_1 = require("./token");
 const user_1 = require("./user");
 let Dossier = class Dossier {
-    constructor(id, nom, type, token, dossier, enfants, user) {
+    constructor(id, nom, nomUtilisateur, type, token, dossier, enfants, user) {
         this.id = id;
         this.nom = nom;
+        this.nomUtilisateur = nomUtilisateur;
         this.type = type;
         this.token = token;
         this.dossier = dossier;
@@ -33,6 +34,10 @@ __decorate([
     (0, typeorm_1.Column)(),
     __metadata("design:type", String)
 ], Dossier.prototype, "nom", void 0);
+__decorate([
+    (0, typeorm_1.Column)(),
+    __metadata("design:type", String)
+], Dossier.prototype, "nomUtilisateur", void 0);
 __decorate([
     (0, typeorm_1.Column)(),
     __metadata("design:type", String)
@@ -55,5 +60,5 @@ __decorate([
 ], Dossier.prototype, "user", void 0);
 exports.Dossier = Dossier = __decorate([
     (0, typeorm_1.Entity)(),
-    __metadata("design:paramtypes", [Number, String, String, token_1.Token, Dossier, Array, user_1.User])
+    __metadata("design:paramtypes", [Number, String, String, String, token_1.Token, Dossier, Array, user_1.User])
 ], Dossier);

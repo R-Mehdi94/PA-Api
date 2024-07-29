@@ -9,6 +9,10 @@ export class Dossier {
 
     @Column()
     nom: string;
+
+    @Column()
+    nomUtilisateur: string;
+
     @Column()
     type: string;
 
@@ -26,9 +30,10 @@ export class Dossier {
 
 
 
-    constructor(id :number ,nom: string, type: string, token: Token, dossier: Dossier, enfants: Dossier[], user: User) {
+    constructor(id :number ,nom: string, nomUtilisateur: string, type: string, token: Token, dossier: Dossier, enfants: Dossier[], user: User) {
         this.id = id;
         this.nom = nom;
+        this.nomUtilisateur = nomUtilisateur;
         this.type = type;
         this.token = token;
         this.dossier = dossier;

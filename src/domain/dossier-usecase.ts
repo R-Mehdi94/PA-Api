@@ -8,6 +8,7 @@ export interface ListDossierRequest {
     page: number
     limit: number
     nom?: string
+    nomUtilisateur?: string
     type?: string
     token?: number
     dossier?: number
@@ -16,6 +17,7 @@ export interface ListDossierRequest {
 
 export interface UpdateDossierParams {
     nom?: string
+    nomUtilisateur?: string
     type?: string
     token?: Token
     dossier?: Dossier
@@ -151,6 +153,10 @@ export class DossierUsecase {
             query.andWhere("dossier.nom = :nom", { nom: listDossierRequest.nom });
         }
 
+        if (listDossierRequest.nomUtilisateur) {
+            query.andWhere("dossier.nomUtilisateur = :nomUtilisateur", { nomUtilisateur: listDossierRequest.nomUtilisateur });
+        }
+
         if (listDossierRequest.type) {
             query.andWhere("dossier.type = :type", { type: listDossierRequest.type });
         }
@@ -198,17 +204,20 @@ export class DossierUsecase {
         return dossier;
     }
 
-    async updateDossier(id: number, { nom, type, token, dossier, user }: UpdateDossierParams): Promise<Dossier | string | null> {
+    async updateDossier(id: number, { nom, nomUtilisateur, type, token, dossier, user }: UpdateDossierParams): Promise<Dossier | string | null> {
         const repo = this.db.getRepository(Dossier);
         const dossierFound = await repo.findOneBy({ id });
         if (dossierFound === null) return null;
 
-        if (nom === undefined && type === undefined && token === undefined && dossier === undefined && user === undefined) {
+        if (nom === undefined && nomUtilisateur === undefined && type === undefined && token === undefined && dossier === undefined && user === undefined) {
             return "No changes";
         }
 
         if (nom) {
             dossierFound.nom = nom;
+        }
+        if (nomUtilisateur) {
+            dossierFound.nomUtilisateur = nomUtilisateur;
         }
         if (type) {
             dossierFound.type = type;

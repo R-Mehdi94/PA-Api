@@ -130,6 +130,9 @@ class DossierUsecase {
             if (listDossierRequest.nom) {
                 query.andWhere("dossier.nom = :nom", { nom: listDossierRequest.nom });
             }
+            if (listDossierRequest.nomUtilisateur) {
+                query.andWhere("dossier.nomUtilisateur = :nomUtilisateur", { nomUtilisateur: listDossierRequest.nomUtilisateur });
+            }
             if (listDossierRequest.type) {
                 query.andWhere("dossier.type = :type", { type: listDossierRequest.type });
             }
@@ -172,16 +175,19 @@ class DossierUsecase {
         });
     }
     updateDossier(id_1, _a) {
-        return __awaiter(this, arguments, void 0, function* (id, { nom, type, token, dossier, user }) {
+        return __awaiter(this, arguments, void 0, function* (id, { nom, nomUtilisateur, type, token, dossier, user }) {
             const repo = this.db.getRepository(dossier_1.Dossier);
             const dossierFound = yield repo.findOneBy({ id });
             if (dossierFound === null)
                 return null;
-            if (nom === undefined && type === undefined && token === undefined && dossier === undefined && user === undefined) {
+            if (nom === undefined && nomUtilisateur === undefined && type === undefined && token === undefined && dossier === undefined && user === undefined) {
                 return "No changes";
             }
             if (nom) {
                 dossierFound.nom = nom;
+            }
+            if (nomUtilisateur) {
+                dossierFound.nomUtilisateur = nomUtilisateur;
             }
             if (type) {
                 dossierFound.type = type;
