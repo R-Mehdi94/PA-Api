@@ -19,8 +19,8 @@ export class Dossier {
     @ManyToOne(() => Token, token => token.dossiers)
     token: Token;
 
-    @ManyToOne(() => Dossier, dossier => dossier.enfants)
-    dossier: Dossier | null | undefined;
+    @ManyToOne(() => Dossier, dossier => dossier.enfants, { nullable: true })
+    dossier: Dossier | null;
 
     @OneToMany(() => Dossier, dossier => dossier.dossier)
     enfants: Dossier[];

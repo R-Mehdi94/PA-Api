@@ -214,32 +214,33 @@ export class DossierUsecase {
         const repo = this.db.getRepository(Dossier);
         const dossierFound = await repo.findOneBy({ id });
         if (dossierFound === null) return null;
-
+    
         if (nom === undefined && nomUtilisateur === undefined && type === undefined && token === undefined && dossier === undefined && user === undefined) {
             return "No changes";
         }
-
-        if (nom) {
+    
+        if (nom !== undefined) {
             dossierFound.nom = nom;
         }
-        if (nomUtilisateur) {
+        if (nomUtilisateur !== undefined) {
             dossierFound.nomUtilisateur = nomUtilisateur;
         }
-        if (type) {
+        if (type !== undefined) {
             dossierFound.type = type;
         }
-        if (token) {
+        if (token !== undefined) {
             dossierFound.token = token;
         }
-        if (dossier) {
+        if (dossier !== undefined) {
             dossierFound.dossier = dossier;
         }
-        if (user) {
+        if (user !== undefined) {
             dossierFound.user = user;
         }
-
+    
         const dossierUpdate = await repo.save(dossierFound);
         return dossierUpdate;
     }
+    
     
 }
