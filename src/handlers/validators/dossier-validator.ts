@@ -47,7 +47,7 @@ export const updateDossierValidation = Joi.object<UpdateDossierRequest>({
     nomUtilisateur: Joi.string().optional(),
     type: Joi.string().optional(),
     token: Joi.number().optional(),
-    dossier: Joi.number().allow(null).allow(undefined).optional(),
+    dossier: Joi.number().allow(null).optional(),
     user: Joi.number().optional()
 });
 
@@ -57,7 +57,7 @@ export interface UpdateDossierRequest {
     nomUtilisateur?: string
     type?: string
     token?: Token
-    dossier?: Dossier | undefined
+    dossier?: Dossier | undefined 
     user?: User
 }
 
