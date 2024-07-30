@@ -10,8 +10,8 @@ exports.createAideProjetValidation = joi_1.default.object({
     descriptionProjet: joi_1.default.string().required(),
     budget: joi_1.default.number().required(),
     deadline: joi_1.default.date().required(),
-    visiteur: joi_1.default.number().required(),
-    adherent: joi_1.default.number().required()
+    visiteur: joi_1.default.number().optional(),
+    adherent: joi_1.default.number().optional()
 });
 exports.aideProjetIdValidation = joi_1.default.object({
     id: joi_1.default.number().required(),

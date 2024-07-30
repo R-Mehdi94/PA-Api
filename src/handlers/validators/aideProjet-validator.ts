@@ -7,8 +7,8 @@ export const createAideProjetValidation = Joi.object<CreateAideProjetValidationR
     descriptionProjet: Joi.string().required(),
     budget: Joi.number().required(),
     deadline: Joi.date().required(),
-    visiteur: Joi.number().required(),
-    adherent: Joi.number().required()
+    visiteur: Joi.number().optional(),
+    adherent: Joi.number().optional()
 });
 
 export interface CreateAideProjetValidationRequest {
@@ -16,8 +16,8 @@ export interface CreateAideProjetValidationRequest {
     descriptionProjet: string
     budget: number
     deadline: Date
-    visiteur: Visiteur
-    adherent: Adherent
+    visiteur?: Visiteur
+    adherent?: Adherent
 }
 
 export const aideProjetIdValidation = Joi.object<AideProjetIdRequest>({
