@@ -112,8 +112,9 @@ export class DossierUsecase {
                                     SELECT 
                                         d1.nomUtilisateur AS Nom, 
                                         d1.nom as VraiNom, 
-                                        d1.id AS id,
-                                        'dossier' AS Type 
+                                        null as tokenId, 
+                                        'dossier' AS Type, 
+                                        d1.id AS id
                                     FROM 
                                         dossier d1
                                     WHERE 
