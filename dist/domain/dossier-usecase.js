@@ -36,11 +36,11 @@ class DossierUsecase {
                     UNION ALL
 
                     SELECT 
-                        d.nomUtilisateur,
+                        d.nomUtilisateur as nomFichier,
                         d.nom as VraiNom,
-                        d.nomUtilisateur as nomFichier, 
-                        d.id AS ID,
-                        'dossier' AS Type 
+                        null as tokenId, 
+                        'dossier' AS Type, 
+                        d.id AS ID
                     FROM 
                         dossier d 
 
