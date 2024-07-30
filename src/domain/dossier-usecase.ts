@@ -49,11 +49,11 @@ export class DossierUsecase {
 
         const sqlQuery = `
                     
-                    select nom as nomFichier, tokenId as id, 'fichier' AS Type from dossier where type like 'Fichier' AND (dossierId = 0 OR dossierId = NULL) AND userId = ?
+                    select nomUtilisateur as nomFichier, tokenId as id, 'fichier' AS Type from dossier where type like 'Fichier' AND (dossierId = 0 OR dossierId = NULL) AND userId = ?
                     UNION ALL
 
                     SELECT 
-                        d.nom, 
+                        d.nomUtilisateur, 
                         d.id AS ID,
                         'dossier' AS Type 
                     FROM 
