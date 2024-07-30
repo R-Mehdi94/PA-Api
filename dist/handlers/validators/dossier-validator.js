@@ -9,7 +9,7 @@ exports.createDossierValidation = joi_1.default.object({
     nom: joi_1.default.string().required(),
     nomUtilisateur: joi_1.default.string().required(),
     type: joi_1.default.string().required(),
-    token: joi_1.default.number().optional(),
+    token: joi_1.default.string().optional(),
     dossier: joi_1.default.number().optional(),
     user: joi_1.default.number().required()
 });
@@ -26,7 +26,7 @@ exports.updateDossierValidation = joi_1.default.object({
     nom: joi_1.default.string().optional(),
     nomUtilisateur: joi_1.default.string().optional(),
     type: joi_1.default.string().optional(),
-    token: joi_1.default.number().optional(),
+    token: joi_1.default.string().optional(),
     dossier: joi_1.default.number().optional(),
     user: joi_1.default.number().optional()
 });
@@ -36,7 +36,7 @@ exports.listDossierValidation = joi_1.default.object({
     nom: joi_1.default.string().optional(),
     nomUtilisateur: joi_1.default.string().optional(),
     type: joi_1.default.string().optional(),
-    token: joi_1.default.number().optional(),
+    token: joi_1.default.string().optional(),
     dossier: joi_1.default.number().optional(),
     user: joi_1.default.number().optional()
 });
