@@ -47,7 +47,7 @@ export const updateDossierValidation = Joi.object<UpdateDossierRequest>({
     nomUtilisateur: Joi.string().optional(),
     type: Joi.string().optional(),
     token: Joi.number().optional(),
-    dossier: Joi.number().allow(null).optional(),
+    dossier: Joi.number().allow(null).allow(undefined).optional(),
     user: Joi.number().optional()
 });
 
