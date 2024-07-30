@@ -49,12 +49,12 @@ export class DossierUsecase {
 
         const sqlQuery = `
                     
-                    select nomUtilisateur as nomFichier, nom as vraiNom, tokenId as id, 'fichier' AS Type from dossier where type like 'Fichier' AND (dossierId = 0 OR dossierId = NULL) AND userId = ?
+                    select nomUtilisateur as nomFichier, nom as VraiNom, tokenId as tokenId, 'fichier' AS Type, id from dossier where type like 'Fichier' AND (dossierId = 0 OR dossierId = NULL) AND userId = ?
                     UNION ALL
 
                     SELECT 
                         d.nomUtilisateur,
-                        d.nom as vraiNom, 
+                        d.nom as VraiNom, 
                         d.id AS ID,
                         'dossier' AS Type 
                     FROM 
@@ -93,8 +93,9 @@ export class DossierUsecase {
                                     SELECT 
                                         dossier.nomUtilisateur AS Nom,
                                         dossier.nom as VraiNom, 
-                                        token.id, 
-                                        'fichier' AS Type 
+                                        token.id as tokenId,
+                                        'fichier' AS Type,
+                                        id 
                                     FROM 
                                         token 
                                     INNER JOIN 
