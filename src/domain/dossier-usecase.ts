@@ -49,11 +49,12 @@ export class DossierUsecase {
 
         const sqlQuery = `
                     
-                    select nomUtilisateur as nomFichier, tokenId as id, 'fichier' AS Type from dossier where type like 'Fichier' AND (dossierId = 0 OR dossierId = NULL) AND userId = ?
+                    select nomUtilisateur as nomFichier, nom as vraiNom, tokenId as id, 'fichier' AS Type from dossier where type like 'Fichier' AND (dossierId = 0 OR dossierId = NULL) AND userId = ?
                     UNION ALL
 
                     SELECT 
-                        d.nomUtilisateur, 
+                        d.nomUtilisateur,
+                        d.nom as vraiNom, 
                         d.id AS ID,
                         'dossier' AS Type 
                     FROM 
@@ -90,7 +91,8 @@ export class DossierUsecase {
 
                             const sqlQuery = `WITH Combined AS (
                                     SELECT 
-                                        dossier.nomUtilisateur AS Nom, 
+                                        dossier.nomUtilisateur AS Nom,
+                                        dossier.nom as VraiNom, 
                                         token.id, 
                                         'fichier' AS Type 
                                     FROM 
@@ -107,6 +109,7 @@ export class DossierUsecase {
 
                                     SELECT 
                                         d1.nomUtilisateur AS Nom, 
+                                        d1.nom as VraiNom, 
                                         d1.id AS id,
                                         'dossier' AS Type 
                                     FROM 
@@ -138,7 +141,7 @@ export class DossierUsecase {
 
         const entityManager = this.db.getRepository(Token);
 
-        const sqlQuery = `SELECT      d2.nomUtilisateur AS nom,      d2.id AS id,      'dossier' AS Type  FROM      dossier d1 INNER JOIN      dossier d2  ON      d1.dossierId = d2.id  WHERE      d1.id = ? and d1.userId = ? UNION ALL SELECT 'Racine' AS nom, NULL AS id, 'racine' AS Type WHERE EXISTS (SELECT 1 FROM dossier d1 WHERE d1.id = ? AND d1.dossierId IS NULL AND d1.userId = ?);`;
+        const sqlQuery = `SELECT      d2.nomUtilisateur AS nom, d2.nom as VraiNom,     d2.id AS id,      'dossier' AS Type  FROM      dossier d1 INNER JOIN      dossier d2  ON      d1.dossierId = d2.id  WHERE      d1.id = ? and d1.userId = ? UNION ALL SELECT 'Racine' AS nom, NULL AS id, 'racine' AS Type WHERE EXISTS (SELECT 1 FROM dossier d1 WHERE d1.id = ? AND d1.dossierId IS NULL AND d1.userId = ?);`;
 
         const dossierParent = await entityManager.query(sqlQuery, [dossierId,id,dossierId,id]);
         if (!dossierParent.length) {
