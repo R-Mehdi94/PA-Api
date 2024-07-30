@@ -48,8 +48,8 @@ export class Adherent {
     @Column()
     estBenevole: boolean
 
-    @ManyToOne(() => User, user => user.parraine)
-    parrain: User;
+    @ManyToOne(() => User, user => user.parraine, { nullable: true })
+    parrain: User | null; 
 
     @OneToMany(() => Inscription, inscriptions => inscriptions.adherent)
     inscriptions: Inscription[];

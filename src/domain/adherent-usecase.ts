@@ -31,7 +31,7 @@ export interface UpdateAdherentParams {
     profession?: string
     estBanie?: boolean
     estBenevole?: boolean
-    parrain?: User
+    parrain?: User | null
 }
 
 export class AdherentUsecase {

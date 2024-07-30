@@ -118,36 +118,6 @@ INSERT INTO tache (Description, dateDebut, dateFin, statut, responsableId, resso
 /*INSERT INTO reservation (dateDebut, dateFin, description, ressourceId, UserId) VALUES
 (NOW(), NOW() + INTERVAL 2 HOUR, 'Réunion du bureau', 1, 1);*/
 
-INSERT INTO demande (type, dateDemande, statut, adherentId)
-VALUES 
-('Evénement', '2024-05-19 14:30:00', 'En attente', 1),
-('Evénement', '2024-05-19 14:30:00', 'Refusée', 1),
-('Projet', '2024-05-20 10:00:00', 'Acceptée', 1);
-
-INSERT INTO demande (type, dateDemande, statut, visiteurId)
-VALUES 
-('Evénement', '2024-05-19 14:30:00', 'En attente', 1),
-('Projet', '2024-05-20 10:00:00', 'Acceptée', 2),
-('Parrainage', '2024-05-21 08:45:00', 'Refusée', 3);
-
-INSERT INTO evenement_demande (id, titre, date, description, lieu, demandeId)
-VALUES 
-(1, 'Festival de Musique', '2024-07-15 18:00:00', 'Un grand festival de musique avec des artistes internationaux.', 'Parc Central', 1),
-(2, 'Festival de Musique', '2024-07-15 18:00:00', 'Un grand festival de musique avec des artistes internationaux.', 'Parc Central', 2);
-
-INSERT INTO aide_projet (titre, descriptionProjet, budget, deadline,adherentId)
-VALUES 
-('Projet de Reforestation', 'Un projet visant à planter des arbres dans les zones déforestées.', 5000.00, '2024-12-31 00:00:00', 1);
-
-INSERT INTO aide_projet_demande (id, titre, descriptionProjet, budget, deadline, demandeId)
-VALUES 
-(2, 'Projet de Reforestation', 'Un projet visant à planter des arbres dans les zones déforestées.', 5000.00, '2024-12-31 00:00:00', 3);
-
-INSERT INTO parrainage_demande (id, parrainId, detailsParrainage, demandeId)
-VALUES 
-(3, 2, 'Parrainage pour les enfants défavorisés.', 3);
-
-
 
 
 /*INSERT INTO dossier (nom, tokenId, dossierId, userId,type) VALUES

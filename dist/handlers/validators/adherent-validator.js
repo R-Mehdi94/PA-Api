@@ -63,7 +63,7 @@ exports.updateAdherentValidationUser = joi_1.default.object({
     profession: joi_1.default.string().optional(),
     estBanie: joi_1.default.boolean().optional(),
     estBenevole: joi_1.default.boolean().optional(),
-    parrain: joi_1.default.number().optional()
+    parrain: joi_1.default.number().allow(null).optional()
 });
 exports.listAdherentValidation = joi_1.default.object({
     page: joi_1.default.number().min(1).optional(),

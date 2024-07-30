@@ -93,8 +93,8 @@ __decorate([
     __metadata("design:type", Boolean)
 ], Adherent.prototype, "estBenevole", void 0);
 __decorate([
-    (0, typeorm_1.ManyToOne)(() => user_1.User, user => user.parraine),
-    __metadata("design:type", user_1.User)
+    (0, typeorm_1.ManyToOne)(() => user_1.User, user => user.parraine, { nullable: true }),
+    __metadata("design:type", Object)
 ], Adherent.prototype, "parrain", void 0);
 __decorate([
     (0, typeorm_1.OneToMany)(() => inscription_1.Inscription, inscriptions => inscriptions.adherent),

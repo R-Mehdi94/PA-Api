@@ -118,7 +118,7 @@ export const updateAdherentValidationUser = Joi.object<UpdateAdherentRequestUser
     profession: Joi.string().optional(),
     estBanie: Joi.boolean().optional(),
     estBenevole: Joi.boolean().optional(),
-    parrain: Joi.number().optional()
+    parrain: Joi.number().allow(null).optional()
 });
 
 export interface UpdateAdherentRequestUser {
@@ -133,7 +133,7 @@ export interface UpdateAdherentRequestUser {
     profession?: string
     estBanie?: boolean
     estBenevole?: boolean
-    parrain?: User
+    parrain?: User | undefined
 }
 
 export const listAdherentValidation = Joi.object<ListAdherentRequest>({
