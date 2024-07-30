@@ -8,7 +8,7 @@ export const createDossierValidation = Joi.object<CreateDossierValidationRequest
     nom: Joi.string().required(),
     nomUtilisateur: Joi.string().required(),
     type: Joi.string().required(),
-    token: Joi.string().optional(),
+    token: Joi.number().optional(),
     dossier: Joi.number().optional(),
     user: Joi.number().required()
 });
@@ -46,7 +46,7 @@ export const updateDossierValidation = Joi.object<UpdateDossierRequest>({
     nom: Joi.string().optional(),
     nomUtilisateur: Joi.string().optional(),
     type: Joi.string().optional(),
-    token: Joi.string().optional(),
+    token: Joi.number().optional(),
     dossier: Joi.number().optional(),
     user: Joi.number().optional()
 });
@@ -67,7 +67,7 @@ export const listDossierValidation = Joi.object<ListDossierRequest>({
     nom: Joi.string().optional(),
     nomUtilisateur: Joi.string().optional(),
     type: Joi.string().optional(),
-    token: Joi.string().optional(),
+    token: Joi.number().optional(),
     dossier: Joi.number().optional(),
     user: Joi.number().optional()
 });
