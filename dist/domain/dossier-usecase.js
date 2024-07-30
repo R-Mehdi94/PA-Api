@@ -32,7 +32,7 @@ class DossierUsecase {
             const entityManager = this.db.getRepository(token_1.Token);
             const sqlQuery = `
                     
-                    select nomUtilisateur as nomFichier, nom as VraiNom, tokenId as tokenId, 'fichier' AS Type, id from dossier where type like 'Fichier' AND (dossierId = 0 OR dossierId = NULL) AND userId = 1
+                    select nomUtilisateur as nomFichier, nom as VraiNom, tokenId as tokenId, 'fichier' AS Type, id from dossier where type like 'Fichier' AND (dossierId = 0 OR dossierId = NULL) AND userId = ?
                     UNION ALL
 
                     SELECT 
@@ -47,7 +47,7 @@ class DossierUsecase {
                     LEFT JOIN token t
                     ON d.tokenId = t.id
                     WHERE 
-                        d.dossierId IS NULL AND d.userId = 1 AND t.blobName is NULL;`;
+                        d.dossierId IS NULL AND d.userId = ? AND t.blobName is NULL;`;
             /*const sqlQuery = `SELECT T.blobName as nomFichier, T.id, 'fichier' AS Type FROM token T LEFT JOIN dossier
                 D ON T.id = D.id WHERE D.tokenId IS NULL AND T.userId = ? and T.blobName is not NULL
 
