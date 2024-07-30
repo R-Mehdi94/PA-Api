@@ -91,46 +91,46 @@ export class DossierUsecase {
         const entityManager = this.db.getRepository(Token);
 
                             const sqlQuery = `WITH Combined AS (
-                                    SELECT 
-                                        dossier.nomUtilisateur AS Nom,
-                                        dossier.nom as VraiNom, 
-                                        token.id as tokenId,
-                                        'fichier' AS Type,
-                                        id 
-                                    FROM 
-                                        token 
-                                    INNER JOIN 
-                                        dossier 
-                                    ON 
-                                        token.id = dossier.tokenId 
-                                    WHERE 
-                                        dossier.dossierId = ? 
-                                        AND token.userId = ?
+                                            SELECT 
+                                                dossier.nomUtilisateur AS Nom,
+                                                dossier.nom as VraiNom, 
+                                                token.id as tokenId,
+                                                'fichier' AS Type,
+                                                dossier.id 
+                                            FROM 
+                                                token 
+                                            INNER JOIN 
+                                                dossier 
+                                            ON 
+                                                token.id = dossier.tokenId 
+                                            WHERE 
+                                                dossier.dossierId = ? 
+                                                AND token.userId = ?
 
-                                    UNION ALL
+                                            UNION ALL
 
-                                    SELECT 
-                                        d1.nomUtilisateur AS Nom, 
-                                        d1.nom as VraiNom, 
-                                        null as tokenId, 
-                                        'dossier' AS Type, 
-                                        d1.id AS id
-                                    FROM 
-                                        dossier d1
-                                    WHERE 
-                                        d1.dossierId = ?
-                                        AND d1.userId = ?
-                                )
-                                SELECT *
-                                FROM Combined c1
-                                WHERE Type = 'fichier'
-                                OR (Type = 'dossier' AND NOT EXISTS (
-                                    SELECT 1
-                                    FROM Combined c2
-                                    WHERE c2.Nom = c1.Nom 
-                                        AND c2.Type = 'fichier'
-                                ));
-                                `;
+                                            SELECT 
+                                                d1.nomUtilisateur AS Nom, 
+                                                d1.nom as VraiNom, 
+                                                null as tokenId, 
+                                                'dossier' AS Type, 
+                                                d1.id AS id
+                                            FROM 
+                                                dossier d1
+                                            WHERE 
+                                                d1.dossierId = ?
+                                                AND d1.userId = ?
+                                        )
+                                        SELECT *
+                                        FROM Combined c1
+                                        WHERE Type = 'fichier'
+                                        OR (Type = 'dossier' AND NOT EXISTS (
+                                            SELECT 1
+                                            FROM Combined c2
+                                            WHERE c2.Nom = c1.Nom 
+                                                AND c2.Type = 'fichier'
+                                        ));
+                                        `;
 
         const arboDossier = await entityManager.query(sqlQuery, [dossierId,id,dossierId,id]);
         if (!arboDossier.length) {
