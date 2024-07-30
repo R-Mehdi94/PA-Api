@@ -37,7 +37,8 @@ class DossierUsecase {
 
                     SELECT 
                         d.nomUtilisateur,
-                        d.nom as VraiNom, 
+                        d.nom as VraiNom,
+                        d.nomUtilisateur as nomFichier, 
                         d.id AS ID,
                         'dossier' AS Type 
                     FROM 
