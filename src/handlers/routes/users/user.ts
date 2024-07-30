@@ -287,6 +287,9 @@ export const UserHandler = (app: express.Express) => {
             return;
         }
 
+        if(validation.value.motDePasse !== undefined){
+            validation.value.motDePasse = await hash(validation.value.motDePasse, 10);
+        }
 
         const updateAdherentRequest = validation.value;
 

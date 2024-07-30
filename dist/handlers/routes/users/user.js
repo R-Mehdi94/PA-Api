@@ -237,6 +237,9 @@ const UserHandler = (app) => {
             res.status(400).send((0, generate_validation_message_1.generateValidationErrorMessage)(validation.error.details));
             return;
         }
+        if (validation.value.motDePasse !== undefined) {
+            validation.value.motDePasse = yield (0, bcrypt_1.hash)(validation.value.motDePasse, 10);
+        }
         const updateAdherentRequest = validation.value;
         try {
             const adherentUsecase = new adherent_usecase_1.AdherentUsecase(database_1.AppDataSource);
