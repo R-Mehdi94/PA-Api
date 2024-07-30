@@ -48,7 +48,7 @@ __decorate([
 ], Dossier.prototype, "token", void 0);
 __decorate([
     (0, typeorm_1.ManyToOne)(() => Dossier, dossier => dossier.enfants),
-    __metadata("design:type", Dossier)
+    __metadata("design:type", Object)
 ], Dossier.prototype, "dossier", void 0);
 __decorate([
     (0, typeorm_1.OneToMany)(() => Dossier, dossier => dossier.dossier),

@@ -27,7 +27,7 @@ exports.updateDossierValidation = joi_1.default.object({
     nomUtilisateur: joi_1.default.string().optional(),
     type: joi_1.default.string().optional(),
     token: joi_1.default.number().optional(),
-    dossier: joi_1.default.number().optional(),
+    dossier: joi_1.default.number().allow(null).optional(),
     user: joi_1.default.number().optional()
 });
 exports.listDossierValidation = joi_1.default.object({

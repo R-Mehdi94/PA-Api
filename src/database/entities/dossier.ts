@@ -20,7 +20,7 @@ export class Dossier {
     token: Token;
 
     @ManyToOne(() => Dossier, dossier => dossier.enfants)
-    dossier: Dossier;
+    dossier: Dossier | null;
 
     @OneToMany(() => Dossier, dossier => dossier.dossier)
     enfants: Dossier[];
